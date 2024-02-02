@@ -33,6 +33,7 @@ const GlobalStyles = createGlobalStyle`
     --background : rgba(251, 251, 251, 1);
     --whiteblue: rgba(215, 236, 252, 1);
     --line-gray: rgba(91, 91, 91, 0.17);
+    --light-gray: rgba(155, 155, 161, 1);
 
 
 
