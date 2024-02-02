@@ -2,8 +2,10 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { useState, useEffect } from "react";
 import GlobalStyles from "./GlobalStyle";
 import styled from "styled-components";
+
 import Main from "./Pages/Main";
 import Nav from "./Pages/Nav";
+import Month from "./Pages/Month";
 
 const Container = styled.div`
   display: flex;
@@ -12,7 +14,6 @@ const Container = styled.div`
   gap: 1rem;
   padding: 1.25rem;
   align-items: flex-start;
-  border: 1px solid black;
 `;
 
 const BodyContainer = styled.div`
@@ -78,6 +79,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Main />}></Route>
+            <Route path="/month" element={<Month />}></Route>
           </Routes>
         </BodyContainer>
       </Container>

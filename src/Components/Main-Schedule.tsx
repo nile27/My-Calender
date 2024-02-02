@@ -1,5 +1,5 @@
 import styled from "styled-components";
-//import Check from "../Img/ei_check.svg";
+
 import { TODOOBJArr } from "../Pages/Main";
 
 const TodoList = styled.li`
@@ -13,7 +13,7 @@ const TodoList = styled.li`
   border-bottom: 1px solid var(--light-gray);
 
   > span {
-    font-weight: 300;
+    font-weight: 400;
     white-space: nowrap;
   }
 `;
@@ -54,7 +54,7 @@ export default function TodoLi(props: {
   const [hour, todo]: [string, TODOOBJArr | undefined] = props.time;
   return (
     <TodoList>
-      <span>{hour + "시"}</span>
+      <span>{hour + " 시"}</span>
       <ColorBox color={todo?.color} />
       <ListBody>
         <span>{todo?.name}</span>

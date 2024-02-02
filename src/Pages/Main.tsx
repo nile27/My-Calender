@@ -20,7 +20,7 @@ export interface ScheduleData {
 const Container = styled.div`
   width: 100%;
   height: 90%;
-  border: 1px solid black;
+
   display: flex;
   padding: 2rem 3rem;
   gap: 1rem;
@@ -38,9 +38,8 @@ const TodoContainer = styled.div`
 const ScheduleBox = styled.div`
   width: 100%;
   height: 100%;
-  border: 1px solid black;
   padding: 2rem;
-  overflow-y: scroll;
+
   > .Header {
     border-bottom: 1px solid var(--light-gray);
     width: 100%;
@@ -50,11 +49,11 @@ const ScheduleBox = styled.div`
       font-size: 20px;
       font-weight: 600;
     }
-
-    ul {
-      width: 90%;
-      height: 90%;
-    }
+  }
+  ul {
+    width: 100%;
+    height: 95%;
+    overflow-y: scroll;
   }
 `;
 
@@ -92,7 +91,7 @@ const TodoBox = styled.div`
 
 export default function Main() {
   const Tododata: Tododata = {
-    "03": {
+    "00": {
       time: "09",
       name: "algorithm",
       tag: "Homework",
@@ -115,6 +114,13 @@ export default function Main() {
     },
     "12": {
       time: "10",
+      name: "key",
+      tag: "What to buy",
+      color: "yellow",
+      done: false,
+    },
+    "20": {
+      time: "10",
       name: "eraser",
       tag: "What to buy",
       color: "yellow",
@@ -122,7 +128,7 @@ export default function Main() {
     },
     "13": {
       time: "11",
-      name: "pen",
+      name: "mouse",
       tag: "What to buy",
       color: "yellow",
       done: true,
@@ -143,8 +149,8 @@ export default function Main() {
   );
   Object.keys(Tododata).forEach((el) => {
     return Tododata[el].done
-      ? todoArr.push(Tododata[el])
-      : doneArr.push(Tododata[el]);
+      ? doneArr.push(Tododata[el])
+      : todoArr.push(Tododata[el]);
   });
 
   return (

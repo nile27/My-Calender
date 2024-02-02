@@ -94,13 +94,13 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
   return (
     <TodoList>
       {done ? (
-        <CheckBtn>
-          <CheckImg />
-        </CheckBtn>
-      ) : (
         <CheckedBtn>
           <CheckImg />
         </CheckedBtn>
+      ) : (
+        <CheckBtn>
+          <CheckImg />
+        </CheckBtn>
       )}
 
       <ListBody>
