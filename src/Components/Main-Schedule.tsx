@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { forwardRef } from "react";
 import { TODOOBJArr } from "../Pages/Main";
 
 const TodoList = styled.li`
@@ -48,11 +48,29 @@ const ListBody = styled.div`
   }
 `;
 
-export default function TodoLi(props: {
+export interface ScrollRef {
+  ref: React.MutableRefObject<null | HTMLLIElement>;
+}
+
+interface Prop {
   time: [string, TODOOBJArr | undefined];
-}) {
-  const [hour, todo]: [string, TODOOBJArr | undefined] = props.time;
-  return (
+}
+const TodoLi = forwardRef<null | HTMLLIElement, Prop>(({ time }, ref) => {
+  const [hour, todo]: [string, TODOOBJArr | undefined] = time;
+  console.log(ref);
+
+  return ref ? (
+    <TodoList ref={ref}>
+      <span>{hour + " 시"}</span>
+      <ColorBox color={todo?.color} />
+      <ListBody>
+        <span>{todo?.name}</span>
+        <div className="time">
+          <span>{todo?.tag}</span>
+        </div>
+      </ListBody>
+    </TodoList>
+  ) : (
     <TodoList>
       <span>{hour + " 시"}</span>
       <ColorBox color={todo?.color} />
@@ -64,4 +82,5 @@ export default function TodoLi(props: {
       </ListBody>
     </TodoList>
   );
-}
+});
+export default TodoLi;

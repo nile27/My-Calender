@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useEffect, useRef } from "react";
 import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
@@ -63,7 +64,7 @@ const TodoBox = styled.div`
   border-radius: 30px;
   background: rgba(244, 244, 246, 1);
   padding: 2rem;
-
+  position: relative;
   .Header {
     display: flex;
     justify-content: space-between;
@@ -90,6 +91,8 @@ const TodoBox = styled.div`
 `;
 
 export default function Main() {
+  const scrollRef = useRef<null | HTMLLIElement>(null);
+
   const Tododata: Tododata = {
     "00": {
       time: "09",
@@ -153,6 +156,20 @@ export default function Main() {
       : todoArr.push(Tododata[el]);
   });
 
+  const time: number = new Date().getHours();
+
+  useEffect(() => {
+    const timelineScroll = () => {
+      if (scrollRef.current) {
+        scrollRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    };
+    timelineScroll();
+  }, []);
+
   return (
     <Container>
       <TodoContainer>
@@ -187,7 +204,11 @@ export default function Main() {
         <ul>
           {todayTime.map(
             (item: [string, TODOOBJArr | undefined], key: number) => {
-              return <Scheduler time={item} key={key} />;
+              return key === time ? (
+                <Scheduler time={item} key={key} ref={scrollRef} />
+              ) : (
+                <Scheduler time={item} key={key} ref={undefined} />
+              );
             },
           )}
         </ul>
