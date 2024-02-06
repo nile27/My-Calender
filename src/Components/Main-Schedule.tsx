@@ -57,7 +57,6 @@ interface Prop {
 }
 const TodoLi = forwardRef<null | HTMLLIElement, Prop>(({ time }, ref) => {
   const [hour, todo]: [string, TODOOBJArr | undefined] = time;
-  console.log(ref);
 
   return ref ? (
     <TodoList ref={ref}>

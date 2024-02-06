@@ -55,6 +55,12 @@ const ScheduleBox = styled.div`
     width: 100%;
     height: 95%;
     overflow-y: scroll;
+
+    > .blank {
+      width: 50%;
+      height: 400px;
+      min-height: 400px;
+    }
   }
 `;
 
@@ -162,7 +168,6 @@ export default function Main() {
     const timelineScroll = () => {
       if (scrollRef.current) {
         scrollRef.current?.scrollIntoView({
-          behavior: "smooth",
           block: "start",
         });
       }
@@ -211,6 +216,7 @@ export default function Main() {
               );
             },
           )}
+          <li className="blank"></li>
         </ul>
       </ScheduleBox>
     </Container>
