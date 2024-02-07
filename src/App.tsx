@@ -9,8 +9,8 @@ import Month from "./Pages/Month";
 
 const Container = styled.div`
   display: flex;
-  width: 80rem;
-  height: 45rem;
+  width: 100vw;
+  height: 100vh;
   gap: 1rem;
   padding: 1.25rem;
   align-items: flex-start;
