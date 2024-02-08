@@ -24,11 +24,17 @@ const MonthBox = styled.div`
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    span {
-      font-size: var(--header-size);
-      font-weight: 600;
-      min-width: 120px;
-      text-align: center;
+    .timeBox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      span {
+        font-size: var(--header-size);
+        font-weight: 600;
+        min-width: 120px;
+        text-align: center;
+      }
     }
   }
 `;
@@ -89,20 +95,27 @@ const ReverseArrow = styled(Arrowimg)`
 
 export default function Month() {
   const monthList = (nowDate: Date, count: number) => {
-    const nowYear = nowDate.getFullYear() + Math.floor(count / 12);
-    const nowMonth =
-      nowDate.getMonth() + (count % 12) >= 12
-        ? nowDate.getMonth() + count - 12
-        : nowDate.getMonth() + (count % 12) < 0
-          ? nowDate.getMonth() + count + 12
-          : nowDate.getMonth() + count;
-    console.log(nowMonth, nowYear, Math.floor(count / 12), count);
+    const nowYear =
+      nowDate.getFullYear() + Math.floor((nowDate.getMonth() + count) / 12);
+    let nowMonth: number = 0;
+
+    if (nowDate.getMonth() + (count % 12) + 1 > 12) {
+      nowMonth = nowDate.getMonth() + (count % 12) - 12;
+      console.log("1");
+    } else if (nowDate.getMonth() + (count % 12) + 1 <= 0) {
+      nowMonth = nowDate.getMonth() + (count % 12) + 12;
+      console.log("2");
+    } else {
+      nowMonth = nowDate.getMonth() + (count % 12);
+      console.log("3");
+    }
+
     const dayOneWeek = new Date(nowYear, nowMonth, 1).getDay();
-    // const dayLastWeek = new Date(nowYear, nowMonth + 1, 0).getDay();
+
     let weekArr: number[] = [];
     const result: [number[]] = [[]];
     result.pop();
-    //const prevMonthEnd = new Date(nowYear, nowMonth, 0).getDate();
+
     const nowMonthEnd = new Date(nowYear, nowMonth + 1, 0).getDate();
 
     for (let i = dayOneWeek - 1; i >= 0; i--) {
@@ -125,12 +138,13 @@ export default function Month() {
       result.push(weekArr);
     }
 
-    return { result, nowMonth };
+    return { result, nowMonth, nowYear };
   };
 
   const date = new Date();
   const [dateCount, setDateCount] = useState<number>(0);
-  const allDay: [number[]] = monthList(date, dateCount).result;
+  const { result, nowMonth, nowYear } = monthList(date, dateCount);
+  const allDay: [number[]] = result;
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthArr: string[] = [
     "Jaunary",
@@ -153,7 +167,11 @@ export default function Month() {
           <ArrowBtn onClick={() => setDateCount(dateCount - 1)}>
             <Arrowimg />
           </ArrowBtn>
-          <span>{monthArr[monthList(date, dateCount).nowMonth]}</span>
+          <div className="timeBox">
+            <span>{nowYear}</span>
+            <span>{monthArr[nowMonth]}</span>
+          </div>
+
           <ArrowBtn onClick={() => setDateCount(dateCount + 1)}>
             <ReverseArrow />
           </ArrowBtn>
