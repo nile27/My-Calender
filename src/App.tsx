@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Main from "./Pages/Main";
 import Nav from "./Pages/Nav";
 import Month from "./Pages/Month";
+import Search from "./Pages/Search";
 import Clock from "./Components/Clock";
 
 const Container = styled.div`
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/today/:month/:day" element={<Main />}></Route>
             <Route path="/month" element={<Month />}></Route>
+            <Route path="/search" element={<Search />}></Route>
           </Routes>
         </BodyContainer>
       </Container>

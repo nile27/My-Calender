@@ -42,6 +42,7 @@ const DayBox = styled.li<DayBoxType>`
     gap: 1rem;
     overflow-y: scroll;
     flex: 1 1 0;
+
     li {
       width: 100%;
       height: 12px;
@@ -66,7 +67,6 @@ const DayBox = styled.li<DayBoxType>`
 const TodayBox = styled(DayBox)`
   .number {
     color: white;
-    text-align: center;
     font-size: var(--normal-size);
     background-color: var(--skyblue);
     border-radius: 50%;
@@ -77,11 +77,41 @@ export default function Day(props: {
   month: number;
   day: number;
   today: number;
+  thisMonth: number;
 }) {
   const navi = useNavigate();
 
   return props.day !== 0 ? (
-    props.today !== props.day ? (
+    props.today === props.day && props.thisMonth === props.month ? (
+      <TodayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
+        <div className="numberBox">
+          <div className="number">{props.day}</div>
+        </div>
+        <ul className="TodoBox">
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+          <li>
+            <div className="colorBox"></div> <span>algorithm</span>
+          </li>
+        </ul>
+      </TodayBox>
+    ) : (
       <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
         <div className="numberBox">
           <div className="number">{props.day}</div>
@@ -110,35 +140,6 @@ export default function Day(props: {
           </li>
         </ul>
       </DayBox>
-    ) : (
-      <TodayBox onClick={() => navi(`/today/${props.day}`)}>
-        <div className="numberBox">
-          <div className="number">{props.day}</div>
-        </div>
-        <ul className="TodoBox">
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-        </ul>
-      </TodayBox>
     )
   ) : (
     <DayBox></DayBox>

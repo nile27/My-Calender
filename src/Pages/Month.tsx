@@ -101,13 +101,10 @@ export default function Month() {
 
     if (nowDate.getMonth() + (count % 12) + 1 > 12) {
       nowMonth = nowDate.getMonth() + (count % 12) - 12;
-      console.log("1");
     } else if (nowDate.getMonth() + (count % 12) + 1 <= 0) {
       nowMonth = nowDate.getMonth() + (count % 12) + 12;
-      console.log("2");
     } else {
       nowMonth = nowDate.getMonth() + (count % 12);
-      console.log("3");
     }
 
     const dayOneWeek = new Date(nowYear, nowMonth, 1).getDay();
@@ -160,6 +157,7 @@ export default function Month() {
     "November",
     "December",
   ];
+
   return (
     <Container>
       <MonthBox>
@@ -195,7 +193,8 @@ export default function Month() {
                 return (
                   <Day
                     day={day}
-                    month={date.getMonth() + 1}
+                    thisMonth={date.getMonth() + 1}
+                    month={nowMonth + 1}
                     today={date.getDate()}
                     key={key}
                   ></Day>

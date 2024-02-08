@@ -111,7 +111,9 @@ export default function Nav() {
         <span>Menu</span>
 
         <Listli
-          onClick={() => navi(`/today/${date.getMonth() + 1}/${date.getDay()}`)}
+          onClick={() =>
+            navi(`/today/${date.getMonth() + 1}/${date.getDate()}`)
+          }
         >
           <img src={Home}></img>
           <span>Home</span>
@@ -122,7 +124,7 @@ export default function Nav() {
           <span>Month</span>
         </Listli>
 
-        <Listli>
+        <Listli onClick={() => navi("/search")}>
           <img src={Search}></img>
           <span>Search</span>
         </Listli>
