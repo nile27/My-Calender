@@ -1,6 +1,11 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router";
 
-const DayBox = styled.li`
+interface DayBoxType {
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+const DayBox = styled.li<DayBoxType>`
   width: 100%;
   height: 100%;
   border: 1px solid var(--line-gray);
@@ -68,10 +73,16 @@ const TodayBox = styled(DayBox)`
   }
 `;
 
-export default function Day(props: { day: number; today: number }) {
+export default function Day(props: {
+  month: number;
+  day: number;
+  today: number;
+}) {
+  const navi = useNavigate();
+
   return props.day !== 0 ? (
     props.today !== props.day ? (
-      <DayBox>
+      <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
         <div className="numberBox">
           <div className="number">{props.day}</div>
         </div>
@@ -100,7 +111,7 @@ export default function Day(props: { day: number; today: number }) {
         </ul>
       </DayBox>
     ) : (
-      <TodayBox>
+      <TodayBox onClick={() => navi(`/today/${props.day}`)}>
         <div className="numberBox">
           <div className="number">{props.day}</div>
         </div>

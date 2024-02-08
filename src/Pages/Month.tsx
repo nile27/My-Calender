@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import Day from "../Components/Month-day";
 import { ReactComponent as Arrow } from "../Img/ep_arrow-right-bold.svg";
+import { useState } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +27,8 @@ const MonthBox = styled.div`
     span {
       font-size: var(--header-size);
       font-weight: 600;
+      min-width: 120px;
+      text-align: center;
     }
   }
 `;
@@ -85,10 +88,15 @@ const ReverseArrow = styled(Arrowimg)`
 `;
 
 export default function Month() {
-  const monthList = (nowDate: Date) => {
-    const nowYear = nowDate.getFullYear();
-    const nowMonth = nowDate.getMonth();
-
+  const monthList = (nowDate: Date, count: number) => {
+    const nowYear = nowDate.getFullYear() + Math.floor(count / 12);
+    const nowMonth =
+      nowDate.getMonth() + (count % 12) >= 12
+        ? nowDate.getMonth() + count - 12
+        : nowDate.getMonth() + (count % 12) < 0
+          ? nowDate.getMonth() + count + 12
+          : nowDate.getMonth() + count;
+    console.log(nowMonth, nowYear, Math.floor(count / 12), count);
     const dayOneWeek = new Date(nowYear, nowMonth, 1).getDay();
     // const dayLastWeek = new Date(nowYear, nowMonth + 1, 0).getDay();
     let weekArr: number[] = [];
@@ -117,22 +125,36 @@ export default function Month() {
       result.push(weekArr);
     }
 
-    return result;
+    return { result, nowMonth };
   };
 
   const date = new Date();
-  const allDay: [number[]] = monthList(date);
+  const [dateCount, setDateCount] = useState<number>(0);
+  const allDay: [number[]] = monthList(date, dateCount).result;
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-
+  const monthArr: string[] = [
+    "Jaunary",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   return (
     <Container>
       <MonthBox>
         <div>
-          <ArrowBtn>
+          <ArrowBtn onClick={() => setDateCount(dateCount - 1)}>
             <Arrowimg />
           </ArrowBtn>
-          <span>January</span>
-          <ArrowBtn>
+          <span>{monthArr[monthList(date, dateCount).nowMonth]}</span>
+          <ArrowBtn onClick={() => setDateCount(dateCount + 1)}>
             <ReverseArrow />
           </ArrowBtn>
         </div>
@@ -152,7 +174,14 @@ export default function Month() {
           return (
             <WeekBox key={idx}>
               {item.map((day: number, key: number) => {
-                return <Day day={day} today={date.getDate()} key={key}></Day>;
+                return (
+                  <Day
+                    day={day}
+                    month={date.getMonth() + 1}
+                    today={date.getDate()}
+                    key={key}
+                  ></Day>
+                );
               })}
             </WeekBox>
           );
