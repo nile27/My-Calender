@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import axios from "axios";
 
 import Day from "../Components/Month-day";
 import { ReactComponent as Arrow } from "../Img/ep_arrow-right-bold.svg";
@@ -141,7 +142,12 @@ export default function Month() {
 
     return { result, dayArr, nowMonth, nowYear };
   };
-
+  const holidayFunc = () => {
+    const url =
+      "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfosolYear=2019&solMonth=03&ServiceKey=xNCeZHfId3LPp8MoaILsSqVIqYQN5uxTchS/MLCXu2SsxVGkccPjqD062/Pdz0WZj8kPRLrTSHEeehS7pLu2iw==";
+    axios.get(url).then((res) => console.log(res.data));
+  };
+  holidayFunc();
   const date = new Date();
   const [dateCount, setDateCount] = useState<number>(0);
   const { result, nowMonth, nowYear, dayArr } = monthList(date, dateCount);
