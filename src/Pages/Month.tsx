@@ -111,15 +111,19 @@ export default function Month() {
 
     let weekArr: number[] = [];
     const result: [number[]] = [[]];
+    const dayArr: number[] = [];
     result.pop();
 
     const nowMonthEnd = new Date(nowYear, nowMonth + 1, 0).getDate();
+    const prevMonthEnd = new Date(nowYear, nowMonth, 0).getDate();
 
     for (let i = dayOneWeek - 1; i >= 0; i--) {
+      dayArr.push(new Date(nowYear, nowMonth - 1, prevMonthEnd - i).getDay());
       weekArr.push(0);
     }
 
     for (let i = 1; i <= nowMonthEnd; i++) {
+      dayArr.push(new Date(nowYear, nowMonth, i).getDay());
       weekArr.push(new Date(nowYear, nowMonth, i).getDate());
 
       if (weekArr.length === 7) {
@@ -135,12 +139,12 @@ export default function Month() {
       result.push(weekArr);
     }
 
-    return { result, nowMonth, nowYear };
+    return { result, dayArr, nowMonth, nowYear };
   };
 
   const date = new Date();
   const [dateCount, setDateCount] = useState<number>(0);
-  const { result, nowMonth, nowYear } = monthList(date, dateCount);
+  const { result, nowMonth, nowYear, dayArr } = monthList(date, dateCount);
   const allDay: [number[]] = result;
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthArr: string[] = [
@@ -193,9 +197,10 @@ export default function Month() {
                 return (
                   <Day
                     day={day}
-                    thisMonth={date.getMonth() + 1}
+                    getday={dayArr[key]}
+                    date={date}
+                    nowYear={nowYear}
                     month={nowMonth + 1}
-                    today={date.getDate()}
                     key={key}
                   ></Day>
                 );

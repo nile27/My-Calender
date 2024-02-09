@@ -23,12 +23,14 @@ const ColorBox = styled.div`
 
 export default function SearchList() {
   return (
-    <SearchBox>
-      <ColorBox color={"yellow"}></ColorBox>
-      <span>Homework</span>
-      <span>2024년 1월 11일</span>
-      <span>오전 9시 ~ 10시</span>
-      <span>algorithm</span>
-    </SearchBox>
+    <>
+      <SearchBox>
+        <ColorBox color={"yellow"}></ColorBox>
+        <span>Homework</span>
+        <span>2024년 1월 11일</span>
+        <span>오전 9시 ~ 10시</span>
+        <span>algorithm</span>
+      </SearchBox>
+    </>
   );
 }

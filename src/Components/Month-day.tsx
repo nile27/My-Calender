@@ -23,13 +23,6 @@ const DayBox = styled.li<DayBoxType>`
     justify-content: start;
     align-items: center;
     padding: 0;
-    .number {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 24px;
-      height: 24px;
-    }
   }
 
   .TodoBox {
@@ -66,6 +59,11 @@ const DayBox = styled.li<DayBoxType>`
 
 const TodayBox = styled(DayBox)`
   .number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
     color: white;
     font-size: var(--normal-size);
     background-color: var(--skyblue);
@@ -73,16 +71,28 @@ const TodayBox = styled(DayBox)`
   }
 `;
 
+const Number = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  color: ${(prop) => prop.color || "black"};
+`;
+
 export default function Day(props: {
   month: number;
+  date: Date;
   day: number;
-  today: number;
-  thisMonth: number;
+  nowYear: number;
+  getday: number;
 }) {
   const navi = useNavigate();
 
   return props.day !== 0 ? (
-    props.today === props.day && props.thisMonth === props.month ? (
+    props.nowYear === props.date.getFullYear() &&
+    props.date.getDate() === props.day &&
+    props.date.getMonth() + 1 === props.month ? (
       <TodayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
         <div className="numberBox">
           <div className="number">{props.day}</div>
@@ -114,7 +124,17 @@ export default function Day(props: {
     ) : (
       <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
         <div className="numberBox">
-          <div className="number">{props.day}</div>
+          <Number
+            color={
+              props.getday === 0 || props.getday === 6
+                ? props.getday === 0
+                  ? "red"
+                  : "blue"
+                : "black"
+            }
+          >
+            {props.day}
+          </Number>
         </div>
         <ul className="TodoBox">
           <li>

@@ -29,8 +29,8 @@ const SearchBarBox = styled.div`
   border-radius: 10px;
 
   img {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
   }
 `;
 const SearchBar = styled.input`
@@ -43,14 +43,20 @@ const SearchBar = styled.input`
   font-weight: 500;
 `;
 
-const ResultBox = styled.div`
+const ResultBox = styled.ul`
   width: 100%;
   height: 100%;
   border: 1px solid black;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: scroll;
+  flex: 1 1 0;
 `;
 
 export default function Search() {
+  const arr = Array.from({ length: 5 }, () => 0);
   return (
     <Container>
       <SearchContainer>
@@ -60,7 +66,9 @@ export default function Search() {
         </SearchBarBox>
       </SearchContainer>
       <ResultBox>
-        <SearchList></SearchList>
+        {arr.map((item: number, key: number) => (
+          <SearchList key={key} />
+        ))}
       </ResultBox>
     </Container>
   );
