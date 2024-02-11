@@ -86,6 +86,7 @@ export default function Day(props: {
   day: number;
   nowYear: number;
   getday: number;
+  holiday: { dateName: string; isHoliday: boolean } | null;
 }) {
   const navi = useNavigate();
 
