@@ -1,0 +1,86 @@
+import styled from "styled-components";
+import Day from "../Components/Month-day";
+const WeekBox = styled.ul`
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+`;
+interface Holiday {
+  dateKind: string;
+  dateName: string;
+  isHoliday: string;
+  locdate: number;
+  seq: number;
+}
+
+interface Prop {
+  holidata: Holiday[] | undefined;
+  date: Date;
+}
+type DataHoliday = {
+  dateName: string;
+  isHoliday: string;
+};
+
+export default function Week(props: Prop) {
+  const { holidata, date } = props;
+  const isHoliday: number[] = holidata
+    ? holidata.map((item: Holiday) => Number(String(item.locdate).slice(6)))
+    : [];
+  const holiday: DataHoliday[] = holidata
+    ? holidata.map((item: Holiday) => {
+        return { dateName: item.dateName, isHoliday: item.isHoliday };
+      })
+    : [];
+  const monthList = (nowDate: Date) => {
+    const nowYear = nowDate.getFullYear();
+    const nowMonth = nowDate.getMonth();
+
+    const dayOneWeek = new Date(nowYear, nowMonth, 1).getDay();
+    const dayLastWeek = new Date(nowYear, nowMonth + 1, 0).getDay();
+
+    const result: number[] = [];
+    const dayArr: number[] = [];
+
+    const nowMonthEnd = new Date(nowYear, nowMonth + 1, 0).getDate();
+    const prevMonthEnd = new Date(nowYear, nowMonth, 0).getDate();
+
+    for (let i = dayOneWeek - 1; i >= 0; i--) {
+      dayArr.push(new Date(nowYear, nowMonth - 1, prevMonthEnd - i).getDay());
+      result.push(0);
+    }
+
+    for (let i = 1; i <= nowMonthEnd; i++) {
+      dayArr.push(new Date(nowYear, nowMonth, i).getDay());
+      result.push(new Date(nowYear, nowMonth, i).getDate());
+    }
+    for (let i = 1; i < 7 - dayLastWeek; i++) {
+      dayArr.push(new Date(nowYear, nowMonth + 1, i).getDay());
+      result.push(0);
+    }
+
+    return { result, dayArr, nowMonth, nowYear };
+  };
+  const { result, nowMonth, nowYear, dayArr } = monthList(date);
+  const allDay: number[] = result;
+  return (
+    <>
+      <WeekBox>
+        {allDay.map((day: number, key: number) => {
+          const idx: number = isHoliday.indexOf(day);
+          return (
+            <Day
+              day={day}
+              getday={dayArr[key]}
+              nowYear={nowYear}
+              month={nowMonth + 1}
+              key={key}
+              holiday={holiday[idx]}
+            ></Day>
+          );
+        })}
+      </WeekBox>
+    </>
+  );
+}

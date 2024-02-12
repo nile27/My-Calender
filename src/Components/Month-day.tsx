@@ -20,9 +20,9 @@ const DayBox = styled.li<DayBoxType>`
     width: 100%;
     height: 24px;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
-    padding: 0;
+    padding-right: 10px;
   }
 
   .TodoBox {
@@ -57,109 +57,97 @@ const DayBox = styled.li<DayBoxType>`
   }
 `;
 
-const TodayBox = styled(DayBox)`
-  .number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
-    color: white;
-    font-size: var(--normal-size);
-    background-color: var(--skyblue);
-    border-radius: 50%;
-  }
-`;
+interface NumberProp {
+  color: string;
+  background: string;
+}
 
-const Number = styled.div`
+const Number = styled.div<NumberProp>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 24px;
   height: 24px;
   color: ${(prop) => prop.color || "black"};
+  font-size: var(--normal-size);
+  background-color: ${(prop) => prop.background || "var(--skyblue)"};
+  border-radius: 50%;
+  text-align: center;
+  padding: 13px;
 `;
+
+type DataHoliday = {
+  dateName: string;
+  isHoliday: string;
+};
 
 export default function Day(props: {
   month: number;
-  date: Date;
+  holiday: DataHoliday | undefined;
   day: number;
   nowYear: number;
   getday: number;
 }) {
   const navi = useNavigate();
+  const date = new Date();
+
+  function todayFunc(): boolean {
+    return (
+      date.getFullYear() === props.nowYear &&
+      date.getMonth() + 1 === props.month &&
+      date.getDate() === props.day
+    );
+  }
+
+  function colorFunc(): string {
+    if (props.holiday) {
+      return props.holiday.isHoliday === "Y" ? "red" : "black";
+    } else {
+      switch (props.getday) {
+        case 0:
+          return "red";
+        case 6:
+          return "blue";
+      }
+    }
+    return "black";
+  }
+
   return props.day !== 0 ? (
-    props.nowYear === props.date.getFullYear() &&
-    props.date.getDate() === props.day &&
-    props.date.getMonth() + 1 === props.month ? (
-      <TodayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
-        <div className="numberBox">
-          <div className="number">{props.day}</div>
-        </div>
-        <ul className="TodoBox">
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-        </ul>
-      </TodayBox>
-    ) : (
-      <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
-        <div className="numberBox">
-          <Number
-            color={
-              props.getday === 0 || props.getday === 6
-                ? props.getday === 0
-                  ? "red"
-                  : "blue"
-                : "black"
-            }
-          >
-            {props.day}
-          </Number>
-        </div>
-        <ul className="TodoBox">
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-          <li>
-            <div className="colorBox"></div> <span>algorithm</span>
-          </li>
-        </ul>
-      </DayBox>
-    )
+    <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
+      <div className="numberBox">
+        <Number
+          background={todayFunc() ? "var(--skyblue)" : "none"}
+          color={todayFunc() ? "white" : colorFunc()}
+        >
+          {props.day}
+        </Number>
+        <div>{props.holiday ? props.holiday.dateName : null}</div>
+      </div>
+      <ul className="TodoBox">
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+        <li>
+          <div className="colorBox"></div> <span>algorithm</span>
+        </li>
+      </ul>
+    </DayBox>
   ) : (
     <DayBox></DayBox>
   );

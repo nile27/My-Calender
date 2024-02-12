@@ -1,9 +1,9 @@
 import styled from "styled-components";
-// import axios from "axios";
+import axios from "axios";
+import Week from "../Components/Month-week";
+import MonthHead from "../Components/Month-head";
 
-import Day from "../Components/Month-day";
-import { ReactComponent as Arrow } from "../Img/ep_arrow-right-bold.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -11,44 +11,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-`;
-
-const MonthBox = styled.div`
-  width: 100%;
-  height: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    .timeBox {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0;
-      span {
-        font-size: var(--header-size);
-        font-weight: 600;
-        min-width: 120px;
-        text-align: center;
-      }
-    }
-  }
-`;
-
-const ArrowBtn = styled.button`
-  display: flex;
-  justify-content: center;
-
-  &:hover {
-    path {
-      fill: var(--skyblue);
-    }
-  }
 `;
 
 const DaysBox = styled.div`
@@ -79,151 +41,54 @@ const DayWeekBox = styled.ul`
   }
 `;
 
-const WeekBox = styled.ul`
-  width: 100%;
-  flex-grow: 1;
-  display: flex;
-`;
-
-const Arrowimg = styled(Arrow)`
-  width: 100%;
-  height: 100%;
-`;
-
-const ReverseArrow = styled(Arrowimg)`
-  transform: scaleX(-1);
-`;
-
 export default function Month() {
-  // type DataHoliday = {
-  //   [id: string]: { dateName: string; isHoliday: string };
-  // };
-  // interface Holiday {
-  //   dateKind: string;
-  //   dateName: string;
-  //   isHoliday: string;
-  //   locdate: number;
-  //   seq: number;
-  // }
+  interface Holiday {
+    dateKind: string;
+    dateName: string;
+    isHoliday: string;
+    locdate: number;
+    seq: number;
+  }
+  const [date, setDate] = useState<Date>(new Date());
+  const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
+  const getHoliday = async () => {
+    const strMonth =
+      String(date.getMonth()).length < 2
+        ? "0" + String(date.getMonth() + 1)
+        : String(date.getMonth() + 1);
 
-  const monthList = (nowDate: Date, count: number) => {
-    const nowYear =
-      nowDate.getFullYear() + Math.floor((nowDate.getMonth() + count) / 12);
-    let nowMonth: number = 0;
+    const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${date.getFullYear()}&solMonth=${strMonth}`;
 
-    if (nowDate.getMonth() + (count % 12) + 1 > 12) {
-      nowMonth = nowDate.getMonth() + (count % 12) - 12;
-    } else if (nowDate.getMonth() + (count % 12) + 1 <= 0) {
-      nowMonth = nowDate.getMonth() + (count % 12) + 12;
-    } else {
-      nowMonth = nowDate.getMonth() + (count % 12);
+    try {
+      const response = await axios.get(url);
+      const holidataArr = [response.data.response.body.items.item];
+      if (holidataArr[0] === undefined) holidataArr.pop();
+      setHoliDate(holidataArr);
+      console.log("fybc,data");
+      return response;
+    } catch (error) {
+      console.error("There was a problem with your axios request:", error);
+      throw error;
     }
-
-    const dayOneWeek = new Date(nowYear, nowMonth, 1).getDay();
-
-    let weekArr: number[] = [];
-    const result: [number[]] = [[]];
-    const dayArr: number[] = [];
-    result.pop();
-
-    const nowMonthEnd = new Date(nowYear, nowMonth + 1, 0).getDate();
-    const prevMonthEnd = new Date(nowYear, nowMonth, 0).getDate();
-
-    for (let i = dayOneWeek - 1; i >= 0; i--) {
-      dayArr.push(new Date(nowYear, nowMonth - 1, prevMonthEnd - i).getDay());
-      weekArr.push(0);
-    }
-
-    for (let i = 1; i <= nowMonthEnd; i++) {
-      dayArr.push(new Date(nowYear, nowMonth, i).getDay());
-      weekArr.push(new Date(nowYear, nowMonth, i).getDate());
-
-      if (weekArr.length === 7) {
-        result.push(weekArr);
-        weekArr = [];
-      }
-    }
-
-    if (weekArr.length) {
-      while (weekArr.length < 7) {
-        weekArr.push(0);
-      }
-      result.push(weekArr);
-    }
-
-    return { result, dayArr, nowMonth, nowYear };
   };
+  useEffect(() => {
+    const processData = async () => {
+      try {
+        const data = await getHoliday();
+        console.log(data, "fetch 완료");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    processData();
+    console.log("useEffect");
+  }, [date]);
 
-  const date = new Date();
-  const [dateCount, setDateCount] = useState<number>(0);
-  // const [holiday, setHoliday] = useState<DataHoliday>({});
-  const { result, nowMonth, nowYear, dayArr } = monthList(date, dateCount);
-  const allDay: [number[]] = result;
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const monthArr: string[] = [
-    "Jaunary",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
-  // const holidayFunc = (year: number, month: number) => {
-  //   let data: Holiday[] | Holiday = [];
-  //   const strMonth =
-  //     String(month).length < 2 ? "0" + String(month) : String(month);
-  //   const holiData: DataHoliday = {};
-  //   const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${year}&solMonth=${strMonth}`;
-
-  //   axios.get(url).then((res) => {
-  //     data = res.data.response.body.items.item;
-  //     if (data) {
-  //       if (Array.isArray(data)) {
-  //         data.forEach((item: Holiday) => {
-  //           holiData[String(item.locdate).slice(6)] = {
-  //             dateName: item.dateName,
-  //             isHoliday: item.isHoliday,
-  //           };
-  //         });
-  //       } else {
-  //         holiData[`${String(data.locdate).slice(6)}`] = {
-  //           dateName: data.dateName,
-  //           isHoliday: data.isHoliday,
-  //         };
-  //       }
-  //     }
-  //   });
-  //   setHoliday(holiData);
-  // };
-
-  // useEffect(() => {
-  //   holidayFunc(nowYear, nowMonth + 1);
-  // }, []);
   return (
     <Container>
-      <MonthBox>
-        <div>
-          <ArrowBtn onClick={() => setDateCount(dateCount - 1)}>
-            <Arrowimg />
-          </ArrowBtn>
-          <div className="timeBox">
-            <span>{nowYear}</span>
-            <span>{monthArr[nowMonth]}</span>
-          </div>
-
-          <ArrowBtn onClick={() => setDateCount(dateCount + 1)}>
-            <ReverseArrow />
-          </ArrowBtn>
-        </div>
-      </MonthBox>
-
+      <MonthHead date={date} setDate={setDate} />
       <DaysBox>
         <DayWeekBox>
           {dayWeek.map((item: string, key: number) => {
@@ -234,24 +99,11 @@ export default function Month() {
             );
           })}
         </DayWeekBox>
-        {allDay.map((item: number[], idx: number) => {
-          return (
-            <WeekBox key={idx}>
-              {item.map((day: number, key: number) => {
-                return (
-                  <Day
-                    day={day}
-                    getday={dayArr[key]}
-                    date={date}
-                    nowYear={nowYear}
-                    month={nowMonth + 1}
-                    key={key}
-                  ></Day>
-                );
-              })}
-            </WeekBox>
-          );
-        })}
+        {!holidata ? (
+          <div>Loading...</div>
+        ) : (
+          <Week date={date} holidata={holidata} />
+        )}
       </DaysBox>
     </Container>
   );
