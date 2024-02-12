@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import axios from "axios";
+// import axios from "axios";
 
 import Day from "../Components/Month-day";
 import { ReactComponent as Arrow } from "../Img/ep_arrow-right-bold.svg";
@@ -95,6 +95,17 @@ const ReverseArrow = styled(Arrowimg)`
 `;
 
 export default function Month() {
+  // type DataHoliday = {
+  //   [id: string]: { dateName: string; isHoliday: string };
+  // };
+  // interface Holiday {
+  //   dateKind: string;
+  //   dateName: string;
+  //   isHoliday: string;
+  //   locdate: number;
+  //   seq: number;
+  // }
+
   const monthList = (nowDate: Date, count: number) => {
     const nowYear =
       nowDate.getFullYear() + Math.floor((nowDate.getMonth() + count) / 12);
@@ -142,14 +153,10 @@ export default function Month() {
 
     return { result, dayArr, nowMonth, nowYear };
   };
-  const holidayFunc = () => {
-    const url =
-      "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfosolYear=2019&solMonth=03&ServiceKey=xNCeZHfId3LPp8MoaILsSqVIqYQN5uxTchS/MLCXu2SsxVGkccPjqD062/Pdz0WZj8kPRLrTSHEeehS7pLu2iw==";
-    axios.get(url).then((res) => console.log(res.data));
-  };
-  holidayFunc();
+
   const date = new Date();
   const [dateCount, setDateCount] = useState<number>(0);
+  // const [holiday, setHoliday] = useState<DataHoliday>({});
   const { result, nowMonth, nowYear, dayArr } = monthList(date, dateCount);
   const allDay: [number[]] = result;
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -168,6 +175,37 @@ export default function Month() {
     "December",
   ];
 
+  // const holidayFunc = (year: number, month: number) => {
+  //   let data: Holiday[] | Holiday = [];
+  //   const strMonth =
+  //     String(month).length < 2 ? "0" + String(month) : String(month);
+  //   const holiData: DataHoliday = {};
+  //   const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${year}&solMonth=${strMonth}`;
+
+  //   axios.get(url).then((res) => {
+  //     data = res.data.response.body.items.item;
+  //     if (data) {
+  //       if (Array.isArray(data)) {
+  //         data.forEach((item: Holiday) => {
+  //           holiData[String(item.locdate).slice(6)] = {
+  //             dateName: item.dateName,
+  //             isHoliday: item.isHoliday,
+  //           };
+  //         });
+  //       } else {
+  //         holiData[`${String(data.locdate).slice(6)}`] = {
+  //           dateName: data.dateName,
+  //           isHoliday: data.isHoliday,
+  //         };
+  //       }
+  //     }
+  //   });
+  //   setHoliday(holiData);
+  // };
+
+  // useEffect(() => {
+  //   holidayFunc(nowYear, nowMonth + 1);
+  // }, []);
   return (
     <Container>
       <MonthBox>
