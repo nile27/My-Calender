@@ -91,7 +91,6 @@ const ColorBox = styled.div`
 
 export default function Nav() {
   const navi = useNavigate();
-  const date = new Date();
 
   return (
     <Container>
@@ -110,11 +109,7 @@ export default function Nav() {
       <ListBox>
         <span>Menu</span>
 
-        <Listli
-          onClick={() =>
-            navi(`/today/${date.getMonth() + 1}/${date.getDate()}`)
-          }
-        >
+        <Listli onClick={() => navi(`/`)}>
           <img src={Home}></img>
           <span>Home</span>
         </Listli>

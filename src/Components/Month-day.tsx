@@ -80,7 +80,7 @@ const HolidayBox = styled.div`
 const HolidaySpan = styled.span`
   font-size: var(--small-size);
   font-weight: 500;
-  color: ${(prop) => prop.color || "black"};
+  color: ${(p) => p.color || "black"};
   white-space: normal;
 `;
 
@@ -125,7 +125,7 @@ export default function Day(props: {
     <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
       <div className="numberBox">
         <Number
-          background={todayFunc() ? "var(--skyblue)" : "none"}
+          background={todayFunc() ? "var(--skyblue)" : "white"}
           color={todayFunc() ? "white" : colorFunc()}
         >
           {props.day}

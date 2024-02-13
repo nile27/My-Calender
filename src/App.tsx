@@ -34,6 +34,7 @@ function App() {
         <BodyContainer>
           <Clock />
           <Routes>
+            <Route path="/" element={<Main />}></Route>
             <Route path="/today/:month/:day" element={<Main />}></Route>
             <Route path="/month" element={<Month />}></Route>
             <Route path="/search" element={<Search />}></Route>

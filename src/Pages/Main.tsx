@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
 import { TODOdata, TODOOBJArr } from "../type";
 import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
+import Modal from "../Components/Main_AddTodo";
 
 const Container = styled.div`
   width: 100%;
@@ -85,6 +87,9 @@ const TodoBox = styled.div`
 
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
+  const [modal, setModal] = useState<boolean>(false);
+  const params = useParams();
+  console.log(params);
 
   const Tododata: TODOdata = {
     "00": {
@@ -168,7 +173,7 @@ export default function Main() {
         <TodoBox>
           <div className="Header">
             <span>To do</span>
-            <button>
+            <button onClick={() => setModal(!modal)}>
               <img src={Plus}></img>
             </button>
           </div>
@@ -206,6 +211,7 @@ export default function Main() {
           <li className="blank"></li>
         </ul>
       </ScheduleBox>
+      {modal ? <Modal modal={modal} setModal={setModal} /> : null}
     </Container>
   );
 }
