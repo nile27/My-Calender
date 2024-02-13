@@ -1,11 +1,8 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router";
+import { OnClick, NumberProp } from "../type";
 
-interface DayBoxType {
-  onClick?: (e: React.MouseEvent) => void;
-}
-
-const DayBox = styled.li<DayBoxType>`
+const DayBox = styled.li<OnClick>`
   width: 100%;
   height: 100%;
   border: 1px solid var(--line-gray);
@@ -56,11 +53,6 @@ const DayBox = styled.li<DayBoxType>`
     background: var(--whiteblue);
   }
 `;
-
-interface NumberProp {
-  color: string;
-  background: string;
-}
 
 const Number = styled.div<NumberProp>`
   display: flex;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as Check } from "../Img/cil_check-alt.svg";
 
-import { TODOOBJArr } from "../Pages/Main";
+import { TODOOBJArr } from "../type";
 
 const TodoList = styled.li`
   display: flex;

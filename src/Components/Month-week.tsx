@@ -1,27 +1,17 @@
 import styled from "styled-components";
 import Day from "../Components/Month-day";
+import { Holiday, DataHoliday } from "../type";
 const WeekBox = styled.ul`
   width: 100%;
   flex: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
-interface Holiday {
-  dateKind: string;
-  dateName: string;
-  isHoliday: string;
-  locdate: number;
-  seq: number;
-}
 
 interface Prop {
   holidata: Holiday[] | undefined;
   date: Date;
 }
-type DataHoliday = {
-  dateName: string;
-  isHoliday: string;
-};
 
 export default function Week(props: Prop) {
   const { holidata, date } = props;

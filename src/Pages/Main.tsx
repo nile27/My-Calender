@@ -1,22 +1,9 @@
 import styled from "styled-components";
 import { useEffect, useRef } from "react";
+import { TODOdata, TODOOBJArr } from "../type";
 import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
-export interface TODOOBJArr {
-  name: string;
-  tag: string;
-  color: string;
-  time: string;
-  done: boolean;
-}
-export interface Tododata {
-  [key: string]: TODOOBJArr;
-}
-
-export interface ScheduleData {
-  [key: string]: TODOOBJArr;
-}
 
 const Container = styled.div`
   width: 100%;
@@ -99,7 +86,7 @@ const TodoBox = styled.div`
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
 
-  const Tododata: Tododata = {
+  const Tododata: TODOdata = {
     "00": {
       time: "09",
       name: "algorithm",

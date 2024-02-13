@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import axios from "axios";
+import { useState, useEffect } from "react";
+import { Holiday } from "../type";
 import Week from "../Components/Month-week";
 import MonthHead from "../Components/Month-head";
-
-import { useState, useEffect } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -42,13 +42,6 @@ const DayWeekBox = styled.ul`
 `;
 
 export default function Month() {
-  interface Holiday {
-    dateKind: string;
-    dateName: string;
-    isHoliday: string;
-    locdate: number;
-    seq: number;
-  }
   const [date, setDate] = useState<Date>(new Date());
   const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
   const getHoliday = async () => {

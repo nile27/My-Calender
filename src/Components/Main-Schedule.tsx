@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { forwardRef } from "react";
-import { TODOOBJArr } from "../Pages/Main";
+import { TODOOBJArr } from "../type";
 
 const TodoList = styled.li`
   display: flex;
@@ -47,10 +47,6 @@ const ListBody = styled.div`
     }
   }
 `;
-
-export interface ScrollRef {
-  ref: React.MutableRefObject<null | HTMLLIElement>;
-}
 
 interface Prop {
   time: [string, TODOOBJArr | undefined];
