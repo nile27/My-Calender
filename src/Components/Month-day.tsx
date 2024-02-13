@@ -76,6 +76,22 @@ const Number = styled.div<NumberProp>`
   padding: 13px;
 `;
 
+const HolidayBox = styled.div`
+  display: flex;
+  jutify-content: start;
+  width: 70%;
+  height: auto;
+  min-height: auto;
+  padding: 0 5px;
+`;
+
+const HolidaySpan = styled.span`
+  font-size: var(--small-size);
+  font-weight: 500;
+  color: ${(prop) => prop.color || "black"};
+  white-space: normal;
+`;
+
 type DataHoliday = {
   dateName: string;
   isHoliday: string;
@@ -122,8 +138,15 @@ export default function Day(props: {
         >
           {props.day}
         </Number>
-        <div>{props.holiday ? props.holiday.dateName : null}</div>
+        <HolidayBox>
+          <HolidaySpan
+            color={props.holiday?.isHoliday === "Y" ? "red" : "black"}
+          >
+            {props.holiday ? props.holiday.dateName : null}
+          </HolidaySpan>
+        </HolidayBox>
       </div>
+
       <ul className="TodoBox">
         <li>
           <div className="colorBox"></div> <span>algorithm</span>
