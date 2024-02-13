@@ -52,16 +52,18 @@ export default function Month() {
   const [date, setDate] = useState<Date>(new Date());
   const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
   const getHoliday = async () => {
-    const strMonth =
-      String(date.getMonth()).length < 2
-        ? "0" + String(date.getMonth() + 1)
-        : String(date.getMonth() + 1);
+    // const strMonth =
+    //   String(date.getMonth()).length < 2
+    //     ? "0" + String(date.getMonth() + 1)
+    //     : String(date.getMonth() + 1);
 
-    const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${date.getFullYear()}&solMonth=${strMonth}`;
+    const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${date.getFullYear()}&numOfRows=20`;
 
     try {
       const response = await axios.get(url);
-      const holidataArr = [response.data.response.body.items.item];
+      const holidataArr = Array.isArray(response.data.response.body.items.item)
+        ? [...response.data.response.body.items.item]
+        : [response.data.response.body.items.item];
       if (holidataArr[0] === undefined) holidataArr.pop();
       setHoliDate(holidataArr);
       console.log("fybc,data");
@@ -81,8 +83,7 @@ export default function Month() {
       }
     };
     processData();
-    console.log("useEffect");
-  }, [date]);
+  }, [date.getFullYear()]);
 
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -99,11 +100,7 @@ export default function Month() {
             );
           })}
         </DayWeekBox>
-        {!holidata ? (
-          <div>Loading...</div>
-        ) : (
-          <Week date={date} holidata={holidata} />
-        )}
+        <Week date={date} holidata={holidata} />
       </DaysBox>
     </Container>
   );

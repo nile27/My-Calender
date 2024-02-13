@@ -25,8 +25,8 @@ type DataHoliday = {
 
 export default function Week(props: Prop) {
   const { holidata, date } = props;
-  const isHoliday: number[] = holidata
-    ? holidata.map((item: Holiday) => Number(String(item.locdate).slice(6)))
+  const isHoliday: string[] = holidata
+    ? holidata.map((item: Holiday) => String(item.locdate))
     : [];
   const holiday: DataHoliday[] = holidata
     ? holidata.map((item: Holiday) => {
@@ -62,13 +62,23 @@ export default function Week(props: Prop) {
 
     return { result, dayArr, nowMonth, nowYear };
   };
+
   const { result, nowMonth, nowYear, dayArr } = monthList(date);
   const allDay: number[] = result;
   return (
     <>
       <WeekBox>
         {allDay.map((day: number, key: number) => {
-          const idx: number = isHoliday.indexOf(day);
+          const strMonth =
+            String(nowMonth + 1).length < 2
+              ? `0` + `${nowMonth + 1}`
+              : `${nowMonth + 1}`;
+          const strDay = String(day).length < 2 ? `0` + `${day}` : `${day}`;
+
+          const idx: number = isHoliday.indexOf(
+            `${nowYear}` + `${strMonth}` + `${strDay}`,
+          );
+
           return (
             <Day
               day={day}
