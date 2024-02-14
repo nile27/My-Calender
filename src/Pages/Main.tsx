@@ -10,7 +10,6 @@ import Modal from "../Components/Main_AddTodo";
 const Container = styled.div`
   width: 100%;
   height: 90%;
-
   display: flex;
   padding: 2rem 3rem;
   gap: 1rem;

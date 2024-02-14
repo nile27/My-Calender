@@ -1,13 +1,15 @@
 import styled from "styled-components";
 // import axios from "axios";
-import { useEffect, useState } from "react";
 
 const BackgroundBox = styled.div`
   width: 100%;
   height: 100%;
+  top: 0;
+  left: 0;
   background: transparent;
   position: absolute;
-  border: 1px solid black;
+  z-index: 120;
+  overflow: hidden;
 `;
 
 const Container = styled.div`
@@ -20,8 +22,11 @@ const Container = styled.div`
   background: var(--whiteblue);
   border-radius: 20px;
   position: fixed;
-  top: 10rem;
-  left: 53%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 `;
 
 interface Prop {
@@ -30,20 +35,8 @@ interface Prop {
 }
 
 export default function AddTodo(props: Prop) {
-  const [width, setWidth] = useState<number>(window.innerWidth);
   const { modal, setModal } = props;
-  const resizeWidth: number = width * 0.3;
-  const handleResize = () => {
-    setWidth(window.innerWidth);
-  };
 
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [width]);
-  console.log(resizeWidth);
   return (
     <BackgroundBox onClick={() => setModal(!modal)}>
       <Container></Container>

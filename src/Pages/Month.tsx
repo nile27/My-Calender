@@ -1,6 +1,7 @@
 import styled from "styled-components";
+
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Holiday } from "../type";
 import Week from "../Components/Month-week";
 import MonthHead from "../Components/Month-head";
@@ -18,6 +19,13 @@ const DaysBox = styled.div`
   height: 95%;
   display: flex;
   flex-direction: column;
+`;
+const AnimationDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 `;
 
 const DayWeekBox = styled.ul`
@@ -43,13 +51,10 @@ const DayWeekBox = styled.ul`
 
 export default function Month() {
   const [date, setDate] = useState<Date>(new Date());
+  // const controls = useAnimationControls();
+  const nextPage = useRef<HTMLDivElement | null>(null);
   const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
   const getHoliday = async () => {
-    // const strMonth =
-    //   String(date.getMonth()).length < 2
-    //     ? "0" + String(date.getMonth() + 1)
-    //     : String(date.getMonth() + 1);
-
     const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${date.getFullYear()}&numOfRows=20`;
 
     try {
@@ -59,7 +64,7 @@ export default function Month() {
         : [response.data.response.body.items.item];
       if (holidataArr[0] === undefined) holidataArr.pop();
       setHoliDate(holidataArr);
-      console.log("fybc,data");
+
       return response;
     } catch (error) {
       console.error("There was a problem with your axios request:", error);
@@ -70,7 +75,7 @@ export default function Month() {
     const processData = async () => {
       try {
         const data = await getHoliday();
-        console.log(data, "fetch 완료");
+        console.log(data);
       } catch (err) {
         console.error(err);
       }
@@ -82,7 +87,7 @@ export default function Month() {
 
   return (
     <Container>
-      <MonthHead date={date} setDate={setDate} />
+      <MonthHead date={date} setDate={setDate} ref={nextPage} />
       <DaysBox>
         <DayWeekBox>
           {dayWeek.map((item: string, key: number) => {
@@ -93,7 +98,9 @@ export default function Month() {
             );
           })}
         </DayWeekBox>
-        <Week date={date} holidata={holidata} />
+        <AnimationDiv ref={nextPage}>
+          <Week date={date} holidata={holidata} />
+        </AnimationDiv>
       </DaysBox>
     </Container>
   );

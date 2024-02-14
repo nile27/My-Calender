@@ -1,11 +1,6 @@
 import styled from "styled-components";
-
+import { forwardRef } from "react";
 import { ReactComponent as Arrow } from "../Img/ep_arrow-right-bold.svg";
-interface MyDate {
-  setDate: React.Dispatch<React.SetStateAction<Date>>;
-
-  date: Date;
-}
 
 const MonthBox = styled.div`
   width: 100%;
@@ -53,58 +48,68 @@ const Arrowimg = styled(Arrow)`
 const ReverseArrow = styled(Arrowimg)`
   transform: scaleX(-1);
 `;
-export default function MonthHead(props: MyDate) {
-  const { date, setDate } = props;
 
-  const monthArr: string[] = [
-    "Jaunary",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const changeMonth = (count: number) => {
-    const nowDate = new Date(date.getTime());
-    let [yearCount, monthCount] = [0, 0];
-
-    if (nowDate.getMonth() + (count % 12) + 1 > 12) {
-      yearCount++;
-      monthCount = (count % 12) - 12;
-    } else if (nowDate.getMonth() + (count % 12) + 1 <= 0) {
-      yearCount--;
-      monthCount = (count % 12) + 12;
-    } else {
-      monthCount = count % 12;
-    }
-
-    nowDate.setFullYear(nowDate.getFullYear() + yearCount);
-    nowDate.setMonth(nowDate.getMonth() + monthCount);
-    setDate(nowDate);
-  };
-
-  return (
-    <MonthBox>
-      <div>
-        <ArrowBtn onClick={() => changeMonth(-1)}>
-          <Arrowimg />
-        </ArrowBtn>
-        <div className="timeBox">
-          <span>{date.getFullYear()}</span>
-          <span>{monthArr[date.getMonth()]}</span>
-        </div>
-
-        <ArrowBtn onClick={() => changeMonth(1)}>
-          <ReverseArrow />
-        </ArrowBtn>
-      </div>
-    </MonthBox>
-  );
+interface Prop {
+  date: Date;
+  setDate: React.Dispatch<React.SetStateAction<Date>>;
 }
+const MonthHead = forwardRef<null | HTMLDivElement, Prop>(
+  ({ date, setDate }, ref) => {
+    const monthArr: string[] = [
+      "Jaunary",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const changeMonth = (count: number) => {
+      const nowDate = new Date(date.getTime());
+      let [yearCount, monthCount] = [0, 0];
+
+      if (ref && typeof ref !== "function" && ref.current) {
+        ref.current.style.animationPlayState = "running";
+      }
+
+      if (nowDate.getMonth() + (count % 12) + 1 > 12) {
+        yearCount++;
+        monthCount = (count % 12) - 12;
+      } else if (nowDate.getMonth() + (count % 12) + 1 <= 0) {
+        yearCount--;
+        monthCount = (count % 12) + 12;
+      } else {
+        monthCount = count % 12;
+      }
+
+      nowDate.setFullYear(nowDate.getFullYear() + yearCount);
+      nowDate.setMonth(nowDate.getMonth() + monthCount);
+      setDate(nowDate);
+    };
+
+    return (
+      <MonthBox>
+        <div>
+          <ArrowBtn onClick={() => changeMonth(-1)}>
+            <Arrowimg />
+          </ArrowBtn>
+          <div className="timeBox">
+            <span>{date.getFullYear()}</span>
+            <span>{monthArr[date.getMonth()]}</span>
+          </div>
+
+          <ArrowBtn onClick={() => changeMonth(1)}>
+            <ReverseArrow />
+          </ArrowBtn>
+        </div>
+      </MonthBox>
+    );
+  },
+);
+export default MonthHead;

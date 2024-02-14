@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Day from "../Components/Month-day";
 import { Holiday, DataHoliday } from "../type";
+
 const WeekBox = styled.ul`
   width: 100%;
   flex: 1;
@@ -15,6 +16,7 @@ interface Prop {
 
 export default function Week(props: Prop) {
   const { holidata, date } = props;
+
   const isHoliday: string[] = holidata
     ? holidata.map((item: Holiday) => String(item.locdate))
     : [];
@@ -55,6 +57,7 @@ export default function Week(props: Prop) {
 
   const { result, nowMonth, nowYear, dayArr } = monthList(date);
   const allDay: number[] = result;
+
   return (
     <>
       <WeekBox>
