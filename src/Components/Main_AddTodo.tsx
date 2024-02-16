@@ -55,6 +55,11 @@ const Container = styled.div`
   right: 0;
   margin: auto;
   box-shadow: 5px 5px 5px 5px var(--line-gray);
+
+  @media screen and (max-width: 460px) {
+    width: 300px;
+    height: 500px;
+  }
 `;
 
 const ModalInputBox = styled.div`
@@ -133,6 +138,9 @@ const DateBtn = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: 460px) {
+    flex-direction: column;
+  }
   span {
     white-space: no-wrap;
   }
