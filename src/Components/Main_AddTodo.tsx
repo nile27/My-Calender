@@ -1,14 +1,29 @@
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import Xbtn from "../Img/ph_x-bold.svg";
 import Clock from "../Img/tabler_clock.svg";
 import Tag from "../Img/mdi_tag.svg";
+import Plus from "../Img/mingcute_add-fill.svg";
+import DownArrow from "../Img/ep_arrow-down-bold.svg";
+
 import DatePicker from "./DatePicker";
 import TimePicker from "./TimePicker";
+import TagPicker from "./TagPicker";
 
 // import axios from "axios";
 
+const UlKeyframe = keyframes`
+from {
+  opacity: 0;
+  transform: translate3d(0, -10%, 0);
+}
+
+to {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+`;
 const BackgroundBox = styled.div`
   width: 100%;
   height: 100%;
@@ -134,14 +149,78 @@ const TagBox = styled.div`
   width: 100%;
   height: auto;
   display: flex;
+  justify-content: start;
+
   border-bottom: 1px solid var(--light-gray);
+
+  .imgBox {
+    padding: 1rem 0;
+    display: flex;
+    align-items: start;
+  }
+  .plusBtn {
+    padding: 1rem 0;
+    display: flex;
+    align-items: start;
+  }
+`;
+
+const SelectContainer = styled.div`
+  width: 100%;
+  height: auto;
+
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.5rem;
+`;
+
+const InitTag = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   padding: 1rem;
+  cursor: pointer;
+
+  .flexBtn {
+    display: flex;
+    gap: 1rem;
+  }
+  span {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    white-space: no-wrap;
+  }
+`;
+
+const SelectTag = styled(InitTag)`
+  padding: 0;
+  justify-content: start;
 `;
 
 const TagColorBox = styled.div`
   width: 24px;
   height: 24px;
   background: ${(p) => p.color || "var(--line-gray)"};
+`;
+
+const SelectBox = styled.div`
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 5px 5px 5px 5px var(--line-gray);
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+
+  animation: ${UlKeyframe} 0.2s ease-in-out;
 `;
 
 interface Prop {
@@ -155,10 +234,25 @@ export default function AddTodo(props: Prop) {
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [timepicker, setTimePicker] = useState<boolean>(false);
   const [datepicker, setDatePicker] = useState<boolean>(false);
+  const [tagpicker, setTagPicker] = useState<boolean>(false);
+  const [addTag, setAddTag] = useState<boolean>(false);
   const [picktime, setPicktime] = useState<{ start: string; end: string }>({
     start: "",
     end: "",
   });
+
+  const TagArr = [
+    { color: "yellow", name: "homework" },
+    { color: "red", name: "homework" },
+    { color: "black", name: "homework" },
+    { color: "black", name: "homework" },
+    { color: "black", name: "homework" },
+    { color: "red", name: "homework" },
+    { color: "red", name: "homework" },
+    { color: "red", name: "homework" },
+    { color: "red", name: "homework" },
+    { color: "red", name: "homework" },
+  ];
 
   return (
     <>
@@ -219,9 +313,40 @@ export default function AddTodo(props: Prop) {
             </DateBlock>
           </ModalTime>
           <TagBox>
-            <img src={Tag}></img>
-            <TagColorBox></TagColorBox>
+            <div className="imgBox">
+              <img src={Tag}></img>
+            </div>
+            <SelectContainer>
+              <InitTag onClick={() => setTagPicker(!tagpicker)}>
+                <div className="flexBtn">
+                  <TagColorBox />
+                  <span>태그를 선택해주세요.</span>
+                </div>
+                <img src={DownArrow}></img>
+              </InitTag>
+              {tagpicker ? (
+                <SelectBox>
+                  {TagArr.map((item: { color: string; name: string }, key) => {
+                    return (
+                      <SelectTag
+                        key={key}
+                        onClick={() => setTagPicker(!tagpicker)}
+                      >
+                        <TagColorBox color={item.color}> </TagColorBox>
+                        <span>{item.name}</span>
+                      </SelectTag>
+                    );
+                  })}
+                </SelectBox>
+              ) : null}
+            </SelectContainer>
+            <button className="plusBtn" onClick={() => setAddTag(!addTag)}>
+              <img src={Plus}></img>
+            </button>
           </TagBox>
+          {addTag ? (
+            <TagPicker addTag={addTag} setAddTag={setAddTag}></TagPicker>
+          ) : null}
         </ModalInputBox>
       </Container>
     </>
