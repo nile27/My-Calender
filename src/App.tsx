@@ -15,6 +15,7 @@ const Container = styled.div`
   gap: 1rem;
   padding: 1.25rem;
   align-items: flex-start;
+  position: relative;
 `;
 
 const BodyContainer = styled.div`

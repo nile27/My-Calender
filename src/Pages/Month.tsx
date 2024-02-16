@@ -44,7 +44,7 @@ const DayWeekBox = styled.ul`
 
     span {
       font-weight: 600;
-      font-size: 18px;
+      font-size: 62.5%;
     }
   }
 `;

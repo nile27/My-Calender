@@ -78,6 +78,7 @@ const CheckBox = styled.div`
   gap: 0.5rem;
   padding: 0 1.5rem;
   background: white;
+  margin-top: 1rem;
 `;
 const CheckBtn = styled.button`
   width: 100%;

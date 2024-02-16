@@ -8,7 +8,7 @@ const DayBox = styled.li<OnClick>`
   border: 1px solid var(--line-gray);
   padding: 0.5rem;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   flex-direction: column;
   gap: 5%;
@@ -35,7 +35,7 @@ const DayBox = styled.li<OnClick>`
 
     li {
       width: 100%;
-      height: 12px;
+      height: auto;
       display: flex;
       gap: 1rem;
       .colorBox {
@@ -44,7 +44,7 @@ const DayBox = styled.li<OnClick>`
         background-color: ${(prop) => prop.color || "var(--line-gray)"};
       }
       span {
-        font-size: 12px;
+        font-size: 0.8rem;
       }
     }
   }
@@ -52,20 +52,56 @@ const DayBox = styled.li<OnClick>`
   &:hover {
     background: var(--whiteblue);
   }
+
+  @media screen and (max-width: 900px) {
+    .numberbox {
+      padding-right: 0;
+    }
+    li {
+      .colorBox {
+        display: none;
+      }
+      .TodoBox {
+        padding: 0;
+
+        span {
+          font-size: 9px;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 710px) {
+    li {
+      .TodoBox {
+        padding: 0;
+
+        span {
+          font-size: 0px;
+        }
+      }
+    }
+  }
 `;
 
 const Number = styled.div<NumberProp>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 24px;
-  height: 24px;
+  width: 10%;
+  height: 10%;
   color: ${(prop) => prop.color || "black"};
   font-size: var(--normal-size);
   background-color: ${(prop) => prop.background || "var(--skyblue)"};
   border-radius: 50%;
   text-align: center;
-  padding: 13px;
+  padding: 1rem;
+
+  @media screen and (max-width: 900px) {
+    width: auto;
+    height: auto;
+    padding: 0.3rem;
+  }
 `;
 
 const HolidayBox = styled.div`
@@ -75,6 +111,9 @@ const HolidayBox = styled.div`
   height: auto;
   min-height: auto;
   padding: 0 5px;
+  @media screen and (max-width: 900px) {
+    padding: 0;
+  }
 `;
 
 const HolidaySpan = styled.span`
@@ -82,6 +121,10 @@ const HolidaySpan = styled.span`
   font-weight: 500;
   color: ${(p) => p.color || "black"};
   white-space: normal;
+
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 `;
 
 type DataHoliday = {
@@ -140,24 +183,6 @@ export default function Day(props: {
       </div>
 
       <ul className="TodoBox">
-        <li>
-          <div className="colorBox"></div> <span>algorithm</span>
-        </li>
-        <li>
-          <div className="colorBox"></div> <span>algorithm</span>
-        </li>
-        <li>
-          <div className="colorBox"></div> <span>algorithm</span>
-        </li>
-        <li>
-          <div className="colorBox"></div> <span>algorithm</span>
-        </li>
-        <li>
-          <div className="colorBox"></div> <span>algorithm</span>
-        </li>
-        <li>
-          <div className="colorBox"></div> <span>algorithm</span>
-        </li>
         <li>
           <div className="colorBox"></div> <span>algorithm</span>
         </li>

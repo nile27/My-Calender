@@ -2,13 +2,14 @@ import styled from "styled-components";
 
 const SearchBox = styled.li`
   width: 100%;
-  height: 40px;
+  min-height: 40px;
+  height: auto;
   display: flex;
   padding: 1rem;
   justify-content: start;
   align-items: center;
   gap: 3rem;
-
+  flex-wrap: wrap;
   span {
     font-size: 18px;
     font-weight: 500;

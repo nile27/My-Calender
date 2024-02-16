@@ -18,11 +18,10 @@ const MonthBox = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 0;
+      gap: 1rem;
       span {
         font-size: var(--header-size);
         font-weight: 600;
-        min-width: 120px;
         text-align: center;
       }
     }

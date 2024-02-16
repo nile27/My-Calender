@@ -50,7 +50,7 @@ const Container = styled.div`
   padding: 2rem;
   gap: 1rem;
   top: 0;
-  bottom: 0;
+  bottom: 200px;
   left: 0;
   right: 0;
   margin: auto;
@@ -64,6 +64,7 @@ const ModalInputBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  position: relative;
 `;
 const HeaderDiv = styled.div`
   width: 100%;
@@ -317,7 +318,12 @@ export default function AddTodo(props: Prop) {
               <img src={Tag}></img>
             </div>
             <SelectContainer>
-              <InitTag onClick={() => setTagPicker(!tagpicker)}>
+              <InitTag
+                onClick={() => {
+                  setTagPicker(!tagpicker);
+                  if (addTag) setAddTag(false);
+                }}
+              >
                 <div className="flexBtn">
                   <TagColorBox />
                   <span>태그를 선택해주세요.</span>
@@ -330,7 +336,9 @@ export default function AddTodo(props: Prop) {
                     return (
                       <SelectTag
                         key={key}
-                        onClick={() => setTagPicker(!tagpicker)}
+                        onClick={() => {
+                          setTagPicker(!tagpicker);
+                        }}
                       >
                         <TagColorBox color={item.color}> </TagColorBox>
                         <span>{item.name}</span>
@@ -340,7 +348,13 @@ export default function AddTodo(props: Prop) {
                 </SelectBox>
               ) : null}
             </SelectContainer>
-            <button className="plusBtn" onClick={() => setAddTag(!addTag)}>
+            <button
+              className="plusBtn"
+              onClick={() => {
+                setAddTag(!addTag);
+                setTagPicker(false);
+              }}
+            >
               <img src={Plus}></img>
             </button>
           </TagBox>

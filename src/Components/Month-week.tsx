@@ -4,7 +4,7 @@ import { Holiday, DataHoliday } from "../type";
 
 const WeekBox = styled.ul`
   width: 100%;
-  flex: 1;
+  flex: 1 1 0;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
