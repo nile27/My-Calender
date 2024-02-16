@@ -13,6 +13,9 @@ const Container = styled.div`
   display: flex;
   padding: 2rem 3rem;
   gap: 1rem;
+  @media screen and (max-width: 860px) {
+    flex-direction: column;
+  }
 `;
 
 const TodoContainer = styled.div`
