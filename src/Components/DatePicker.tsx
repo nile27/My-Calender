@@ -1,10 +1,24 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import ReactDatePicker, { CalendarContainer } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
 
 import Arrow from "../Img/ep_arrow-right-bold.svg";
+
+const UlKeyframe = keyframes`
+from {
+  opacity: 0;
+  transform: translate3d(0, -10%, 0);
+}
+
+to {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+}
+`;
 const DateWapper = styled.div`
+  animation: ${UlKeyframe} 0.2s ease-in-out;
   position: relative;
   z-index: 200;
   .react-datepicker {

@@ -3,7 +3,9 @@ import styled from "styled-components";
 
 import Xbtn from "../Img/ph_x-bold.svg";
 import Clock from "../Img/tabler_clock.svg";
+import Tag from "../Img/mdi_tag.svg";
 import DatePicker from "./DatePicker";
+import TimePicker from "./TimePicker";
 
 // import axios from "axios";
 
@@ -46,7 +48,7 @@ const ModalInputBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
+  gap: 1rem;
 `;
 const HeaderDiv = styled.div`
   width: 100%;
@@ -74,12 +76,12 @@ const ModalTime = styled.div`
   height: auto;
   border-bottom: 1px solid var(--light-gray);
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
-  padding: 1rem;
-  background: var(--line-gray);
+  padding: 0 1rem;
 
   img {
+    margin-top: 50px;
     width: 24px;
     height: 24px;
   }
@@ -102,6 +104,7 @@ const DateBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-direction: column;
   }
 `;
 
@@ -113,6 +116,7 @@ const DateBtn = styled.button`
   padding: 1rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   span {
     white-space: no-wrap;
   }
@@ -120,6 +124,24 @@ const DateBtn = styled.button`
   &:hover {
     box-shadow: 5px 5px 5px 5px var(--line-gray);
   }
+`;
+
+const TimeBtn = styled(DateBtn)`
+  padding-right: 27%;
+`;
+
+const TagBox = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  border-bottom: 1px solid var(--light-gray);
+  padding: 1rem;
+`;
+
+const TagColorBox = styled.div`
+  width: 24px;
+  height: 24px;
+  background: ${(p) => p.color || "var(--line-gray)"};
 `;
 
 interface Prop {
@@ -131,9 +153,12 @@ export default function AddTodo(props: Prop) {
   const { modal, setModal } = props;
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [timepicker, setTimePicker] = useState<boolean>(false);
   const [datepicker, setDatePicker] = useState<boolean>(false);
-
-  // const timeArr = Array.from({ length: 24 }, (_, i) => i + 1);
+  const [picktime, setPicktime] = useState<{ start: string; end: string }>({
+    start: "",
+    end: "",
+  });
 
   return (
     <>
@@ -160,19 +185,43 @@ export default function AddTodo(props: Prop) {
                       : null}
                   </span>
                 </DateBtn>
+                {datepicker ? (
+                  <DatePicker
+                    startDate={startDate}
+                    endDate={endDate}
+                    datepicker={datepicker}
+                    setDatePicker={setDatePicker}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                  />
+                ) : null}
+                <TimeBtn onClick={() => setTimePicker(!timepicker)}>
+                  <span>
+                    {picktime.start
+                      ? `${picktime.start} : 00`
+                      : `${new Date().getHours()} : 00`}
+                  </span>
+                  <span>
+                    {picktime.end
+                      ? `${picktime.end} : 00 `
+                      : `${new Date().getHours()} : 00`}
+                  </span>
+                </TimeBtn>
+                {timepicker ? (
+                  <TimePicker
+                    picktime={picktime}
+                    setPickTime={setPicktime}
+                    timepicker={timepicker}
+                    setTimePicker={setTimePicker}
+                  />
+                ) : null}
               </div>
-              {datepicker ? (
-                <DatePicker
-                  startDate={startDate}
-                  endDate={endDate}
-                  datepicker={datepicker}
-                  setDatePicker={setDatePicker}
-                  setStartDate={setStartDate}
-                  setEndDate={setEndDate}
-                />
-              ) : null}
             </DateBlock>
           </ModalTime>
+          <TagBox>
+            <img src={Tag}></img>
+            <TagColorBox></TagColorBox>
+          </TagBox>
         </ModalInputBox>
       </Container>
     </>
