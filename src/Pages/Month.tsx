@@ -44,14 +44,16 @@ const DayWeekBox = styled.ul`
 
     span {
       font-weight: 600;
-      font-size: 62.5%;
+      font-size: 100%;
+      @media screen and (max-width: 300px) {
+        font-size: 70%;
+      }
     }
   }
 `;
 
 export default function Month() {
   const [date, setDate] = useState<Date>(new Date());
-  // const controls = useAnimationControls();
   const nextPage = useRef<HTMLDivElement | null>(null);
   const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
   const getHoliday = async () => {

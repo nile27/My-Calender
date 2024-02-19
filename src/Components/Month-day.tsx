@@ -19,7 +19,6 @@ const DayBox = styled.li<OnClick>`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 10px;
   }
 
   .TodoBox {
@@ -31,6 +30,9 @@ const DayBox = styled.li<OnClick>`
     padding: 0.5rem;
     gap: 1rem;
     overflow-y: scroll;
+    white-space: nowrap;
+    overflow-x: hidden;
+
     flex: 1 1 0;
 
     li {
@@ -44,7 +46,8 @@ const DayBox = styled.li<OnClick>`
         background-color: ${(prop) => prop.color || "var(--line-gray)"};
       }
       span {
-        font-size: 0.8rem;
+        font-size: 12px;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -53,31 +56,53 @@ const DayBox = styled.li<OnClick>`
     background: var(--whiteblue);
   }
 
-  @media screen and (max-width: 900px) {
-    .numberbox {
+  @media screen and (min-width: 610px) and (max-width: 900px) {
+    .numberBox {
       padding-right: 0;
     }
-    li {
-      .colorBox {
-        display: none;
-      }
-      .TodoBox {
-        padding: 0;
+    .TodoBox {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      li {
+        .colorBox {
+          display: none;
+        }
 
         span {
-          font-size: 9px;
+          font-size: 70%;
         }
       }
     }
   }
 
-  @media screen and (max-width: 710px) {
-    li {
-      .TodoBox {
+  @media screen and (max-width: 610px) {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    padding: 0.5rem 0;
+    .numberBox {
+      padding-right: 0;
+    }
+    .TodoBox {
+      padding: 0;
+      white-space: nowrap;
+      overflow: hidden;
+
+      li {
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+
         padding: 0;
+        .colorBox {
+          display: none;
+        }
 
         span {
-          font-size: 0px;
+          font-size: 70%;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -101,6 +126,9 @@ const Number = styled.div<NumberProp>`
     width: auto;
     height: auto;
     padding: 0.3rem;
+  }
+  @media screen and (max-width: 375px) {
+    font-size: 70%;
   }
 `;
 

@@ -18,6 +18,9 @@ const GlobalStyles = createGlobalStyle`
   a {
     text-decoration: none;
   }
+  ul{
+    list-style:none;
+  }
 
   li {
     list-style: none;

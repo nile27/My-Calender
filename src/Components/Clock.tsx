@@ -14,6 +14,9 @@ const HeadBox = styled.div`
   }
   > span {
     font-weight: 600;
+    @media screen and (max-width: 500px) {
+      font-size: 70%;
+    }
   }
 `;
 
