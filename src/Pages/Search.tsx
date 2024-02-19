@@ -1,7 +1,11 @@
 import styled from "styled-components";
-import SearchImg from "../Img/mingcute_search-line.svg";
+import { useState } from "react";
+import axios from "axios";
 
+import { SearchData } from "../type";
+import SearchImg from "../Img/mingcute_search-line.svg";
 import SearchList from "../Components/Search-list";
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -56,18 +60,39 @@ const ResultBox = styled.ul`
 `;
 
 export default function Search() {
-  const arr = Array.from({ length: 5 }, () => 0);
+  const [keyword, setKeyword] = useState<string>("");
+  const [data, setData] = useState<SearchData[]>([]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setKeyword(value);
+  };
+
+  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      return axios
+        .get("http://localhost:4000/search")
+        .then((res) => setData(res.data))
+        .catch((err) => console.error(err));
+    }
+    return;
+  };
+
+  console.log(keyword, data);
   return (
     <Container>
       <SearchContainer>
         <SearchBarBox>
           <img src={SearchImg}></img>
-          <SearchBar></SearchBar>
+          <SearchBar
+            onChange={handleInputChange}
+            onKeyDown={(e) => handleKeydown(e)}
+          ></SearchBar>
         </SearchBarBox>
       </SearchContainer>
       <ResultBox>
-        {arr.map((item: number, key: number) => (
-          <SearchList key={key} />
+        {data.map((item: SearchData, key: number) => (
+          <SearchList search={item} key={key} />
         ))}
       </ResultBox>
     </Container>

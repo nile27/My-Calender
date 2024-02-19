@@ -35,3 +35,7 @@ export interface TODOOBJArr {
 export interface TODOdata {
   [key: string]: TODOOBJArr;
 }
+
+export interface SearchData {
+  [key: string]: string;
+}

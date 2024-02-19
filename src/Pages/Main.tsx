@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { TODOdata, TODOOBJArr } from "../type";
@@ -89,54 +90,10 @@ const TodoBox = styled.div`
 
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
+  const [todoData, setTodoDate] = useState<TODOdata>({});
   const [modal, setModal] = useState<boolean>(false);
   const params = useParams();
   console.log(params);
-
-  const Tododata: TODOdata = {
-    "00": {
-      time: "09",
-      name: "algorithm",
-      tag: "Homework",
-      color: "yellow",
-      done: true,
-    },
-    "10": {
-      time: "10",
-      name: "Pen",
-      tag: "What to buy",
-      color: "blue",
-      done: true,
-    },
-    "11": {
-      time: "11",
-      name: "pen",
-      tag: "What to buy",
-      color: "blue",
-      done: false,
-    },
-    "12": {
-      time: "10",
-      name: "key",
-      tag: "What to buy",
-      color: "yellow",
-      done: false,
-    },
-    "20": {
-      time: "10",
-      name: "eraser",
-      tag: "What to buy",
-      color: "yellow",
-      done: false,
-    },
-    "13": {
-      time: "11",
-      name: "mouse",
-      tag: "What to buy",
-      color: "yellow",
-      done: true,
-    },
-  };
 
   const todoArr: TODOOBJArr[] = [];
 
@@ -147,18 +104,29 @@ export default function Main() {
     (_, i) => {
       const idx: string = String(i).length === 1 ? "0" + String(i) : String(i);
 
-      return [idx, Tododata[idx]];
+      return [idx, todoData[idx]];
     },
   );
-  Object.keys(Tododata).forEach((el) => {
-    return Tododata[el].done
-      ? doneArr.push(Tododata[el])
-      : todoArr.push(Tododata[el]);
+  Object.keys(todoData).forEach((el) => {
+    return todoData[el].done
+      ? doneArr.push(todoData[el])
+      : todoArr.push(todoData[el]);
   });
 
   const time: number = new Date().getHours();
 
   useEffect(() => {
+    const dataFunc = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/Todo");
+        const data = res.data;
+        setTodoDate(data);
+        return res;
+      } catch (err) {
+        throw err;
+      }
+    };
+
     const timelineScroll = () => {
       if (scrollRef.current) {
         scrollRef.current?.scrollIntoView({
@@ -167,6 +135,7 @@ export default function Main() {
       }
     };
     timelineScroll();
+    dataFunc();
   }, []);
 
   return (

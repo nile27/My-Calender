@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
-
+import { SearchData } from "../type";
 const SearchBox = styled.li`
   width: 100%;
   min-height: 40px;
@@ -61,10 +61,13 @@ const Search770Box = styled.li`
 const ColorBox = styled.div`
   width: 24px;
   height: 24px;
-  background: ${(prop) => prop.color || "var(--line-gray)"};
+  background: ${(prop) =>
+    prop.color === "null" ? "var(--line-gray)" : prop.color};
 `;
 
-export default function SearchList() {
+export default function SearchList(props: { search: SearchData }) {
+  const { color, name, date, time, tagname } = props.search;
+
   const View: boolean = useMediaQuery({
     query: "(max-width:770px)",
   });
@@ -73,25 +76,25 @@ export default function SearchList() {
       {View ? (
         <Search770Box>
           <div className="tagBox">
-            <ColorBox color={"yellow"}></ColorBox>
-            <span className="tagName">Homework</span>
+            <ColorBox color={color}></ColorBox>
+            <span className="tagName">{tagname}</span>
           </div>
           <div className="todoBox">
             <span>Todo: </span>
-            <span className="todoname">algorithm</span>
+            <span className="todoname">{name}</span>
           </div>
           <div className="timeBox">
-            <span className="date">2024년 1월 11일</span>
-            <span className="time">오전 9시 ~ 10시</span>
+            <span className="date">{date}</span>
+            <span className="time">{time}</span>
           </div>
         </Search770Box>
       ) : (
         <SearchBox>
-          <ColorBox color={"yellow"}></ColorBox>
-          <span className="tagName">Homework</span>
-          <span className="date">2024년 1월 11일</span>
-          <span className="time">오전 9시 ~ 10시</span>
-          <span className="todoname">algorithm</span>
+          <ColorBox color={color}></ColorBox>
+          <span className="tagName">{tagname}</span>
+          <span className="date">{date}</span>
+          <span className="time">{time}</span>
+          <span className="todoname">{name}</span>
         </SearchBox>
       )}
     </>
