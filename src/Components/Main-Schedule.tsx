@@ -20,7 +20,8 @@ const TodoList = styled.li`
 
 const ColorBox = styled.div`
   width: 5px;
-  background-color: ${(prop) => prop.color || "var(--line-gray)"};
+  background-color: ${(prop) =>
+    prop.color === "null" ? "var(--line-gray)" : prop.color};
 `;
 
 const ListBody = styled.div`

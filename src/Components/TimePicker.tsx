@@ -115,7 +115,12 @@ export default function TimePicker(props: Prop) {
   const { picktime, setPickTime, timepicker, setTimePicker } = props;
 
   const handleTimeFunc = () => {
-    if (!picktime.start || !picktime.end || picktime.start > picktime.end) {
+    console.log(picktime.start, picktime.end);
+    if (
+      !picktime.start ||
+      !picktime.end ||
+      Number(picktime.start) > Number(picktime.end)
+    ) {
       alert(
         "시작 시간보다 끝 시간이 작아야 합니다. 시간 선택을 다시 해주세요.",
       );

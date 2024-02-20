@@ -89,7 +89,8 @@ const ListBody = styled.div`
 const ColorBox = styled.div`
   width: 20px;
   height: 20px;
-  background-color: ${(prop) => prop.color || "var(--line-gray)"};
+  background-color: ${(prop) =>
+    prop.color === "null" ? "var(--line-gray)" : prop.color};
   @media screen and (max-width: 460px) {
     display: none;
   }
