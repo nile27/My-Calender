@@ -1,55 +1,56 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true
-  },
-  "extends": [
-    "airbnb-typescript",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-  ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
+    "env": {
+      "browser": true,
+      "es6": true
     },
-    "ecmaVersion": 2018,
-    "project": "./tsconfig.json"
-  },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "import"
-  ],
-  "rules": {
-    "import/no-extraneous-dependencies": 0,
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "mjs": "never",
-        "ts": "never",
-        "tsx": "never",
-        "json": "never"
-      }
-    ]
-  },
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions":[
-          ".jsx",
-          ".tsx",
-          ".js",
-          ".ts"
-        ]
+    "extends": [
+      "airbnb-typescript",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 2018,
+      "project": "./client/tsconfig.json",
+      "createDefaultProgram": true
+    },
+    "plugins": [
+      "react",
+      "@typescript-eslint",
+      "import"
+    ],
+    "rules": {
+      "import/no-extraneous-dependencies": 0,
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "mjs": "never",
+          "ts": "never",
+          "tsx": "never",
+          "json": "never"
+        }
+      ]
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions":[
+            ".jsx",
+            ".tsx",
+            ".js",
+            ".ts"
+          ]
+        }
       }
     }
   }
-}
