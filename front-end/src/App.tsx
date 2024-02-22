@@ -1,25 +1,48 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import styled from "styled-components";
+import GlobalStyles from "./GlobalStyle";
+
+import Main from "./Pages/Main";
+import Nav from "./Pages/Nav";
+import Month from "./Pages/Month";
+import Search from "./Pages/Search";
+import Clock from "./Components/Clock";
+
+const Container = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  gap: 1rem;
+  padding: 1.25rem;
+  align-items: flex-start;
+  position: relative;
+`;
+
+const BodyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <GlobalStyles />
+      <Container>
+        <Nav />
+        <BodyContainer>
+          <Clock />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/today/:month/:day" element={<Main />} />
+            <Route path="/month" element={<Month />} />
+            <Route path="/search" element={<Search />} />
+          </Routes>
+        </BodyContainer>
+      </Container>
+    </BrowserRouter>
   );
 }
 
