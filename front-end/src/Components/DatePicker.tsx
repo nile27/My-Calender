@@ -3,7 +3,8 @@ import ReactDatePicker, { CalendarContainer } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
 import { useSelector, useDispatch } from "react-redux";
-import { selectPickDate, PickDateSlice } from "../Slice/pickDateSlice";
+import { PickDateSlice } from "../Slice/pickDateSlice";
+import { selectTodayDate } from "../Slice/todayDate";
 
 import Arrow from "../Img/ep_arrow-right-bold.svg";
 
@@ -100,6 +101,10 @@ const DateWapper = styled.div`
     .react-datepicker__children-container {
       width: 300px;
     }
+    .react-datepicker__day--disabled {
+      opacity: 0.5; /* 비활성화된 요소에 투명도 적용 */
+      background-color: #f0f0f0; /* 배경색 변경 */
+    }
   }
 `;
 const StyledDatePicker = styled(ReactDatePicker)`
@@ -158,26 +163,42 @@ interface Prop {
 export default function DatePicker(props: Prop) {
   const { datepicker, setDatePicker } = props;
 
-  const pickDate = useSelector(selectPickDate);
+  const today = useSelector(selectTodayDate);
   const dispatch = useDispatch();
 
   const handleDatePicker = (date: [Date, Date]) => {
+    if (date[0]) {
+      dispatch(
+        PickDateSlice.actions.startDate({
+          year: String(date[0].getFullYear()),
+          month: String(date[0].getMonth()),
+          day: String(date[0].getDate()),
+        })
+      );
+    }
     if (date[1]) {
+      dispatch(
+        PickDateSlice.actions.endDate({
+          year: String(date[1].getFullYear()),
+          month: String(date[1].getMonth()),
+          day: String(date[1].getDate()),
+        })
+      );
       setDatePicker(!datepicker);
     }
-    dispatch(PickDateSlice.actions.startDate(date[0]));
-    dispatch(PickDateSlice.actions.endDate(date[1]));
-
-    // console.log(startDate, endDate);
   };
-  console.log(pickDate);
 
   return (
     <DateWapper>
       <StyledDatePicker
         locale={ko}
-        startDate={pickDate.startDate}
-        endDate={pickDate.endDate}
+        startDate={
+          new Date(Number(today.year), Number(today.month), Number(today.day))
+        }
+        endDate={null}
+        minDate={
+          new Date(Number(today.year), Number(today.month), Number(today.day))
+        }
         onChange={(date: [Date, Date]) => handleDatePicker(date)}
         selectsRange
         closeOnScroll
@@ -185,7 +206,7 @@ export default function DatePicker(props: Prop) {
         popperContainer={CalendarContainer}
         renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
           <Customhead>
-            <span>{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
+            <span>{`${date.getFullYear()}년 ${date.getMonth()}월`}</span>
             <div className="btnBox">
               <PrevButton onClick={decreaseMonth} />
               <NextButton onClick={increaseMonth} />

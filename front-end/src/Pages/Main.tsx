@@ -124,7 +124,7 @@ export default function Main() {
         );
         const { data } = res;
         dispatch(TodoSlice.actions.update(data));
-        console.log(todoData);
+
         return res;
       } catch (err) {
         throw err;
@@ -148,11 +148,10 @@ export default function Main() {
         dispatch(TodaySlice.actions.day(String(new Date().getDate())));
       }
     };
-
+    console.log(todoData);
     MainDateFunc();
     timelineScroll();
     dataFunc();
-    console.log(todayTime);
   }, [params]);
 
   return (
@@ -189,7 +188,7 @@ export default function Main() {
         <ul>
           {todayTime.map(
             (item: [string, TODOOBJArr | undefined], key: number) => {
-              return item[1] ? (
+              return key === new Date().getHours() ? (
                 <Scheduler time={item} key={key} ref={scrollRef} />
               ) : (
                 <Scheduler time={item} key={key} ref={undefined} />

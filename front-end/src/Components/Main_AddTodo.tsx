@@ -1,14 +1,15 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import { selectTodayDate } from "../Slice/todayDate";
-import { selectPickDate, PickDateSlice } from "../Slice/pickDateSlice";
-
+import { selectPickDate, PickDateSlice, reset } from "../Slice/pickDateSlice";
 import Xbtn from "../Img/ph_x-bold.svg";
 import Clock from "../Img/tabler_clock.svg";
 import Tag from "../Img/mdi_tag.svg";
 import Plus from "../Img/mingcute_add-fill.svg";
 import DownArrow from "../Img/ep_arrow-down-bold.svg";
+import { CheckBox, CheckBtn } from "../Style/CheckBtn";
 
 import DatePicker from "./DatePicker";
 import TimePicker from "./TimePicker";
@@ -40,11 +41,10 @@ const BackgroundBox = styled.div`
 
 const Container = styled.div`
   width: 450px;
-  max-height: 500px;
   height: auto;
+  max-height: 500px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
   background: white;
   border-radius: 20px;
@@ -70,9 +70,9 @@ const ModalInputBox = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
   position: relative;
+  justify-content: start;
+  gap: 1rem;
 `;
 const HeaderDiv = styled.div`
   width: 100%;
@@ -162,7 +162,7 @@ const TagBox = styled.div`
   height: auto;
   display: flex;
   justify-content: start;
-
+  position: relative;
   border-bottom: 1px solid var(--light-gray);
 
   .imgBox {
@@ -185,6 +185,7 @@ const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 0.5rem;
+  background: white;
 `;
 
 const InitTag = styled.div`
@@ -223,15 +224,19 @@ const TagColorBox = styled.div`
 const SelectBox = styled.div`
   width: 100%;
   height: auto;
-  max-height: 100px;
+  max-height: 150px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: absolute;
+  z-index: 200;
+  top: 100%;
+  right: 0%;
   box-shadow: 5px 5px 5px 5px var(--line-gray);
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
-
+  background: white;
   animation: ${UlKeyframe} 0.2s ease-in-out;
 `;
 
@@ -265,9 +270,25 @@ export default function AddTodo(props: Prop) {
     { color: "red", name: "homework" },
   ];
 
+  const TagOnclickFunc = (color: string, name: string) => {
+    dispatch(PickDateSlice.actions.tagColor(color));
+    dispatch(PickDateSlice.actions.tagName(name));
+    setTagPicker(!tagpicker);
+  };
+
+  const handlePostTodo = () => {
+    setModal(!modal);
+    return axios.post("http://localhost:4000/Todo", { pickDate });
+  };
+
+  const ModalCloseFunc = () => {
+    setModal(!modal);
+    dispatch(reset());
+  };
+
   return (
     <>
-      <BackgroundBox onClick={() => setModal(!modal)} />
+      <BackgroundBox onClick={ModalCloseFunc} />
       <Container>
         <HeaderDiv>
           <button onClick={() => setModal(false)}>
@@ -287,13 +308,13 @@ export default function AddTodo(props: Prop) {
               <div className="flexBtn">
                 <DateBtn onClick={() => setDatePicker(true)}>
                   <span>
-                    {pickDate.startDate !== null
-                      ? `${pickDate.startDate.getFullYear()}년 ${pickDate.startDate.getMonth() + 1}월 ${pickDate.startDate.getDate()}일`
+                    {pickDate.startDate.year.length !== 0
+                      ? `${pickDate.startDate.year}년 ${pickDate.startDate.month}월 ${pickDate.startDate.day}일`
                       : `${today.year}년 ${today.month}월 ${today.day}일`}
                   </span>
                   <span>
-                    {pickDate.endDate !== null
-                      ? `${pickDate.endDate.getFullYear()}년 ${pickDate.endDate.getMonth() + 1}월 ${pickDate.endDate.getDate()}일`
+                    {pickDate.endDate.year.length !== 0
+                      ? `${pickDate.endDate.year}년 ${pickDate.endDate.month}월 ${pickDate.endDate.day}일`
                       : `${today.year}년 ${today.month}월 ${today.day}일`}
                   </span>
                 </DateBtn>
@@ -329,27 +350,40 @@ export default function AddTodo(props: Prop) {
               <img src={Tag} />
             </div>
             <SelectContainer>
-              <InitTag
-                onClick={() => {
-                  setTagPicker(!tagpicker);
-                  if (addTag) setAddTag(false);
-                }}
-              >
-                <div className="flexBtn">
-                  <TagColorBox />
-                  <span>태그를 선택해주세요.</span>
-                </div>
-                <img src={DownArrow} />
-              </InitTag>
+              {pickDate.tagColor ? (
+                <InitTag
+                  onClick={() => {
+                    setTagPicker(!tagpicker);
+                    if (addTag) setAddTag(false);
+                  }}
+                >
+                  <div className="flexBtn">
+                    <TagColorBox color={pickDate.tagColor} />
+                    <span>{pickDate.tagName}</span>
+                  </div>
+                  <img src={DownArrow} />
+                </InitTag>
+              ) : (
+                <InitTag
+                  onClick={() => {
+                    setTagPicker(!tagpicker);
+                    if (addTag) setAddTag(false);
+                  }}
+                >
+                  <div className="flexBtn">
+                    <TagColorBox />
+                    <span>태그를 선택해주세요.</span>
+                  </div>
+                  <img src={DownArrow} />
+                </InitTag>
+              )}
               {tagpicker ? (
                 <SelectBox>
                   {TagArr.map((item: { color: string; name: string }, key) => {
                     return (
                       <SelectTag
                         key={key}
-                        onClick={() => {
-                          setTagPicker(!tagpicker);
-                        }}
+                        onClick={() => TagOnclickFunc(item.color, item.name)}
                       >
                         <TagColorBox color={item.color}> </TagColorBox>
                         <span>{item.name}</span>
@@ -370,6 +404,10 @@ export default function AddTodo(props: Prop) {
             </button>
           </TagBox>
           {addTag ? <TagPicker addTag={addTag} setAddTag={setAddTag} /> : null}
+          <CheckBox>
+            <CheckBtn onClick={() => handlePostTodo()}>확인</CheckBtn>
+            <CheckBtn onClick={ModalCloseFunc}>취소</CheckBtn>
+          </CheckBox>
         </ModalInputBox>
       </Container>
     </>
