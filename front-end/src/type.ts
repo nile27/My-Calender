@@ -21,7 +21,7 @@ export interface OnClick {
 
 export interface NumberProp {
   color: string;
-  background: string;
+  background_color: string;
 }
 
 export interface TODOOBJArr {
@@ -30,6 +30,16 @@ export interface TODOOBJArr {
   color: string;
   time: string;
   done: boolean;
+}
+export interface MonthTodo {
+  color: string[];
+  name: string[];
+  date: string;
+  time: string;
+  tagname: string[];
+  year: string;
+  month: string;
+  day: string;
 }
 
 export interface TODOdata {

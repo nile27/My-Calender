@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { MonthSlice, selectMonth } from "../Slice/monthSlice";
+
 import { Holiday } from "../type";
 import Week from "../Components/Month-week";
 import MonthHead from "../Components/Month-head";
@@ -56,33 +59,40 @@ export default function Month() {
   const [date, setDate] = useState<Date>(new Date());
   const nextPage = useRef<HTMLDivElement | null>(null);
   const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
-  const getHoliday = async () => {
-    const url = `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${date.getFullYear()}&numOfRows=20`;
+  const dispatch = useDispatch();
+  const MonthTodo = useSelector(selectMonth);
 
-    try {
-      const response = await axios.get(url);
-      const holidataArr = Array.isArray(response.data.response.body.items.item)
-        ? [...response.data.response.body.items.item]
-        : [response.data.response.body.items.item];
-      if (holidataArr[0] === undefined) holidataArr.pop();
-      setHoliDate(holidataArr);
-
-      return response;
-    } catch (error) {
-      console.error("There was a problem with your axios request:", error);
-      throw error;
-    }
-  };
   useEffect(() => {
-    const processData = async () => {
+    const getHoliday = async () => {
+      const url = `${process.env.REACT_APP_HOLIDAY_URL}?ServiceKey=${process.env.REACT_APP_HOLIDAY_KEY}&solYear=${date.getFullYear()}&numOfRows=20`;
+
       try {
-        const data = await getHoliday();
-        console.log(data);
-      } catch (err) {
-        console.error(err);
+        const response = await axios.get(url);
+        const holidataArr = Array.isArray(
+          response.data.response.body.items.item
+        )
+          ? [...response.data.response.body.items.item]
+          : [response.data.response.body.items.item];
+        if (holidataArr[0] === undefined) holidataArr.pop();
+        setHoliDate(holidataArr);
+
+        return response;
+      } catch (error) {
+        console.error("There was a problem with your axios request:", error);
+        throw error;
       }
     };
-    processData();
+    const gettodoDate = async () => {
+      const url = "http://localhost:4000/month";
+
+      const data = await axios.get(url);
+
+      dispatch(MonthSlice.actions.monthUpdate(data.data));
+      console.log(MonthTodo, data.data);
+    };
+
+    getHoliday();
+    gettodoDate();
   }, [date.getFullYear()]);
 
   const dayWeek: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];

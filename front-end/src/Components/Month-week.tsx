@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 import Day from "./Month-day";
-import { Holiday, DataHoliday } from "../type";
+import { Holiday, DataHoliday, MonthTodo } from "../type";
+import { selectMonth } from "../Slice/monthSlice";
 
 const WeekBox = styled.ul`
   width: 100%;
@@ -16,6 +18,7 @@ interface Prop {
 
 export default function Week(props: Prop) {
   const { holidata, date } = props;
+  const todoData: MonthTodo[] = useSelector(selectMonth);
 
   const isHoliday: string[] = holidata
     ? holidata.map((item: Holiday) => String(item.locdate))
@@ -56,6 +59,9 @@ export default function Week(props: Prop) {
   };
 
   const { result, nowMonth, nowYear, dayArr } = monthList(date);
+  const todoDay: MonthTodo[] = todoData
+    .filter((el) => nowMonth + 1 === Number(el.month))
+    .sort((a, b) => Number(a.month) - Number(b.month));
   const allDay: number[] = result;
 
   return (
@@ -71,6 +77,7 @@ export default function Week(props: Prop) {
           const idx: number = isHoliday.indexOf(
             `${nowYear}` + `${strMonth}` + `${strDay}`
           );
+          const todoIdx = todoDay.findIndex((el) => el.day === String(day));
 
           return (
             <Day
@@ -80,6 +87,7 @@ export default function Week(props: Prop) {
               month={nowMonth + 1}
               key={key}
               holiday={holiday[idx]}
+              todoDay={todoIdx !== -1 ? todoDay[todoIdx] : undefined}
             />
           );
         })}

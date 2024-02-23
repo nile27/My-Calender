@@ -148,11 +148,12 @@ export default function Main() {
         dispatch(TodaySlice.actions.day(String(new Date().getDate())));
       }
     };
-    console.log(todoData);
+
     MainDateFunc();
     timelineScroll();
     dataFunc();
-  }, [params]);
+    console.log(todoData, params);
+  }, [today, params]);
 
   return (
     <Container>

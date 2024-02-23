@@ -128,7 +128,7 @@ const DownListli = styled(Listli)`
 `;
 const TagBtn = styled(Listli)`
   &:hover {
-    background: none;
+    background-color: none;
   }
 `;
 

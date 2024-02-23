@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router";
-import { OnClick, NumberProp } from "../type";
+import { OnClick, NumberProp, MonthTodo } from "../type";
 
 const DayBox = styled.li<OnClick>`
   width: 100%;
@@ -40,11 +40,7 @@ const DayBox = styled.li<OnClick>`
       height: auto;
       display: flex;
       gap: 1rem;
-      .colorBox {
-        height: 100%;
-        width: 12px;
-        background-color: ${(prop) => prop.color || "var(--line-gray)"};
-      }
+
       span {
         font-size: 12px;
         text-overflow: ellipsis;
@@ -53,7 +49,7 @@ const DayBox = styled.li<OnClick>`
   }
 
   &:hover {
-    background: var(--whiteblue);
+    background-color: var(--whiteblue);
   }
 
   @media screen and (min-width: 610px) and (max-width: 900px) {
@@ -117,7 +113,7 @@ const Number = styled.div<NumberProp>`
   height: 10%;
   color: ${(prop) => prop.color || "black"};
   font-size: var(--normal-size);
-  background-color: ${(prop) => prop.background || "var(--skyblue)"};
+  background-color: ${(prop) => prop.background_color || "var(--skyblue)"};
   border-radius: 50%;
   text-align: center;
   padding: 1rem;
@@ -155,6 +151,20 @@ const HolidaySpan = styled.span`
   }
 `;
 
+const ColorBox = styled.div`
+  height: 100%;
+  width: 12px;
+  background-color: ${(prop) => prop.color || "var(--line-gray)"};
+
+  @media screen and (min-width: 610px) and (max-width: 900px) {
+    display: none;
+  }
+
+  @media screen and (max-width: 610px) {
+    display: none;
+  }
+`;
+
 type DataHoliday = {
   dateName: string;
   isHoliday: string;
@@ -166,6 +176,7 @@ export default function Day(props: {
   day: number;
   nowYear: number;
   getday: number;
+  todoDay: MonthTodo | undefined;
 }) {
   const navi = useNavigate();
   const date = new Date();
@@ -198,7 +209,7 @@ export default function Day(props: {
     <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
       <div className="numberBox">
         <Number
-          background={todayFunc() ? "var(--skyblue)" : "white"}
+          background_color={todayFunc() ? "var(--skyblue)" : "white"}
           color={todayFunc() ? "white" : colorFunc()}
         >
           {props.day}
@@ -213,9 +224,22 @@ export default function Day(props: {
       </div>
 
       <ul className="TodoBox">
-        <li>
-          <div className="colorBox" /> <span>algorithm</span>
-        </li>
+        {props.todoDay &&
+          props.todoDay.name.map((item: string, key: number) => {
+            return (
+              <li key={key}>
+                <ColorBox
+                  className="colorBox"
+                  color={
+                    props.todoDay?.color[key] === "null"
+                      ? undefined
+                      : props.todoDay?.color[key]
+                  }
+                />
+                <span>{item}</span>
+              </li>
+            );
+          })}
       </ul>
     </DayBox>
   ) : (
