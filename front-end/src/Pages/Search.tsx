@@ -76,8 +76,8 @@ export default function Search() {
         .catch((err) => console.error(err));
     }
   };
+  console.log(keyword);
 
-  console.log(keyword, data);
   return (
     <Container>
       <SearchContainer>

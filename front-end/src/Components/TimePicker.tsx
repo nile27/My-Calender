@@ -1,9 +1,13 @@
 import styled, { keyframes } from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { selectPickDate, PickDateSlice } from "../Slice/pickDateSlice";
 
 const Container = styled.div`
   width: 100%;
   height: auto;
   display: flex;
+  position: absolute;
+  z-index: 200;
   justify-content: center;
   flex-direction: column;
   background: white;
@@ -99,27 +103,18 @@ const CheckBtn = styled.button`
 interface Prop {
   timepicker: boolean;
   setTimePicker: React.Dispatch<React.SetStateAction<boolean>>;
-  setPickTime: React.Dispatch<
-    React.SetStateAction<{
-      start: string;
-      end: string;
-    }>
-  >;
-  picktime: {
-    start: string;
-    end: string;
-  };
 }
 
 export default function TimePicker(props: Prop) {
-  const { picktime, setPickTime, timepicker, setTimePicker } = props;
+  const { timepicker, setTimePicker } = props;
+  const picktime = useSelector(selectPickDate);
+  const dispatch = useDispatch();
 
   const handleTimeFunc = () => {
-    console.log(picktime.start, picktime.end);
     if (
-      !picktime.start ||
-      !picktime.end ||
-      Number(picktime.start) > Number(picktime.end)
+      !picktime.startTime ||
+      !picktime.endTime ||
+      Number(picktime.startTime) > Number(picktime.endTime)
     ) {
       alert(
         "시작 시간보다 끝 시간이 작아야 합니다. 시간 선택을 다시 해주세요."
@@ -136,16 +131,16 @@ export default function TimePicker(props: Prop) {
   ) => {
     const { value } = e.target as HTMLInputElement;
     if (start) {
-      setPickTime({ ...picktime, start: `${value}` });
+      dispatch(PickDateSlice.actions.startTime(value));
     } else {
-      setPickTime({ ...picktime, end: `${value}` });
+      dispatch(PickDateSlice.actions.endTime(value));
     }
   };
 
   const timeArr = Array.from({ length: 23 }, (_, i) => i + 1);
   const endTimeArr = Array.from(
-    { length: 24 - Number(picktime.start) },
-    (_, i) => Number(picktime.start) + 1 + i
+    { length: 24 - Number(picktime.startTime) },
+    (_, i) => Number(picktime.startTime) + 1 + i
   );
   return (
     <Container>
@@ -156,7 +151,7 @@ export default function TimePicker(props: Prop) {
             type="text"
             readOnly
             placeholder="시작 시간"
-            value={picktime.start ? `${picktime.start} : 00` : ""}
+            value={picktime.startTime ? `${picktime.startTime} : 00` : ""}
           />
           <SelectBox>
             {timeArr.map((item: number, key: number) => {
@@ -177,7 +172,7 @@ export default function TimePicker(props: Prop) {
             type="text"
             readOnly
             placeholder="끝 시간"
-            value={picktime.end ? `${picktime.end} : 00` : ""}
+            value={picktime.endTime ? `${picktime.endTime} : 00` : ""}
           />
 
           <SelectBox>

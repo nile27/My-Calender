@@ -1,5 +1,8 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+
+import { selectPickDate, PickDateSlice } from "../Slice/pickDateSlice";
 
 import Xbtn from "../Img/ph_x-bold.svg";
 import Clock from "../Img/tabler_clock.svg";
@@ -239,16 +242,14 @@ interface Prop {
 
 export default function AddTodo(props: Prop) {
   const { modal, setModal } = props;
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+
   const [timepicker, setTimePicker] = useState<boolean>(false);
   const [datepicker, setDatePicker] = useState<boolean>(false);
   const [tagpicker, setTagPicker] = useState<boolean>(false);
   const [addTag, setAddTag] = useState<boolean>(false);
-  const [picktime, setPicktime] = useState<{ start: string; end: string }>({
-    start: "",
-    end: "",
-  });
+
+  const pickDate = useSelector(selectPickDate);
+  const dispatch = useDispatch();
 
   const TagArr = [
     { color: "yellow", name: "homework" },
@@ -273,47 +274,47 @@ export default function AddTodo(props: Prop) {
           </button>
         </HeaderDiv>
         <ModalInputBox>
-          <ModalInput placeholder="제목" />
+          <ModalInput
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              dispatch(PickDateSlice.actions.name(e.target.value))
+            }
+            placeholder="제목"
+          />
           <ModalTime>
             <img src={Clock} />
             <DateBlock>
               <div className="flexBtn">
                 <DateBtn onClick={() => setDatePicker(true)}>
                   <span>
-                    {`${startDate.getFullYear()}년 ${startDate.getMonth() + 1}월 ${startDate.getDate()}일`}
+                    {pickDate.startDate !== null &&
+                      `${pickDate.startDate.getFullYear()}년 ${pickDate.startDate.getMonth() + 1}월 ${pickDate.startDate.getDate()}일`}
                   </span>
                   <span>
-                    {endDate !== null
-                      ? `${endDate.getFullYear()}년 ${endDate.getMonth() + 1}월 ${endDate.getDate()}일`
+                    {pickDate.endDate !== null
+                      ? `${pickDate.endDate.getFullYear()}년 ${pickDate.endDate.getMonth() + 1}월 ${pickDate.endDate.getDate()}일`
                       : null}
                   </span>
                 </DateBtn>
                 {datepicker ? (
                   <DatePicker
-                    startDate={startDate}
-                    endDate={endDate}
                     datepicker={datepicker}
                     setDatePicker={setDatePicker}
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
                   />
                 ) : null}
                 <TimeBtn onClick={() => setTimePicker(!timepicker)}>
                   <span>
-                    {picktime.start
-                      ? `${picktime.start} : 00`
+                    {pickDate.startTime
+                      ? `${pickDate.startTime} : 00`
                       : `${new Date().getHours()} : 00`}
                   </span>
                   <span>
-                    {picktime.end
-                      ? `${picktime.end} : 00 `
+                    {pickDate.endTime
+                      ? `${pickDate.endTime} : 00 `
                       : `${new Date().getHours()} : 00`}
                   </span>
                 </TimeBtn>
                 {timepicker ? (
                   <TimePicker
-                    picktime={picktime}
-                    setPickTime={setPicktime}
                     timepicker={timepicker}
                     setTimePicker={setTimePicker}
                   />

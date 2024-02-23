@@ -2,7 +2,11 @@ import styled from "styled-components";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
-import { TODOdata, TODOOBJArr } from "../type";
+import { useSelector, useDispatch } from "react-redux";
+import { TodoSlice, selectTodo } from "../Slice/todoSlice";
+import { TodaySlice, selectTodayDate } from "../Slice/todayDate";
+
+import { TODOOBJArr, TODOdata } from "../type";
 import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
@@ -90,11 +94,11 @@ const TodoBox = styled.div`
 
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
-  const [todoData, setTodoDate] = useState<TODOdata>({});
+  const dispatch = useDispatch();
+  const todoData: TODOdata = useSelector(selectTodo);
+  const today = useSelector(selectTodayDate);
   const [modal, setModal] = useState<boolean>(false);
   const params = useParams();
-  console.log(params);
-
   const todoArr: TODOOBJArr[] = [];
 
   const doneArr: TODOOBJArr[] = [];
@@ -118,9 +122,11 @@ export default function Main() {
   useEffect(() => {
     const dataFunc = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/Todo");
+        const res = await axios.get(
+          `http://localhost:4000/Todo?day=${today.day}`
+        );
         const { data } = res;
-        setTodoDate(data);
+        dispatch(TodoSlice.actions.update(data));
         return res;
       } catch (err) {
         throw err;
@@ -134,9 +140,21 @@ export default function Main() {
         });
       }
     };
+
+    const MainDateFunc = () => {
+      if (params.day !== undefined && params.month !== undefined) {
+        dispatch(TodaySlice.actions.month(params.month));
+        dispatch(TodaySlice.actions.day(params.day));
+      } else {
+        dispatch(TodaySlice.actions.month(String(new Date().getMonth() + 1)));
+        dispatch(TodaySlice.actions.day(String(new Date().getDate())));
+      }
+    };
+
+    MainDateFunc();
     timelineScroll();
     dataFunc();
-  }, []);
+  }, [params]);
 
   return (
     <Container>

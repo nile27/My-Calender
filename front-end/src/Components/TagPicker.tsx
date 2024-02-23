@@ -7,6 +7,8 @@ const Contatiner = styled.div`
   width: 100%;
   height: auto;
   display: flex;
+  position: absolute;
+  z-index: 200;
   flex-direction: column;
   padding: 1rem;
   border-radius: 20px;

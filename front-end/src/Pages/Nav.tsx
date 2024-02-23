@@ -157,15 +157,30 @@ export default function Nav() {
               <DownListBox>
                 <span>Menu</span>
 
-                <DownListli onClick={() => navi(`/`)}>
+                <DownListli
+                  onClick={() => {
+                    navi(`/`);
+                    setIsOpen(!isOpen);
+                  }}
+                >
                   <span>Home</span>
                 </DownListli>
 
-                <DownListli onClick={() => navi("/month")}>
+                <DownListli
+                  onClick={() => {
+                    navi("/month");
+                    setIsOpen(!isOpen);
+                  }}
+                >
                   <span>Month</span>
                 </DownListli>
 
-                <DownListli onClick={() => navi("/search")}>
+                <DownListli
+                  onClick={() => {
+                    navi("/search");
+                    setIsOpen(!isOpen);
+                  }}
+                >
                   <span>Search</span>
                 </DownListli>
               </DownListBox>

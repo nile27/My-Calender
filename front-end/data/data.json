@@ -1,0 +1,46 @@
+{
+  "Todo": [
+    {
+      "time": "09",
+      "name": "algorithm",
+      "tag": "Homework",
+      "color": "yellow",
+      "done": true,
+      "month": 2,
+      "day": 23
+    },
+    {
+      "time": "10",
+      "name": "Pen",
+      "tag": "What to buy",
+      "color": "blue",
+      "done": true,
+      "month": 2,
+      "day": 2
+    }
+  ],
+
+  "search": [
+    {
+      "color": "yellow",
+      "name": "algorithm",
+      "date": "2024년 2월 1일",
+      "time": "09 ~ 10",
+      "tagname": "Homework"
+    },
+    {
+      "color": "blue",
+      "name": "algorithm",
+      "date": "2024년 2월 1일",
+      "time": "09 ~ 10",
+      "tagname": "Homework"
+    },
+    {
+      "color": "null",
+      "name": "algorithm",
+      "date": "2024년 2월 1일",
+      "time": "09 ~ 10",
+      "tagname": "Homework"
+    }
+  ]
+}

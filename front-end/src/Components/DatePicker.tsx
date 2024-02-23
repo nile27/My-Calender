@@ -2,6 +2,8 @@ import styled, { keyframes } from "styled-components";
 import ReactDatePicker, { CalendarContainer } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
+import { useSelector, useDispatch } from "react-redux";
+import { selectPickDate, PickDateSlice } from "../Slice/pickDateSlice";
 
 import Arrow from "../Img/ep_arrow-right-bold.svg";
 
@@ -19,7 +21,7 @@ to {
 `;
 const DateWapper = styled.div`
   animation: ${UlKeyframe} 0.2s ease-in-out;
-  position: relative;
+  position: absolute;
   z-index: 200;
   .react-datepicker {
     padding: 16px;
@@ -149,39 +151,33 @@ const NextButton = styled(PrevButton)`
 
 interface Prop {
   setDatePicker: React.Dispatch<React.SetStateAction<boolean>>;
-  setEndDate: React.Dispatch<React.SetStateAction<Date | null>>;
-  setStartDate: React.Dispatch<React.SetStateAction<Date>>;
+
   datepicker: boolean;
-  startDate: Date;
-  endDate: Date | null;
 }
 
 export default function DatePicker(props: Prop) {
-  const {
-    startDate,
-    endDate,
-    datepicker,
-    setDatePicker,
-    setStartDate,
-    setEndDate,
-  } = props;
+  const { datepicker, setDatePicker } = props;
+
+  const pickDate = useSelector(selectPickDate);
+  const dispatch = useDispatch();
 
   const handleDatePicker = (date: [Date, Date]) => {
     if (date[1]) {
       setDatePicker(!datepicker);
     }
-    setStartDate(date[0]);
-    setEndDate(date[1]);
+    dispatch(PickDateSlice.actions.startDate(date[0]));
+    dispatch(PickDateSlice.actions.endDate(date[1]));
 
-    console.log(startDate, endDate);
+    // console.log(startDate, endDate);
   };
+  console.log(pickDate);
 
   return (
     <DateWapper>
       <StyledDatePicker
         locale={ko}
-        startDate={startDate}
-        endDate={endDate}
+        startDate={pickDate.startDate}
+        endDate={pickDate.endDate}
         onChange={(date: [Date, Date]) => handleDatePicker(date)}
         selectsRange
         closeOnScroll
