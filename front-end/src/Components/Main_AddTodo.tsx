@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-
+import { selectTodayDate } from "../Slice/todayDate";
 import { selectPickDate, PickDateSlice } from "../Slice/pickDateSlice";
 
 import Xbtn from "../Img/ph_x-bold.svg";
@@ -249,6 +249,7 @@ export default function AddTodo(props: Prop) {
   const [addTag, setAddTag] = useState<boolean>(false);
 
   const pickDate = useSelector(selectPickDate);
+  const today = useSelector(selectTodayDate);
   const dispatch = useDispatch();
 
   const TagArr = [
@@ -286,13 +287,14 @@ export default function AddTodo(props: Prop) {
               <div className="flexBtn">
                 <DateBtn onClick={() => setDatePicker(true)}>
                   <span>
-                    {pickDate.startDate !== null &&
-                      `${pickDate.startDate.getFullYear()}년 ${pickDate.startDate.getMonth() + 1}월 ${pickDate.startDate.getDate()}일`}
+                    {pickDate.startDate !== null
+                      ? `${pickDate.startDate.getFullYear()}년 ${pickDate.startDate.getMonth() + 1}월 ${pickDate.startDate.getDate()}일`
+                      : `${today.year}년 ${today.month}월 ${today.day}일`}
                   </span>
                   <span>
                     {pickDate.endDate !== null
                       ? `${pickDate.endDate.getFullYear()}년 ${pickDate.endDate.getMonth() + 1}월 ${pickDate.endDate.getDate()}일`
-                      : null}
+                      : `${today.year}년 ${today.month}월 ${today.day}일`}
                   </span>
                 </DateBtn>
                 {datepicker ? (
