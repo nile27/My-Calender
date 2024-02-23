@@ -14,7 +14,7 @@
       "name": "Pen",
       "tag": "What to buy",
       "color": "blue",
-      "done": true,
+      "done": false,
       "month": 2,
       "day": 2
     }

@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { TodoSlice, selectTodo } from "../Slice/todoSlice";
 import { TodaySlice, selectTodayDate } from "../Slice/todayDate";
 
-import { TODOOBJArr, TODOdata } from "../type";
+import { TODOOBJArr } from "../type";
 import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
@@ -95,7 +95,7 @@ const TodoBox = styled.div`
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
   const dispatch = useDispatch();
-  const todoData: TODOdata = useSelector(selectTodo);
+  const todoData: TODOOBJArr[] = useSelector(selectTodo);
   const today = useSelector(selectTodayDate);
   const [modal, setModal] = useState<boolean>(false);
   const params = useParams();
@@ -107,17 +107,14 @@ export default function Main() {
     { length: 24 },
     (_, i) => {
       const idx: string = String(i).length === 1 ? `0${String(i)}` : String(i);
+      const todoIdx: number = todoData.findIndex((el) => el.time === idx);
 
-      return [idx, todoData[idx]];
+      return todoIdx === -1 ? [idx, undefined] : [idx, todoData[todoIdx]];
     }
   );
-  Object.keys(todoData).forEach((el) => {
-    return todoData[el].done
-      ? doneArr.push(todoData[el])
-      : todoArr.push(todoData[el]);
+  todoData.forEach((el) => {
+    return el.done ? doneArr.push(el) : todoArr.push(el);
   });
-
-  const time: number = new Date().getHours();
 
   useEffect(() => {
     const dataFunc = async () => {
@@ -127,6 +124,7 @@ export default function Main() {
         );
         const { data } = res;
         dispatch(TodoSlice.actions.update(data));
+        console.log(todoData);
         return res;
       } catch (err) {
         throw err;
@@ -154,6 +152,7 @@ export default function Main() {
     MainDateFunc();
     timelineScroll();
     dataFunc();
+    console.log(todayTime);
   }, [params]);
 
   return (
@@ -190,7 +189,7 @@ export default function Main() {
         <ul>
           {todayTime.map(
             (item: [string, TODOOBJArr | undefined], key: number) => {
-              return key === time ? (
+              return item[1] ? (
                 <Scheduler time={item} key={key} ref={scrollRef} />
               ) : (
                 <Scheduler time={item} key={key} ref={undefined} />

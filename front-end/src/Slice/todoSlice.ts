@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { TODOdata } from "../type";
+import { TODOOBJArr } from "../type";
 import { RootState } from "../store";
+
+const initialState: { value: TODOOBJArr[] } = {
+  value: [],
+};
 
 export const TodoSlice = createSlice({
   name: "todoSlice",
-  initialState: {
-    value: {},
-  },
+  initialState,
 
   reducers: {
-    update: (state, action: PayloadAction<TODOdata>) => {
+    update: (state, action: PayloadAction<TODOOBJArr[]>) => {
       state.value = action.payload;
     },
   },
