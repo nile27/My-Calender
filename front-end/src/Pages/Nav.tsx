@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { tagFilterSlice, selectTagDate } from "../Slice/tagFilter";
 
 import Home from "../Img/akar-icons_home-alt1.svg";
 import Calender from "../Img/ic_baseline-calendar-month.svg";
@@ -93,6 +95,10 @@ const ListBox = styled.div`
   background-color: white;
 `;
 
+const TagListBox = styled(ListBox)`
+  gap: 1rem;
+`;
+
 const Listli = styled.button`
   witdh: 100%;
   min-height: 1.5rem;
@@ -127,6 +133,12 @@ const DownListli = styled(Listli)`
   padding: 0px;
 `;
 const TagBtn = styled(Listli)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  > span {
+    font-size: 18px;
+  }
   &:hover {
     background-color: none;
   }
@@ -138,6 +150,11 @@ const ColorBox = styled.div`
   background-color: ${(prop) => prop.color || `var(--light-gray)`};
 `;
 
+interface TagData {
+  color: string;
+  tagName: string;
+}
+
 export default function Nav() {
   const navi = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -145,6 +162,26 @@ export default function Nav() {
     query: "(max-width:1100px)",
   });
 
+  const dispatch = useDispatch();
+
+  const tagData = useSelector(selectTagDate);
+  const { value, visit } = tagData;
+
+  const filterOnclick = (idx: number) => {
+    if (!tagData.visit[idx]) {
+      dispatch(tagFilterSlice.actions.check(idx));
+    } else {
+      dispatch(tagFilterSlice.actions.uncheck(idx));
+    }
+  };
+  useEffect(() => {
+    const tagArr: TagData[] = [
+      { color: "red", tagName: "word" },
+      { color: "blue", tagName: "What to buy" },
+      { color: "yellow", tagName: "Homework" },
+    ];
+    dispatch(tagFilterSlice.actions.get(tagArr));
+  }, []);
   return (
     <Container>
       {View ? (
@@ -219,13 +256,22 @@ export default function Nav() {
               <span>Search</span>
             </Listli>
           </ListBox>
-          <ListBox>
+          <TagListBox>
             <span>Menu</span>
-            <TagBtn>
-              <ColorBox color="blue" />
-              <span>Work</span>
-            </TagBtn>
-          </ListBox>
+            {value.map((item: TagData, key: number) => {
+              return !visit[key] ? (
+                <TagBtn key={key} onClick={() => filterOnclick(key)}>
+                  <ColorBox color={item.color} />
+                  <span>{item.tagName}</span>
+                </TagBtn>
+              ) : (
+                <TagBtn key={key} onClick={() => filterOnclick(key)}>
+                  <ColorBox />
+                  <span>{item.tagName}</span>
+                </TagBtn>
+              );
+            })}
+          </TagListBox>
         </>
       )}
     </Container>

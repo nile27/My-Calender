@@ -2,6 +2,7 @@
   "Todo": [
     {
       "time": "09",
+      "end": "11",
       "name": "algorithm",
       "tag": "Homework",
       "color": "yellow",
@@ -28,64 +29,6 @@
       "done": false,
       "month": 2,
       "day": 2
-    },
-    {
-      "time": "10",
-      "name": "Pen",
-      "tag": "What to buy",
-      "color": "blue",
-      "done": false,
-      "month": 2,
-      "day": 23
-    },
-    {
-      "time": "10",
-      "name": "Pen",
-      "tag": "What to buy",
-      "color": "yellow",
-      "done": false,
-      "month": 2,
-      "day": 10
-    },
-    {
-      "id": "6c9b",
-      "pickDate": {
-        "name": "d",
-        "startDate": {
-          "year": "2024",
-          "month": "2",
-          "day": "23"
-        },
-        "endDate": {
-          "year": "2024",
-          "month": "2",
-          "day": "28"
-        },
-        "startTime": "5",
-        "endTime": "18",
-        "tagColor": "black",
-        "tagName": "homework"
-      }
-    },
-    {
-      "id": "4f1c",
-      "pickDate": {
-        "name": "2d2d",
-        "startDate": {
-          "year": "2024",
-          "month": "2",
-          "day": "2"
-        },
-        "endDate": {
-          "year": "2024",
-          "month": "2",
-          "day": "14"
-        },
-        "startTime": "5",
-        "endTime": "8",
-        "tagColor": "black",
-        "tagName": "homework"
-      }
     }
   ],
   "search": [
@@ -93,7 +36,8 @@
       "color": "yellow",
       "name": "algorithm",
       "date": "2024년 2월 1일",
-      "time": "09 ~ 10",
+      "time": "09",
+      "end": "13",
       "tagname": "Homework"
     },
     {

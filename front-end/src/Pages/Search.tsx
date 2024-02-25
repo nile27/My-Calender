@@ -73,10 +73,9 @@ export default function Search() {
       return axios
         .get("http://localhost:4000/search")
         .then((res) => setData(res.data))
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err, keyword));
     }
   };
-  console.log(keyword);
 
   return (
     <Container>

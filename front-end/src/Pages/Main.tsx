@@ -7,8 +7,10 @@ import { TodoSlice, selectTodo } from "../Slice/todoSlice";
 import { TodaySlice, selectTodayDate } from "../Slice/todayDate";
 import { isUpdateSlice } from "../Slice/isUpdate";
 import { PickDateSlice } from "../Slice/pickDateSlice";
+import { selectTagDate } from "../Slice/tagFilter";
 
 import { TODOOBJArr } from "../type";
+
 import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
@@ -97,11 +99,22 @@ const TodoBox = styled.div`
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
   const dispatch = useDispatch();
-  const todoData: TODOOBJArr[] = useSelector(selectTodo);
   const today = useSelector(selectTodayDate);
+  const tagArr = useSelector(selectTagDate);
+  const { value, visit } = tagArr;
+  const todoData: TODOOBJArr[] = useSelector(selectTodo);
+  const filterData: TODOOBJArr[] = todoData.filter(
+    (item: TODOOBJArr) =>
+      !visit[
+        value.findIndex(
+          (el) => el.tagName === item.tag && el.color === item.color
+        )
+      ]
+  );
 
   const [modal, setModal] = useState<boolean>(false);
   const params = useParams();
+
   const todoArr: TODOOBJArr[] = [];
 
   const doneArr: TODOOBJArr[] = [];
@@ -110,54 +123,16 @@ export default function Main() {
     { length: 24 },
     (_, i) => {
       const idx: string = String(i).length === 1 ? `0${String(i)}` : String(i);
-      const todoIdx: number = todoData.findIndex(
-        (el) => el.time <= idx && idx < el.end
-      );
+      const todoIdx: number = filterData.findIndex((el: TODOOBJArr) => {
+        return el.time <= idx && idx < el.end;
+      });
 
-      return todoIdx === -1 ? [idx, undefined] : [idx, todoData[todoIdx]];
+      return todoIdx === -1 ? [idx, undefined] : [idx, filterData[todoIdx]];
     }
   );
-  todoData.forEach((el) => {
+  filterData.forEach((el) => {
     return el.done ? doneArr.push(el) : todoArr.push(el);
   });
-
-  const MainDateFunc = () => {
-    if (params.day !== undefined && params.month !== undefined) {
-      dispatch(TodaySlice.actions.month(params.month));
-      dispatch(TodaySlice.actions.day(params.day));
-      dispatch(
-        PickDateSlice.actions.startDate({
-          year: String(today.year),
-          month: String(today.month),
-          day: String(today.day),
-        })
-      );
-      dispatch(
-        PickDateSlice.actions.endDate({
-          year: String(today.year),
-          month: String(today.month),
-          day: String(today.day),
-        })
-      );
-    } else {
-      dispatch(TodaySlice.actions.month(String(new Date().getMonth() + 1)));
-      dispatch(TodaySlice.actions.day(String(new Date().getDate())));
-      dispatch(
-        PickDateSlice.actions.startDate({
-          year: String(today.year),
-          month: String(today.month),
-          day: String(today.day),
-        })
-      );
-      dispatch(
-        PickDateSlice.actions.endDate({
-          year: String(today.year),
-          month: String(today.month),
-          day: String(today.day),
-        })
-      );
-    }
-  };
   const isUpdateModalFunc = () => {
     setModal(!modal);
     dispatch(isUpdateSlice.actions.isUpdate(false));
@@ -183,6 +158,43 @@ export default function Main() {
         scrollRef.current?.scrollIntoView({
           block: "start",
         });
+      }
+    };
+    const MainDateFunc = () => {
+      if (params.day !== undefined && params.month !== undefined) {
+        dispatch(TodaySlice.actions.month(params.month));
+        dispatch(TodaySlice.actions.day(params.day));
+        dispatch(
+          PickDateSlice.actions.startDate({
+            year: String(today.year),
+            month: String(today.month),
+            day: String(today.day),
+          })
+        );
+        dispatch(
+          PickDateSlice.actions.endDate({
+            year: String(today.year),
+            month: String(today.month),
+            day: String(today.day),
+          })
+        );
+      } else {
+        dispatch(TodaySlice.actions.month(String(new Date().getMonth() + 1)));
+        dispatch(TodaySlice.actions.day(String(new Date().getDate())));
+        dispatch(
+          PickDateSlice.actions.startDate({
+            year: String(today.year),
+            month: String(today.month),
+            day: String(today.day),
+          })
+        );
+        dispatch(
+          PickDateSlice.actions.endDate({
+            year: String(today.year),
+            month: String(today.month),
+            day: String(today.day),
+          })
+        );
       }
     };
 

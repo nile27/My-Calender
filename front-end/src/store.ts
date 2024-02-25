@@ -4,6 +4,7 @@ import TodaySlice from "./Slice/todayDate";
 import PickDateSlice from "./Slice/pickDateSlice";
 import MonthSlice from "./Slice/monthSlice";
 import isUpdate from "./Slice/isUpdate";
+import tagFilterSlice from "./Slice/tagFilter";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     PickDate: PickDateSlice.reducer,
     Month: MonthSlice.reducer,
     isUpdate: isUpdate.reducer,
+    tagFilter: tagFilterSlice.reducer,
   },
 });
 
