@@ -29,6 +29,7 @@ export interface TODOOBJArr {
   tag: string;
   color: string;
   time: string;
+  end: string;
   done: boolean;
 }
 export interface MonthTodo {
@@ -39,6 +40,7 @@ export interface MonthTodo {
   tagname: string[];
   year: string;
   month: string;
+  end: string;
   day: string;
 }
 

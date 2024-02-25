@@ -104,7 +104,7 @@ const ColorBox = styled.div`
 `;
 
 export default function TodoLi(props: { todo: TODOOBJArr }) {
-  const { name, tag, color, done, time } = props.todo;
+  const { name, tag, color, done, time, end } = props.todo;
   const dispatch = useDispatch();
   const select = useSelector(selectTodo);
   const [modal, setModal] = useState<boolean>(false);
@@ -114,6 +114,7 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
     dispatch(PickDateSlice.actions.tagName(tag));
     dispatch(PickDateSlice.actions.tagColor(color));
     dispatch(PickDateSlice.actions.startTime(time));
+    dispatch(PickDateSlice.actions.endTime(end));
     setModal(!modal);
     dispatch(isUpdateSlice.actions.isUpdate(true));
   };

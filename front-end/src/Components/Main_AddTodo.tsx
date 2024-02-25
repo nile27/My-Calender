@@ -227,15 +227,26 @@ export default function AddTodo(props: Prop) {
 
   const handlePostTodo = () => {
     setModal(!modal);
+    if (!isUpdateModal) {
+      return axios
+        .post("http://localhost:4000/Todo", { ...pickDate })
+        .then(() => dispatch(reset()))
+        .catch((err) => alert(err));
+    }
+
     return axios
-      .post("http://localhost:4000/Todo", { ...pickDate })
-      .then(() => dispatch(reset()));
+      .patch("http://localhost:4000/Todo", { ...pickDate })
+      .then(() => dispatch(reset()))
+      .catch((err) => alert(err));
   };
 
   const ModalCloseFunc = () => {
     setModal(!modal);
     dispatch(reset());
+    dispatch(PickDateSlice.actions.startDate({ ...today }));
+    dispatch(PickDateSlice.actions.endDate({ ...today }));
   };
+  console.log(pickDate.startDate, pickDate.endDate);
 
   return (
     <>

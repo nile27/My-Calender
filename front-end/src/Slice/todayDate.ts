@@ -10,14 +10,18 @@ interface Today {
 interface TodayValue {
   value: Today;
 }
-const date = new Date();
 
-const initialState: TodayValue = {
-  value: {
+const getInitialDate = (): Today => {
+  const date = new Date();
+  return {
     year: String(date.getFullYear()),
     month: String(date.getMonth() + 1),
     day: String(date.getDate()),
-  },
+  };
+};
+
+const initialState: TodayValue = {
+  value: getInitialDate(),
 };
 
 export const TodaySlice = createSlice({

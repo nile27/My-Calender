@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { RootState } from "../store";
 
 interface PickDate {
@@ -55,6 +56,13 @@ export const PickDateSlice = createSlice({
     },
     reset: (state) => {
       state.value = initialState.value;
+    },
+    dateReset: (state) => {
+      state.value = {
+        ...initialState.value,
+        startDate: state.value.startDate,
+        endDate: state.value.endDate,
+      };
     },
   },
 });
