@@ -246,7 +246,6 @@ export default function AddTodo(props: Prop) {
     dispatch(PickDateSlice.actions.startDate({ ...today }));
     dispatch(PickDateSlice.actions.endDate({ ...today }));
   };
-  console.log(pickDate.startDate, pickDate.endDate);
 
   return (
     <>
