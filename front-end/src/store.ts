@@ -3,6 +3,7 @@ import TodoSlice from "./Slice/todoSlice";
 import TodaySlice from "./Slice/todayDate";
 import PickDateSlice from "./Slice/pickDateSlice";
 import MonthSlice from "./Slice/monthSlice";
+import isUpdate from "./Slice/isUpdate";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     Today: TodaySlice.reducer,
     PickDate: PickDateSlice.reducer,
     Month: MonthSlice.reducer,
+    isUpdate: isUpdate.reducer,
   },
 });
 

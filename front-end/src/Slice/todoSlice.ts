@@ -15,6 +15,9 @@ export const TodoSlice = createSlice({
     update: (state, action: PayloadAction<TODOOBJArr[]>) => {
       state.value = action.payload;
     },
+    done: (state, action: PayloadAction<number>) => {
+      state.value[action.payload].done = !state.value[action.payload].done;
+    },
   },
 });
 

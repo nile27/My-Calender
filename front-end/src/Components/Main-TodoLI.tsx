@@ -1,7 +1,14 @@
 import styled from "styled-components";
-import { ReactComponent as Check } from "../Img/cil_check-alt.svg";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { PickDateSlice } from "../Slice/pickDateSlice";
+import { TodoSlice, selectTodo } from "../Slice/todoSlice";
+import { isUpdateSlice } from "../Slice/isUpdate";
 import { TODOOBJArr } from "../type";
+
+import Modal from "./Main_AddTodo";
+import { ReactComponent as Check } from "../Img/cil_check-alt.svg";
+import Plus from "../Img/mingcute_add-fill.svg";
 
 const TodoList = styled.li`
   display: flex;
@@ -97,16 +104,35 @@ const ColorBox = styled.div`
 `;
 
 export default function TodoLi(props: { todo: TODOOBJArr }) {
-  const { name, tag, color, done } = props.todo;
+  const { name, tag, color, done, time } = props.todo;
+  const dispatch = useDispatch();
+  const select = useSelector(selectTodo);
+  const [modal, setModal] = useState<boolean>(false);
+
+  const UpdateOnclick = () => {
+    dispatch(PickDateSlice.actions.name(name));
+    dispatch(PickDateSlice.actions.tagName(tag));
+    dispatch(PickDateSlice.actions.tagColor(color));
+    dispatch(PickDateSlice.actions.startTime(time));
+    setModal(!modal);
+    dispatch(isUpdateSlice.actions.isUpdate(true));
+  };
+
+  const doneOnclick = () => {
+    const idx: number = select.findIndex(
+      (el) => el.tag === tag && el.name === name
+    );
+    dispatch(TodoSlice.actions.done(idx));
+  };
 
   return (
     <TodoList>
       {done ? (
-        <CheckedBtn>
+        <CheckedBtn onClick={doneOnclick}>
           <CheckImg />
         </CheckedBtn>
       ) : (
-        <CheckBtn>
+        <CheckBtn onClick={doneOnclick}>
           <CheckImg />
         </CheckBtn>
       )}
@@ -118,6 +144,10 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
           {tag}
         </div>
       </ListBody>
+      <button onClick={UpdateOnclick}>
+        <img src={Plus} />
+      </button>
+      {!modal ? null : <Modal modal={modal} setModal={setModal} />}
     </TodoList>
   );
 }

@@ -11,6 +11,8 @@ const Contatiner = styled.div`
   padding: 1rem;
   border-radius: 20px;
   background: white;
+  z-index: 200;
+  position: absolute;
   box-shadow: 5px 5px 5px 5px var(--line-gray);
 `;
 const HeaderDiv = styled.div`

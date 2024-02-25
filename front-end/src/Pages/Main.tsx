@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { TodoSlice, selectTodo } from "../Slice/todoSlice";
 import { TodaySlice, selectTodayDate } from "../Slice/todayDate";
+import { isUpdateSlice } from "../Slice/isUpdate";
 
 import { TODOOBJArr } from "../type";
 import Plus from "../Img/mingcute_add-fill.svg";
@@ -116,6 +117,11 @@ export default function Main() {
     return el.done ? doneArr.push(el) : todoArr.push(el);
   });
 
+  const isUpdateModalFunc = () => {
+    setModal(!modal);
+    dispatch(isUpdateSlice.actions.isUpdate(false));
+  };
+
   useEffect(() => {
     const dataFunc = async () => {
       try {
@@ -152,7 +158,6 @@ export default function Main() {
     MainDateFunc();
     timelineScroll();
     dataFunc();
-    console.log(todoData, params);
   }, [today, params]);
 
   return (
@@ -161,7 +166,7 @@ export default function Main() {
         <TodoBox>
           <div className="Header">
             <span>To do</span>
-            <button onClick={() => setModal(!modal)}>
+            <button onClick={isUpdateModalFunc}>
               <img src={Plus} />
             </button>
           </div>
