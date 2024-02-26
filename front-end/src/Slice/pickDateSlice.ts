@@ -24,7 +24,7 @@ const initialState: { value: PickData } = {
     endDate: { year: "", month: "", day: "" },
     startTime: "",
     endTime: "",
-    tagColor: "",
+    tagColor: "null",
     tagName: "",
   },
 };

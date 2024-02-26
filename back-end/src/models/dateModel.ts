@@ -2,34 +2,41 @@ import mongoose from "mongoose";
 
 const dateSchema = new mongoose.Schema({
   year: {
-    type: Number,
-    required: true
+    type: String,
+    required: true,
   },
   month: {
-    type: Number,
-    required: true
+    type: String,
+    required: true,
   },
   day: {
-    type: Number,
-    required: true
+    type: String,
+    required: true,
+  },
+  time: {
+    type: String,
+    required: true,
+  },
+  end: {
+    type: String,
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   tagName: {
     type: String,
-    required: true
+    required: true,
   },
   color: {
     type: String,
-    required: true
+    required: true,
   },
   done: {
     type: Boolean,
-    required: true
+    required: true,
   },
-
 });
 
 const CalenderData = mongoose.model("Calender", dateSchema);

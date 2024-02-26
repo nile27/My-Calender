@@ -178,6 +178,7 @@ export default function Nav() {
     const tagArr: TagData[] = [
       { color: "red", tagName: "word" },
       { color: "blue", tagName: "What to buy" },
+      { color: "red", tagName: "What to buy" },
       { color: "yellow", tagName: "Homework" },
     ];
     dispatch(tagFilterSlice.actions.get(tagArr));
