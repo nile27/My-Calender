@@ -11,6 +11,6 @@ const tagSchema = new mongoose.Schema({
   },
 });
 
-const Tag = mongoose.model("Calender", tagSchema);
+const Tag = mongoose.model("tags", tagSchema);
 
-export default tagSchema;
+export default Tag;

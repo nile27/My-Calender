@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import CalenderData from "../models/dateModel";
+import Tag from "../models/tagModel";
 import { Request, Response } from "express";
 
 interface PostData {
@@ -27,6 +28,7 @@ const getYearData = asyncHandler(async (req: Request, res: Response) => {
 const postYearData = asyncHandler(async (req: Request, res: Response) => {
   const { startDate, endDate, startTime, endTime, name, tagName, color, done } =
     req.body;
+  const tagFilter = await Tag.findOne({ tagName: tagName, color: color });
   let firstDate: Date = new Date();
   let lastDate: string = "";
   let i: number = 0;
@@ -62,12 +64,12 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         year: String(firstDate.getFullYear()),
         month: String(firstDate.getMonth() + 1),
         day: String(firstDate.getDate()),
-        startTime: 13,
-        endTime: 15,
-        name: "algorithm",
-        tagName: "Homework",
-        color: "yellow",
-        done: false,
+        startTime: startTime,
+        endTime: endTime,
+        name: name,
+        tagName: tagName,
+        color: color,
+        done: done,
       });
     }
 
@@ -78,6 +80,9 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
     i += 1;
   }
   arr.forEach((el: PostData) => CalenderData.create({ ...el }));
+  if (!tagFilter) {
+    Tag.create({ tagName: tagName, color: color });
+  }
 
   res.json("일정이 추가 되었습니다.");
 });
