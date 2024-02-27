@@ -33,7 +33,6 @@ const duplicateFunc = async ({
   endTime,
 }: Duplicate): Promise<PostData[]> => {
   if (id) {
-    console.log(id, year, month, day, startTime, endTime);
     const contacts = await CalenderData.find({
       _id: { $ne: "65dd85695f8a1bb5d2759c97" },
       year: year,
@@ -67,7 +66,6 @@ const getYearData = asyncHandler(async (req: Request, res: Response) => {
     month: month,
     day: day,
   });
-  console.log(contacts);
 
   res.status(200).json(contacts);
 });
@@ -133,7 +131,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const patchYearData = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { id }: { id: string } = req.params as { id: string };
   const { startDate, startTime, name, endTime, tagName, color } = req.body;
   let dubplicate: PostData[] = [];
   const tagFilter = await Tag.findOne({ tagName: tagName, color: color });
@@ -146,9 +144,8 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
     startTime: startTime,
     endTime: endTime,
   });
-  console.log("dub", dubplicate);
+
   if (dubplicate.length) {
-    console.log("dub", dubplicate);
     res
       .status(409)
       .send(
@@ -176,4 +173,11 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(upDate);
 });
 
-export default { getYearData, postYearData, patchYearData };
+const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
+  const { id }: { id: string } = req.params as { id: string };
+  const deleteTodo = await CalenderData.deleteOne({ _id: id });
+
+  res.status(200).json(deleteTodo);
+});
+
+export default { getYearData, postYearData, patchYearData, deleteYearData };

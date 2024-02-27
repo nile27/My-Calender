@@ -7,6 +7,9 @@ router
   .get(Controller.getYearData)
   .post(Controller.postYearData);
 
-router.route("/today/:id").patch(Controller.patchYearData);
+router
+  .route("/today/:id")
+  .patch(Controller.patchYearData)
+  .delete(Controller.deleteYearData);
 
 module.exports = router;
