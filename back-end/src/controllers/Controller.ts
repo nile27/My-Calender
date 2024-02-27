@@ -2,12 +2,12 @@ import asyncHandler from "express-async-handler";
 import CalenderData from "../models/dateModel";
 import { Request, Response } from "express";
 
-interface Data {
+interface PostData {
   year: string;
   month: string;
   day: string;
-  time: string;
-  end: string;
+  startTime: Number;
+  endTime: Number;
   name: string;
   tagName: string;
   color: string;
@@ -30,9 +30,9 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
   let firstDate: Date = new Date();
   let lastDate: string = "";
   let i: number = 0;
-  let arr: { year: Number; month: Number; day: Number }[] = [];
+  let arr: PostData[] = [];
   let date = `${endDate.year}-${Number(endDate.month)}-${endDate.day}`;
-  let contacts: Data[] = [];
+  let contacts: PostData[] = [];
   while (lastDate !== date) {
     firstDate = new Date(
       Number(startDate.year),
@@ -57,6 +57,18 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
           `${contacts[0].year}-${contacts[0].month}-${contacts[0].day} 와 일정이 중복됩니다.`
         );
       return;
+    } else {
+      arr.push({
+        year: String(firstDate.getFullYear()),
+        month: String(firstDate.getMonth() + 1),
+        day: String(firstDate.getDate()),
+        startTime: 13,
+        endTime: 15,
+        name: "algorithm",
+        tagName: "Homework",
+        color: "yellow",
+        done: false,
+      });
     }
 
     lastDate = `${firstDate.getFullYear()}-${
@@ -65,6 +77,8 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 
     i += 1;
   }
+  arr.forEach((el: PostData) => CalenderData.create({ ...el }));
+
   res.json("일정이 추가 되었습니다.");
 });
 
