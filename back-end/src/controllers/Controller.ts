@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import CalenderData from "../models/dateModel";
 import Tag from "../models/tagModel";
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 
 interface PostData {
   year: string;
@@ -130,6 +130,30 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json("일정이 추가 되었습니다.");
 });
 
+const postTodoDone = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { id }: { id: string } = req.params as { id: string };
+
+    try {
+      const document = await CalenderData.findById(id);
+
+      if (!document) {
+        res.status(404).json({ message: "문서를 찾을 수 없습니다." });
+        return;
+      }
+
+      document.done = !document.done;
+
+      await document.save();
+
+      res.status(200).json(document);
+    } catch (error) {
+      console.error("Error toggling done status:", error);
+      res.status(500).json({ message: "서버 오류 발생" });
+    }
+  }
+);
+
 const patchYearData = asyncHandler(async (req: Request, res: Response) => {
   const { id }: { id: string } = req.params as { id: string };
   const { startDate, startTime, name, endTime, tagName, color } = req.body;
@@ -180,4 +204,10 @@ const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(deleteTodo);
 });
 
-export default { getYearData, postYearData, patchYearData, deleteYearData };
+export default {
+  getYearData,
+  postYearData,
+  patchYearData,
+  deleteYearData,
+  postTodoDone,
+};

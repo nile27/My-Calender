@@ -12,4 +12,6 @@ router
   .patch(Controller.patchYearData)
   .delete(Controller.deleteYearData);
 
+router.route("/todo/:id").patch(Controller.postTodoDone);
+
 module.exports = router;
