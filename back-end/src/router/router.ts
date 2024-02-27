@@ -3,7 +3,7 @@ import Controller from "../controllers/Controller";
 const router: Router = express.Router();
 
 router
-  .route("/today/:month/:day")
+  .route("/today/:year/:month/:day")
   .get(Controller.getYearData)
   .post(Controller.postYearData);
 

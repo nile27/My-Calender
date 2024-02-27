@@ -13,12 +13,12 @@ const dateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  time: {
-    type: String,
+  startTime: {
+    type: Number,
     required: true,
   },
-  end: {
-    type: String,
+  endTime: {
+    type: Number,
     required: true,
   },
   name: {

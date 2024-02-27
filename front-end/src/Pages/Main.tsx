@@ -161,7 +161,12 @@ export default function Main() {
       }
     };
     const MainDateFunc = () => {
-      if (params.day !== undefined && params.month !== undefined) {
+      if (
+        params.year !== undefined &&
+        params.day !== undefined &&
+        params.month !== undefined
+      ) {
+        dispatch(TodaySlice.actions.year(params.year));
         dispatch(TodaySlice.actions.month(params.month));
         dispatch(TodaySlice.actions.day(params.day));
         dispatch(

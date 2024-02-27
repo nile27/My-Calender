@@ -25,7 +25,8 @@ const getYearData = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const postYearData = asyncHandler(async (req: Request, res: Response) => {
-  const { startDate, endDate, name, tagName, color, done } = req.body;
+  const { startDate, endDate, startTime, endTime, name, tagName, color, done } =
+    req.body;
   let firstDate: Date = new Date();
   let lastDate: string = "";
   let i: number = 0;
@@ -39,12 +40,22 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
       Number(startDate.day) + i
     );
     contacts = await CalenderData.find({
+      year: String(firstDate.getFullYear()),
       month: String(firstDate.getMonth() + 1),
       day: String(firstDate.getDate()),
+      $or: [
+        { startTime: { $gte: startTime, $lte: endTime } },
+        { endTime: { $gte: startTime, $lte: endTime } },
+      ],
     });
+    console.log(contacts);
 
-    if (contacts) {
-      res.send("일정이 중복 되었습니다.");
+    if (contacts.length) {
+      res
+        .status(409)
+        .send(
+          `${contacts[0].year}-${contacts[0].month}-${contacts[0].day} 와 일정이 중복됩니다.`
+        );
       return;
     }
 
@@ -54,18 +65,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 
     i += 1;
   }
-
-  // const data = await CalenderData.create({
-  //   year,
-  //   month,
-  //   day,
-  //   name,
-  //   tagName,
-  //   color,
-  //   done,
-  // });
-  console.log(req.body, date, contacts);
-  res.json(arr);
+  res.json("일정이 추가 되었습니다.");
 });
 
 export default { getYearData, postYearData };

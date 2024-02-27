@@ -3,6 +3,12 @@ export type DataHoliday = {
   isHoliday: string;
 };
 
+export interface ParamsDate {
+  year: string | undefined;
+  month: string | undefined;
+  day: string | undefined;
+}
+
 export interface Holiday {
   dateKind: string;
   dateName: string;

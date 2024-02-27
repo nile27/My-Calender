@@ -36,7 +36,7 @@ function App() {
           <Clock />
           <Routes>
             <Route path="/" element={<Main />} />
-            <Route path="/today/:month/:day" element={<Main />} />
+            <Route path="/today/:year/:month/:day" element={<Main />} />
             <Route path="/month" element={<Month />} />
             <Route path="/search" element={<Search />} />
           </Routes>

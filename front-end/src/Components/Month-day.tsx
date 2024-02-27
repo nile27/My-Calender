@@ -206,7 +206,11 @@ export default function Day(props: {
   }
 
   return props.day !== 0 ? (
-    <DayBox onClick={() => navi(`/today/${props.month}/${props.day}`)}>
+    <DayBox
+      onClick={() =>
+        navi(`/today/${props.nowYear}/${props.month}/${props.day}`)
+      }
+    >
       <div className="numberBox">
         <Number
           background_color={todayFunc() ? "var(--skyblue)" : "white"}
