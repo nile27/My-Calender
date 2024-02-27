@@ -107,7 +107,7 @@ export default function Main() {
     (item: TODOOBJArr) =>
       !visit[
         value.findIndex(
-          (el) => el.tagName === item.tag && el.color === item.color
+          (el) => el.tagName === item.tagName && el.color === item.color
         )
       ]
   );
@@ -124,7 +124,7 @@ export default function Main() {
     (_, i) => {
       const idx: string = String(i).length === 1 ? `0${String(i)}` : String(i);
       const todoIdx: number = filterData.findIndex((el: TODOOBJArr) => {
-        return el.time <= idx && idx < el.end;
+        return el.startTime <= idx && idx < el.endTime;
       });
 
       return todoIdx === -1 ? [idx, undefined] : [idx, filterData[todoIdx]];

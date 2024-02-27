@@ -32,10 +32,10 @@ export interface NumberProp {
 
 export interface TODOOBJArr {
   name: string;
-  tag: string;
+  tagName: string;
   color: string;
-  time: string;
-  end: string;
+  startTime: string;
+  endTime: string;
   done: boolean;
 }
 export interface MonthTodo {

@@ -104,24 +104,24 @@ const ColorBox = styled.div`
 `;
 
 export default function TodoLi(props: { todo: TODOOBJArr }) {
-  const { name, tag, color, done, time, end } = props.todo;
+  const { name, tagName, color, done, startTime, endTime } = props.todo;
   const dispatch = useDispatch();
   const select = useSelector(selectTodo);
   const [modal, setModal] = useState<boolean>(false);
 
   const UpdateOnclick = () => {
     dispatch(PickDateSlice.actions.name(name));
-    dispatch(PickDateSlice.actions.tagName(tag));
+    dispatch(PickDateSlice.actions.tagName(tagName));
     dispatch(PickDateSlice.actions.tagColor(color));
-    dispatch(PickDateSlice.actions.startTime(time));
-    dispatch(PickDateSlice.actions.endTime(end));
+    dispatch(PickDateSlice.actions.startTime(startTime));
+    dispatch(PickDateSlice.actions.endTime(endTime));
     setModal(!modal);
     dispatch(isUpdateSlice.actions.isUpdate(true));
   };
 
   const doneOnclick = () => {
     const idx: number = select.findIndex(
-      (el) => el.tag === tag && el.name === name
+      (el) => el.tagName === tagName && el.name === name
     );
     dispatch(TodoSlice.actions.done(idx));
   };
@@ -142,7 +142,7 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
         <span>{name}</span>
         <div className="tag">
           <ColorBox color={color} />
-          {tag}
+          {tagName}
         </div>
       </ListBody>
       <button onClick={UpdateOnclick}>

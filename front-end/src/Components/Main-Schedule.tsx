@@ -62,7 +62,7 @@ const TodoLi = forwardRef<null | HTMLLIElement, Prop>(({ time }, ref) => {
       <ListBody>
         <span>{todo?.name}</span>
         <div className="time">
-          <span>{todo?.tag}</span>
+          <span>{todo?.tagName}</span>
         </div>
       </ListBody>
     </TodoList>
@@ -73,7 +73,7 @@ const TodoLi = forwardRef<null | HTMLLIElement, Prop>(({ time }, ref) => {
       <ListBody>
         <span>{todo?.name}</span>
         <div className="time">
-          <span>{todo?.tag}</span>
+          <span>{todo?.tagName}</span>
         </div>
       </ListBody>
     </TodoList>

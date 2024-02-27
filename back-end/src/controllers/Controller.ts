@@ -16,13 +16,14 @@ interface PostData {
 }
 
 const getYearData = asyncHandler(async (req: Request, res: Response) => {
-  const { month, day } = req.params;
+  const { year, month, day } = req.params;
   const contacts = await CalenderData.find({
-    month: "2",
-    day: "20",
+    year: year,
+    month: month,
+    day: day,
   });
-  console.log(req.params, contacts);
-  res.json(contacts);
+
+  res.status(200).json(contacts);
 });
 
 const postYearData = asyncHandler(async (req: Request, res: Response) => {
@@ -50,7 +51,6 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         { endTime: { $gte: startTime, $lte: endTime } },
       ],
     });
-    console.log(contacts);
 
     if (contacts.length) {
       res
@@ -84,7 +84,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
     Tag.create({ tagName: tagName, color: color });
   }
 
-  res.json("일정이 추가 되었습니다.");
+  res.status(200).json("일정이 추가 되었습니다.");
 });
 
 export default { getYearData, postYearData };
