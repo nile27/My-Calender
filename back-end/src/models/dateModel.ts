@@ -27,7 +27,6 @@ const dateSchema = new mongoose.Schema({
   },
   tagName: {
     type: String,
-    required: true,
   },
   color: {
     type: String,

@@ -6,12 +6,13 @@ router
   .route("/today/:year/:month/:day")
   .get(Controller.getYearData)
   .post(Controller.postYearData);
-
 router
   .route("/today/:id")
   .patch(Controller.patchYearData)
   .delete(Controller.deleteYearData);
 
 router.route("/todo/:id").patch(Controller.postTodoDone);
+
+router.route("/month/:year");
 
 module.exports = router;

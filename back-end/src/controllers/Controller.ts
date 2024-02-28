@@ -10,7 +10,20 @@ interface PostData {
   startTime: Number;
   endTime: Number;
   name: string;
-  tagName: string;
+  tagName: string | null;
+  color: string;
+  done: boolean;
+}
+
+interface CreateData {
+  _id: string;
+  year: string;
+  month: string;
+  day: string;
+  startTime: Number;
+  endTime: Number;
+  name: string;
+  tagName: string | null;
   color: string;
   done: boolean;
 }
@@ -23,7 +36,7 @@ interface Duplicate {
   startTime: Number;
   endTime: Number;
 }
-
+// 중복 처리 함수
 const duplicateFunc = async ({
   id,
   year,
@@ -32,9 +45,11 @@ const duplicateFunc = async ({
   startTime,
   endTime,
 }: Duplicate): Promise<PostData[]> => {
+  let contacts: PostData[];
+
   if (id) {
-    const contacts = await CalenderData.find({
-      _id: { $ne: "65dd85695f8a1bb5d2759c97" },
+    const documents = await CalenderData.find({
+      _id: { $ne: id },
       year: year,
       month: month,
       day: day,
@@ -43,9 +58,21 @@ const duplicateFunc = async ({
         { endTime: { $gte: startTime, $lte: endTime } },
       ],
     });
-    return contacts;
+
+    // Convert Document array to PostData array
+    contacts = documents.map((doc) => ({
+      year: doc.year,
+      month: doc.month,
+      day: doc.day,
+      startTime: doc.startTime,
+      endTime: doc.endTime,
+      name: doc.name,
+      tagName: doc.tagName || null,
+      color: doc.color,
+      done: doc.done,
+    }));
   } else {
-    const contacts = await CalenderData.find({
+    const documents = await CalenderData.find({
       year: year,
       month: month,
       day: day,
@@ -54,10 +81,25 @@ const duplicateFunc = async ({
         { endTime: { $gte: startTime, $lte: endTime } },
       ],
     });
-    return contacts;
+
+    // Convert Document array to PostData array
+    contacts = documents.map((doc) => ({
+      year: doc.year,
+      month: doc.month,
+      day: doc.day,
+      startTime: doc.startTime,
+      endTime: doc.endTime,
+      name: doc.name,
+      tagName: doc.tagName || null,
+      color: doc.color,
+      done: doc.done,
+    }));
   }
+
+  return contacts;
 };
 
+// Main - get /today/:year/:month/:day
 const getYearData = asyncHandler(async (req: Request, res: Response) => {
   const { year, month, day } = req.params;
 
@@ -70,14 +112,16 @@ const getYearData = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(contacts);
 });
 
+// Main - post /today/:year/:month/:day
 const postYearData = asyncHandler(async (req: Request, res: Response) => {
+  const { year, month, day } = req.params;
   const { startDate, endDate, startTime, endTime, name, tagName, color, done } =
     req.body;
   const tagFilter = await Tag.findOne({ tagName: tagName, color: color });
   let firstDate: Date = new Date();
   let lastDate: string = "";
   let i: number = 0;
-  let arr: PostData[] = [];
+  let arr: CreateData[] = [];
   let date = `${endDate.year}-${Number(endDate.month)}-${endDate.day}`;
   let dubplicate: PostData[] = [];
   while (lastDate !== date) {
@@ -103,7 +147,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         );
       return;
     } else {
-      arr.push({
+      const createdData = await CalenderData.create({
         year: String(firstDate.getFullYear()),
         month: String(firstDate.getMonth() + 1),
         day: String(firstDate.getDate()),
@@ -114,6 +158,18 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         color: color,
         done: done,
       });
+      arr.push({
+        _id: createdData._id.toString(),
+        year: createdData.year,
+        month: createdData.month,
+        day: createdData.day,
+        startTime: createdData.startTime,
+        endTime: createdData.endTime,
+        name: createdData.name,
+        tagName: createdData.tagName || null, // undefined인 경우 null로 처리
+        color: createdData.color,
+        done: createdData.done,
+      });
     }
 
     lastDate = `${firstDate.getFullYear()}-${
@@ -122,38 +178,24 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 
     i += 1;
   }
-  arr.forEach((el: PostData) => CalenderData.create({ ...el }));
-  if (!tagFilter) {
+  // arr.forEach((el: PostData) => CalenderData.create({ ...el }));
+  if (tagName && !tagFilter) {
     Tag.create({ tagName: tagName, color: color });
   }
 
-  res.status(200).json("일정이 추가 되었습니다.");
+  // const updatedContacts = await CalenderData.find({
+  //   year: year,
+  //   month: month,
+  //   day: day,
+  // });
+
+  res.status(200).json({
+    message: "일정이 추가 되었습니다.",
+    updatedContact: arr,
+  });
 });
 
-const postTodoDone = asyncHandler(
-  async (req: Request, res: Response): Promise<void> => {
-    const { id }: { id: string } = req.params as { id: string };
-
-    try {
-      const document = await CalenderData.findById(id);
-
-      if (!document) {
-        res.status(404).json({ message: "문서를 찾을 수 없습니다." });
-        return;
-      }
-
-      document.done = !document.done;
-
-      await document.save();
-
-      res.status(200).json(document);
-    } catch (error) {
-      console.error("Error toggling done status:", error);
-      res.status(500).json({ message: "서버 오류 발생" });
-    }
-  }
-);
-
+// Main - patch /today/:id
 const patchYearData = asyncHandler(async (req: Request, res: Response) => {
   const { id }: { id: string } = req.params as { id: string };
   const { startDate, startTime, name, endTime, tagName, color } = req.body;
@@ -184,7 +226,7 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
     {
       startTime: startTime,
       endTime: endTime,
-      tagName: tagName,
+      tagName: tagName ? tagName : "",
       color: color,
       name: name,
     },
@@ -197,12 +239,39 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(upDate);
 });
 
+// Main - Delete /today/:id
 const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
   const { id }: { id: string } = req.params as { id: string };
   const deleteTodo = await CalenderData.deleteOne({ _id: id });
 
   res.status(200).json(deleteTodo);
 });
+
+// Todo Post /todo/:id
+
+const postTodoDone = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { id }: { id: string } = req.params as { id: string };
+
+    try {
+      const document = await CalenderData.findById(id);
+
+      if (!document) {
+        res.status(404).json({ message: "문서를 찾을 수 없습니다." });
+        return;
+      }
+
+      document.done = !document.done;
+
+      await document.save();
+
+      res.status(200).json(document);
+    } catch (error) {
+      console.error("Error toggling done status:", error);
+      res.status(500).json({ message: "서버 오류 발생" });
+    }
+  }
+);
 
 export default {
   getYearData,
