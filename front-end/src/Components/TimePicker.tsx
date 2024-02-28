@@ -132,8 +132,8 @@ export default function TimePicker(props: Prop) {
 
       return;
     }
-    dispatch(PickDateSlice.actions.startTime(pickedTime.start));
-    dispatch(PickDateSlice.actions.endTime(pickedTime.end));
+    dispatch(PickDateSlice.actions.startTime(Number(pickedTime.start)));
+    dispatch(PickDateSlice.actions.endTime(Number(pickedTime.end)));
     setTimePicker(!timepicker);
   };
 
@@ -152,7 +152,7 @@ export default function TimePicker(props: Prop) {
   const timeArr = Array.from({ length: 23 }, (_, i) => i + 1);
   const endTimeArr = Array.from(
     { length: 24 - Number(pickedTime.start) },
-    (_, i) => Number(pickedTime.start) + 1 + i
+    (_, i) => (Number(pickedTime.start) ? Number(pickedTime.start) + i : i + 1)
   );
   return (
     <Container>

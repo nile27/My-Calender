@@ -158,18 +158,23 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         color: color,
         done: done,
       });
-      arr.push({
-        _id: createdData._id.toString(),
-        year: createdData.year,
-        month: createdData.month,
-        day: createdData.day,
-        startTime: createdData.startTime,
-        endTime: createdData.endTime,
-        name: createdData.name,
-        tagName: createdData.tagName || null, // undefined인 경우 null로 처리
-        color: createdData.color,
-        done: createdData.done,
-      });
+      if (
+        year === String(firstDate.getFullYear()) &&
+        month === String(firstDate.getMonth() + 1) &&
+        day === String(firstDate.getDate())
+      )
+        arr.push({
+          _id: createdData._id.toString(),
+          year: createdData.year,
+          month: createdData.month,
+          day: createdData.day,
+          startTime: createdData.startTime,
+          endTime: createdData.endTime,
+          name: createdData.name,
+          tagName: createdData.tagName || null, // undefined인 경우 null로 처리
+          color: createdData.color,
+          done: createdData.done,
+        });
     }
 
     lastDate = `${firstDate.getFullYear()}-${

@@ -31,12 +31,16 @@ export interface NumberProp {
 }
 
 export interface TODOOBJArr {
+  _id: string;
   name: string;
   tagName: string;
   color: string;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
   done: boolean;
+  year: string;
+  month: string;
+  day: string;
 }
 export interface MonthTodo {
   color: string[];
@@ -56,4 +60,21 @@ export interface TODOdata {
 
 export interface SearchData {
   [key: string]: string;
+}
+
+export interface PickYear {
+  year: string;
+  month: string;
+  day: string;
+}
+export interface PickData {
+  _id: string;
+  name: string;
+  startDate: PickYear;
+  endDate: PickYear;
+  startTime: number;
+  endTime: number;
+  color: string;
+  tagName: string;
+  done: boolean;
 }

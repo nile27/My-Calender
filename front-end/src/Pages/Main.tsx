@@ -101,6 +101,7 @@ export default function Main() {
   const dispatch = useDispatch();
   const today = useSelector(selectTodayDate);
   const tagArr = useSelector(selectTagDate);
+
   const { value, visit } = tagArr;
   const todoData: TODOOBJArr[] = useSelector(selectTodo);
   const filterData: TODOOBJArr[] = todoData.filter(
@@ -124,7 +125,7 @@ export default function Main() {
     (_, i) => {
       const idx: string = String(i).length === 1 ? `0${String(i)}` : String(i);
       const todoIdx: number = filterData.findIndex((el: TODOOBJArr) => {
-        return el.startTime <= idx && idx < el.endTime;
+        return el.startTime <= Number(idx) && Number(idx) <= el.endTime;
       });
 
       return todoIdx === -1 ? [idx, undefined] : [idx, filterData[todoIdx]];
@@ -142,10 +143,12 @@ export default function Main() {
     const dataFunc = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4000/Todo?day=${today.day}`
+          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`
         );
         const { data } = res;
+        console.log(data);
         dispatch(TodoSlice.actions.update(data));
+        sessionStorage.setItem("todoData", JSON.stringify(data));
 
         return res;
       } catch (err) {
@@ -201,12 +204,22 @@ export default function Main() {
           })
         );
       }
+      dispatch(PickDateSlice.actions.startTime(new Date().getHours()));
+      dispatch(PickDateSlice.actions.endTime(new Date().getHours()));
     };
 
     MainDateFunc();
     timelineScroll();
     dataFunc();
-  }, [today, params]);
+    if (sessionStorage.getItem("todoData") || todoData.length === 0) {
+      const storedData = sessionStorage.getItem("todoData");
+      const parsedData = storedData ? JSON.parse(storedData) : [];
+      console.log("지워짐");
+      dispatch(TodoSlice.actions.update(parsedData));
+    }
+
+    console.log(todoData, filterData, params);
+  }, [params, today]);
 
   return (
     <Container>
@@ -215,7 +228,7 @@ export default function Main() {
           <div className="Header">
             <span>To do</span>
             <button onClick={isUpdateModalFunc}>
-              <img src={Plus} />
+              <img src={Plus} alt="Add" />
             </button>
           </div>
           <ul>
@@ -252,7 +265,7 @@ export default function Main() {
           <li className="blank" />
         </ul>
       </ScheduleBox>
-      {modal ? <Modal modal={modal} setModal={setModal} /> : null}
+      {modal && <Modal modal={modal} setModal={setModal} />}
     </Container>
   );
 }

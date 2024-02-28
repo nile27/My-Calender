@@ -47,7 +47,8 @@
     "react/jsx-no-useless-fragment": "off",
     "no-useless-catch": "off",
     "consistent-return": "off",
-    "no-alert": "off"
+    "no-alert": "off",
+    "no-underscore-dangle": "off"
   },
   "settings": {
     "import/resolver": {

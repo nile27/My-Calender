@@ -1,31 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { PickData, PickYear } from "../type";
 import { RootState } from "../store";
-
-interface PickDate {
-  year: string;
-  month: string;
-  day: string;
-}
-interface PickData {
-  name: string;
-  startDate: PickDate;
-  endDate: PickDate;
-  startTime: string;
-  endTime: string;
-  tagColor: string;
-  tagName: string;
-}
 
 const initialState: { value: PickData } = {
   value: {
+    _id: "",
     name: "",
     startDate: { year: "", month: "", day: "" },
     endDate: { year: "", month: "", day: "" },
-    startTime: "",
-    endTime: "",
-    tagColor: "null",
+    startTime: 0,
+    endTime: 0,
+    color: "null",
     tagName: "",
+    done: false,
   },
 };
 
@@ -33,23 +20,26 @@ export const PickDateSlice = createSlice({
   name: "pickDateSlice",
   initialState,
   reducers: {
-    startDate: (state, action: PayloadAction<PickDate>) => {
+    id: (state, action: PayloadAction<string>) => {
+      state.value._id = action.payload;
+    },
+    startDate: (state, action: PayloadAction<PickYear>) => {
       state.value.startDate = action.payload;
     },
-    endDate: (state, action: PayloadAction<PickDate>) => {
+    endDate: (state, action: PayloadAction<PickYear>) => {
       state.value.endDate = action.payload;
     },
     name: (state, action: PayloadAction<string>) => {
       state.value.name = action.payload;
     },
-    startTime: (state, action: PayloadAction<string>) => {
+    startTime: (state, action: PayloadAction<number>) => {
       state.value.startTime = action.payload;
     },
-    endTime: (state, action: PayloadAction<string>) => {
+    endTime: (state, action: PayloadAction<number>) => {
       state.value.endTime = action.payload;
     },
     tagColor: (state, action: PayloadAction<string>) => {
-      state.value.tagColor = action.payload;
+      state.value.color = action.payload;
     },
     tagName: (state, action: PayloadAction<string>) => {
       state.value.tagName = action.payload;

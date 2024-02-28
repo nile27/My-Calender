@@ -5,6 +5,7 @@ import axios from "axios";
 import { selectTodayDate } from "../Slice/todayDate";
 import { selectPickDate, PickDateSlice, reset } from "../Slice/pickDateSlice";
 import { isUpdate } from "../Slice/isUpdate";
+import TodoSlice from "../Slice/todoSlice";
 import Xbtn from "../Img/ph_x-bold.svg";
 import Clock from "../Img/tabler_clock.svg";
 import Tag from "../Img/mdi_tag.svg";
@@ -204,6 +205,7 @@ export default function AddTodo(props: Prop) {
   const pickDate = useSelector(selectPickDate);
   const today = useSelector(selectTodayDate);
   const isUpdateModal = useSelector(isUpdate);
+
   const dispatch = useDispatch();
 
   const TagArr = [
@@ -225,19 +227,39 @@ export default function AddTodo(props: Prop) {
     setTagPicker(!tagpicker);
   };
 
-  const handlePostTodo = () => {
+  const handlePostTodo = async () => {
     setModal(!modal);
     if (!isUpdateModal) {
-      return axios
-        .post("http://localhost:4000/Todo", { ...pickDate })
-        .then(() => dispatch(reset()))
-        .catch((err) => alert(err));
-    }
+      try {
+        const res = await axios.post(
+          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`,
+          { ...pickDate }
+        );
 
-    return axios
-      .patch("http://localhost:4000/Todo", { ...pickDate })
-      .then(() => dispatch(reset()))
-      .catch((err) => alert(err));
+        const sessionDataString = sessionStorage.getItem("todoData");
+        console.log(res);
+        if (sessionDataString) {
+          const sessionData = JSON.parse(sessionDataString);
+          dispatch(TodoSlice.actions.postUpdate(res.data.updatedContact[0]));
+          if (sessionData) sessionData.push(res.data.updatedContact[0]);
+          console.log(sessionData);
+          sessionStorage.setItem("todoData", JSON.stringify(sessionData));
+          console.log(res.data.updatedContact);
+          dispatch(reset());
+        }
+      } catch (err) {
+        console.error(err);
+        alert("제목을 입력해주세요");
+      }
+    } else {
+      return axios
+        .patch(`http://localhost:4000/today/${pickDate._id}`, { ...pickDate })
+        .then(() => {
+          dispatch(TodoSlice.actions.patchUpdate({ ...pickDate }));
+          dispatch(reset());
+        })
+        .catch((err) => alert(err.response.data));
+    }
   };
 
   const ModalCloseFunc = () => {
@@ -246,7 +268,7 @@ export default function AddTodo(props: Prop) {
     dispatch(PickDateSlice.actions.startDate({ ...today }));
     dispatch(PickDateSlice.actions.endDate({ ...today }));
   };
-
+  console.log(pickDate);
   return (
     <>
       <BackgroundBox onClick={ModalCloseFunc} />
@@ -315,7 +337,7 @@ export default function AddTodo(props: Prop) {
               <img src={Tag} />
             </div>
             <SelectContainer>
-              {pickDate.tagColor ? (
+              {pickDate.color ? (
                 <InitTag
                   onClick={() => {
                     setTagPicker(!tagpicker);
@@ -323,7 +345,7 @@ export default function AddTodo(props: Prop) {
                   }}
                 >
                   <div className="flexBtn">
-                    <TagColorBox color={pickDate.tagColor} />
+                    <TagColorBox color={pickDate.color} />
                     <span>{pickDate.tagName}</span>
                   </div>
                   <img src={DownArrow} />

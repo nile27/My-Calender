@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
-
+import { useDispatch } from "react-redux";
+import PickDateSlice from "../Slice/pickDateSlice";
 import XBtn from "../Img/ph_x-bold.svg";
 
 const Contatiner = styled.div`
@@ -105,7 +106,9 @@ interface Prop {
 export default function TagPicker(prop: Prop) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [boxColor, setBoxColor] = useState<string>("");
+  const [tagName, setTagName] = useState<string>("");
   const { addTag, setAddTag } = prop;
+  const dispatch = useDispatch();
   const arr = [
     "red",
     "blue",
@@ -119,6 +122,21 @@ export default function TagPicker(prop: Prop) {
     "purple",
   ];
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTagName(event.target.value);
+  };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      setTagName("");
+    }
+  };
+
+  const handleTag = () => {
+    dispatch(PickDateSlice.actions.tagColor(boxColor));
+    dispatch(PickDateSlice.actions.tagName(tagName));
+    setAddTag(!addTag);
+  };
+
   return (
     <Contatiner>
       <HeaderDiv>
@@ -126,7 +144,12 @@ export default function TagPicker(prop: Prop) {
           <img className="Ximg" src={XBtn} />
         </button>
       </HeaderDiv>
-      <ModalInput placeholder="태그 이름" />
+      <ModalInput
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        value={tagName}
+        placeholder="태그 이름"
+      />
       <SelectContainer>
         <span>태그 색상</span>
         <div className="tagBox">
@@ -147,7 +170,7 @@ export default function TagPicker(prop: Prop) {
         </div>
       </SelectContainer>
       <CheckBox>
-        <CheckBtn onClick={() => setAddTag(!addTag)}>확인</CheckBtn>
+        <CheckBtn onClick={handleTag}>확인</CheckBtn>
         <CheckBtn onClick={() => setAddTag(!addTag)}>취소</CheckBtn>
       </CheckBox>
     </Contatiner>

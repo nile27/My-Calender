@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import axios from "axios";
 import { PickDateSlice } from "../Slice/pickDateSlice";
 import { TodoSlice, selectTodo } from "../Slice/todoSlice";
 import { isUpdateSlice } from "../Slice/isUpdate";
@@ -104,17 +105,20 @@ const ColorBox = styled.div`
 `;
 
 export default function TodoLi(props: { todo: TODOOBJArr }) {
-  const { name, tagName, color, done, startTime, endTime } = props.todo;
+  const { name, tagName, color, done, startTime, endTime, _id } = props.todo;
   const dispatch = useDispatch();
   const select = useSelector(selectTodo);
+
   const [modal, setModal] = useState<boolean>(false);
 
   const UpdateOnclick = () => {
+    const [start, end] = [Number(startTime), Number(endTime)];
     dispatch(PickDateSlice.actions.name(name));
+    dispatch(PickDateSlice.actions.id(_id));
     dispatch(PickDateSlice.actions.tagName(tagName));
     dispatch(PickDateSlice.actions.tagColor(color));
-    dispatch(PickDateSlice.actions.startTime(startTime));
-    dispatch(PickDateSlice.actions.endTime(endTime));
+    dispatch(PickDateSlice.actions.startTime(start));
+    dispatch(PickDateSlice.actions.endTime(end));
     setModal(!modal);
     dispatch(isUpdateSlice.actions.isUpdate(true));
   };
@@ -124,6 +128,8 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
       (el) => el.tagName === tagName && el.name === name
     );
     dispatch(TodoSlice.actions.done(idx));
+
+    return axios.patch(`http://localhost:4000/todo/${_id}`);
   };
 
   return (
@@ -140,10 +146,12 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
 
       <ListBody>
         <span>{name}</span>
-        <div className="tag">
-          <ColorBox color={color} />
-          {tagName}
-        </div>
+        {tagName && (
+          <div className="tag">
+            <ColorBox color={color} />
+            {tagName}
+          </div>
+        )}
       </ListBody>
       <button onClick={UpdateOnclick}>
         <img src={Plus} />
