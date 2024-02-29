@@ -124,7 +124,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
   let arr: CreateData[] = [];
   let date = `${endDate.year}-${Number(endDate.month)}-${endDate.day}`;
   let dubplicate: PostData[] = [];
-  console.log(req.body);
+
   while (lastDate !== date) {
     firstDate = new Date(
       Number(startDate.year),
@@ -173,11 +173,10 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
           startTime: createdData.startTime,
           endTime: createdData.endTime,
           name: createdData.name,
-          tagName: createdData.tagName || null, // undefined인 경우 null로 처리
+          tagName: createdData.tagName || null,
           color: createdData.color,
           done: createdData.done,
         });
-      console.log(lastDate, date, req.params);
     }
 
     lastDate = `${firstDate.getFullYear()}-${
@@ -188,7 +187,12 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
   }
 
   if (tagName && !tagFilter) {
-    Tag.create({ tagName: tagName, color: color });
+    Tag.create({ count: 1, tagName: tagName, color: color });
+  } else if (tagName && tagFilter) {
+    if (tagFilter && typeof tagFilter.count === "number") {
+      tagFilter.count += 1;
+      await tagFilter.save();
+    }
   }
 
   res.status(200).json({
@@ -237,7 +241,12 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
     { new: true }
   );
   if (tagName && !tagFilter) {
-    Tag.create({ tagName: tagName, color: color });
+    Tag.create({ count: 1, tagName: tagName, color: color });
+  } else if (tagName && tagFilter) {
+    if (tagFilter && typeof tagFilter.count === "number") {
+      tagFilter.count = tagFilter.count - 1;
+      await tagFilter.save();
+    }
   }
 
   res.status(200).json(upDate);
@@ -245,14 +254,29 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
 
 // Main - Delete /today/:id
 const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
-  const { id }: { id: string } = req.params as { id: string };
+  const { id, tagName, color }: { id: string; tagName: string; color: string } =
+    req.params as { id: string; tagName: string; color: string };
+  const deleteTodo = await CalenderData.deleteOne({ _id: id });
+  const deleteTag = await Tag.findOne({ tagName: tagName, color: color });
   try {
-    const deleteTodo = await CalenderData.deleteOne({ _id: id });
-
     if (!deleteTodo.deletedCount) {
       res.status(404).json({ message: "문서를 찾을 수 없습니다." });
     } else {
-      res.status(200).json({ message: "일정이 삭제되었습니다." });
+      if (deleteTag && typeof deleteTag.count === "number") {
+        if (deleteTag.count > 1) {
+          deleteTag.count -= 1;
+
+          await deleteTag.save();
+
+          res.status(200).json({ message: "일정이 삭제되었습니다." });
+        } else {
+          await Tag.deleteOne({ tagName: tagName, color: color });
+          const newTagArr = await Tag.find({});
+          res
+            .status(200)
+            .json({ message: "일정이 삭제되었습니다.", data: newTagArr });
+        }
+      }
     }
   } catch (err) {
     console.error("Error toggling done status:", err);
@@ -296,9 +320,9 @@ const searchFunc = asyncHandler(
       const document = await CalenderData.find({
         $or: [{ name: keyword }, { tagName: keyword }],
       });
-      console.log(document);
-      if (!document) {
-        res.status(404).json({ message: "문서를 찾을 수 없습니다." });
+
+      if (!document || document.length === 0) {
+        res.status(409).json({ message: "문서를 찾을 수 없습니다." });
         return;
       }
       res.status(200).json(document);
@@ -308,6 +332,12 @@ const searchFunc = asyncHandler(
     }
   }
 );
+
+// Tag - tag
+const getSearch = asyncHandler(async (req: Request, res: Response) => {
+  const contacts = await Tag.find({});
+  res.status(200).json(contacts);
+});
 
 // const resetDatabase = async () => {
 //   try {
@@ -330,4 +360,5 @@ export default {
   deleteYearData,
   postTodoDone,
   searchFunc,
+  getSearch,
 };

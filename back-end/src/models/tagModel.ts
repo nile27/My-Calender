@@ -9,6 +9,9 @@ const tagSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  count: {
+    type: Number,
+  },
 });
 
 const Tag = mongoose.model("tags", tagSchema);

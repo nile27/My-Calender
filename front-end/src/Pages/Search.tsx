@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 
 import { TODOOBJArr } from "../type";
 import SearchImg from "../Img/mingcute_search-line.svg";
@@ -72,11 +72,11 @@ export default function Search() {
     if (e.key === "Enter") {
       try {
         const res = await axios.get(`http://localhost:4000/search/${keyword}`);
-
-        console.log(res);
         setData(res.data);
       } catch (error) {
-        console.log(error);
+        if (isAxiosError(error) && error.response) {
+          alert(error.response.data.message);
+        }
       }
     }
   };

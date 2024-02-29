@@ -6,10 +6,8 @@ router
   .route("/today/:year/:month/:day")
   .get(Controller.getYearData)
   .post(Controller.postYearData);
-router
-  .route("/today/:id")
-  .patch(Controller.patchYearData)
-  .delete(Controller.deleteYearData);
+router.route("/today/:id").patch(Controller.patchYearData);
+router.route("/today/:id/:tagName/:color").delete(Controller.deleteYearData);
 
 router.route("/todo/:id").patch(Controller.postTodoDone);
 
@@ -17,6 +15,6 @@ router.route("/month/:year");
 
 router.route("/search/:keyword").get(Controller.searchFunc);
 
-router.route("/tag");
+router.route("/tag").get(Controller.getSearch);
 
 module.exports = router;

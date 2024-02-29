@@ -129,6 +129,14 @@ export default function TagPicker(prop: Prop) {
   };
 
   const handleTag = () => {
+    if (!tagName) {
+      alert("태그 이름을 입력해주세요.");
+      return;
+    }
+    if (!boxColor) {
+      alert("색깔을 골라주세요.");
+      return;
+    }
     dispatch(PickDateSlice.actions.tagColor(boxColor));
     dispatch(PickDateSlice.actions.tagName(tagName));
     setAddTag(!addTag);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import axios, { isAxiosError } from "axios";
@@ -23,7 +23,8 @@ import DatePicker from "./DatePicker";
 import TimePicker from "./TimePicker";
 import TagPicker from "./TagPicker";
 import { TODOOBJArr } from "../type";
-import tagFilterSlice, { selectTagDate } from "../Slice/tagFilter";
+import tagFilterSlice from "../Slice/tagFilter";
+import tagSelectSlice, { selectTagList } from "../Slice/tagSelect";
 
 // import axios from "axios";
 
@@ -208,7 +209,8 @@ export default function AddTodo(props: Prop) {
   const today = useSelector(selectTodayDate);
   const isUpdateModal = useSelector(isUpdate);
   const todo = useSelector(selectTodo);
-  const tagSelect = useSelector(selectTagDate);
+  // const tagSelect = useSelector(selectTagDate);
+  const TagList = useSelector(selectTagList);
 
   const dispatch = useDispatch();
 
@@ -336,13 +338,16 @@ export default function AddTodo(props: Prop) {
   const deleteFunc = async () => {
     try {
       const res = await axios.delete(
-        `http://localhost:4000/today/${pickDate._id}`
+        `http://localhost:4000/today/${pickDate._id}/${pickDate.tagName}/${pickDate.color}`
       );
-      const sessionDataString = sessionStorage.getItem("todoData");
 
+      const sessionDataString = sessionStorage.getItem("todoData");
       if (sessionDataString) {
         sessionStorage.setItem("todoData", JSON.stringify(todo));
         dispatch(TodoSlice.actions.deleteUpdate(pickDate._id));
+      }
+      if (res.data.data) {
+        dispatch(tagSelectSlice.actions.get(res.data.data));
       }
       alert(res.data.message);
     } catch (error) {
@@ -350,6 +355,18 @@ export default function AddTodo(props: Prop) {
     }
     ModalCloseFunc();
   };
+
+  useEffect(() => {
+    const tagDataFunc = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/tag`);
+        dispatch(tagSelectSlice.actions.get(res.data));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    tagDataFunc();
+  }, [todo]);
 
   return (
     <>
@@ -448,7 +465,7 @@ export default function AddTodo(props: Prop) {
               )}
               {tagpicker ? (
                 <SelectBox>
-                  {tagSelect.value.map(
+                  {TagList.value.map(
                     (item: { color: string; tagName: string }, key) => {
                       return (
                         <SelectTag
