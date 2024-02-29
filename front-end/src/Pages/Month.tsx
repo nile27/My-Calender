@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { MonthSlice, selectMonth } from "../Slice/monthSlice";
+import { useDispatch } from "react-redux";
+import { MonthSlice } from "../Slice/monthSlice";
 
 import { Holiday } from "../type";
 import Week from "../Components/Month-week";
@@ -60,7 +60,6 @@ export default function Month() {
   const nextPage = useRef<HTMLDivElement | null>(null);
   const [holidata, setHoliDate] = useState<Holiday[] | undefined>([]);
   const dispatch = useDispatch();
-  const MonthTodo = useSelector(selectMonth);
 
   useEffect(() => {
     const getHoliday = async () => {
@@ -83,12 +82,11 @@ export default function Month() {
       }
     };
     const gettodoDate = async () => {
-      const url = "http://localhost:4000/month";
+      const url: string = `http://localhost:4000/month/${date.getFullYear()}`;
 
       const data = await axios.get(url);
 
       dispatch(MonthSlice.actions.monthUpdate(data.data));
-      console.log(MonthTodo, data.data);
     };
 
     getHoliday();

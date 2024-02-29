@@ -13,7 +13,7 @@ export const MonthSlice = createSlice({
 
   reducers: {
     monthUpdate: (state, action: PayloadAction<MonthTodo[]>) => {
-      state.value = action.payload;
+      state.value = [...action.payload];
     },
   },
 });

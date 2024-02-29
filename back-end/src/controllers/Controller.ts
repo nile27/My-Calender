@@ -15,6 +15,12 @@ interface PostData {
   done: boolean;
 }
 
+interface MyDate {
+  year: string;
+  month: string;
+  day: string;
+}
+
 interface CreateData {
   _id: string;
   year: string;
@@ -26,6 +32,15 @@ interface CreateData {
   tagName: string | null;
   color: string;
   done: boolean;
+}
+
+interface MonthTodo {
+  color: string[];
+  name: string[];
+  tagName: string[];
+  year: string;
+  month: string;
+  day: string;
 }
 
 interface Duplicate {
@@ -339,6 +354,47 @@ const getSearch = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(contacts);
 });
 
+const monthData = asyncHandler(async (req: Request, res: Response) => {
+  const { year } = req.params;
+  const contacts = await CalenderData.find({ year: year });
+
+  let dummy: MonthTodo = {
+    year: "",
+    month: "",
+    day: "",
+    name: [],
+    tagName: [],
+    color: [],
+  };
+  let arr: MonthTodo[] = [];
+
+  contacts.forEach((el) => {
+    const idx = arr.findIndex(
+      (item: MonthTodo) =>
+        item.year === el.year && item.month === el.month && item.day === el.day
+    );
+
+    if (idx !== -1) {
+      arr[idx].name.push(el.name);
+      arr[idx].tagName.push(el.tagName ? el.tagName : "null");
+      arr[idx].color.push(el.color);
+    } else {
+      dummy = {
+        year: el.year,
+        month: el.month,
+        day: el.day,
+        name: [el.name],
+        tagName: el.tagName ? [el.tagName] : ["null"],
+        color: [el.color],
+      };
+      arr.push(dummy);
+    }
+    console.log(arr);
+  });
+
+  res.status(200).json(arr);
+});
+
 // const resetDatabase = async () => {
 //   try {
 //     // CalenderData 컬렉션 내 모든 문서 삭제
@@ -361,4 +417,5 @@ export default {
   postTodoDone,
   searchFunc,
   getSearch,
+  monthData,
 };

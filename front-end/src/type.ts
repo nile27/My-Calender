@@ -45,12 +45,9 @@ export interface TODOOBJArr {
 export interface MonthTodo {
   color: string[];
   name: string[];
-  date: string;
-  time: string;
   tagname: string[];
   year: string;
   month: string;
-  end: string;
   day: string;
 }
 

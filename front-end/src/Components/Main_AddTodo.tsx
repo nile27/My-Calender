@@ -351,7 +351,9 @@ export default function AddTodo(props: Prop) {
       }
       alert(res.data.message);
     } catch (error) {
-      console.error(error);
+      if (isAxiosError(error)) {
+        alert(error);
+      }
     }
     ModalCloseFunc();
   };
@@ -362,7 +364,9 @@ export default function AddTodo(props: Prop) {
         const res = await axios.get(`http://localhost:4000/tag`);
         dispatch(tagSelectSlice.actions.get(res.data));
       } catch (error) {
-        console.error(error);
+        if (isAxiosError(error)) {
+          alert(error);
+        }
       }
     };
     tagDataFunc();

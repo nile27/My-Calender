@@ -17,4 +17,6 @@ router.route("/search/:keyword").get(Controller.searchFunc);
 
 router.route("/tag").get(Controller.getSearch);
 
+router.route("/month/:year").get(Controller.monthData);
+
 module.exports = router;

@@ -79,7 +79,7 @@ export default function SearchList(props: { search: TODOOBJArr }) {
         <Search770Box>
           <div className="tagBox">
             <ColorBox color={color} />
-            <span className="tagName">{tagName}</span>
+            <span className="tagName">{tagName || "태그가 없습니다."}</span>
           </div>
           <div className="todoBox">
             <span>Todo: </span>
@@ -93,7 +93,7 @@ export default function SearchList(props: { search: TODOOBJArr }) {
       ) : (
         <SearchBox>
           <ColorBox color={color} />
-          <span className="tagName">{tagName}</span>
+          <span className="tagName">{tagName || "태그가 없습니다."}</span>
           <span className="date">{`${year}_${month}_${day}`}</span>
           <span className="time">{`${startTime}시 ~ ${endTime}시`}</span>
           <span className="todoname">{name}</span>
