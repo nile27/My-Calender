@@ -5,7 +5,7 @@ import axios from "axios";
 import { selectTodayDate } from "../Slice/todayDate";
 import { selectPickDate, PickDateSlice, reset } from "../Slice/pickDateSlice";
 import { isUpdate } from "../Slice/isUpdate";
-import TodoSlice from "../Slice/todoSlice";
+import TodoSlice, { selectTodo } from "../Slice/todoSlice";
 import Xbtn from "../Img/ph_x-bold.svg";
 import Clock from "../Img/tabler_clock.svg";
 import Tag from "../Img/mdi_tag.svg";
@@ -22,6 +22,7 @@ import { CheckBox, CheckBtn } from "../Style/CheckBtn";
 import DatePicker from "./DatePicker";
 import TimePicker from "./TimePicker";
 import TagPicker from "./TagPicker";
+import { TODOOBJArr } from "../type";
 
 // import axios from "axios";
 
@@ -205,6 +206,7 @@ export default function AddTodo(props: Prop) {
   const pickDate = useSelector(selectPickDate);
   const today = useSelector(selectTodayDate);
   const isUpdateModal = useSelector(isUpdate);
+  const todo = useSelector(selectTodo);
 
   const dispatch = useDispatch();
 
@@ -228,6 +230,11 @@ export default function AddTodo(props: Prop) {
   };
 
   const handlePostTodo = async () => {
+    if (!pickDate.name) {
+      alert("제목을 입력해주세요.");
+      dispatch(reset());
+      return;
+    }
     setModal(!modal);
     if (!isUpdateModal) {
       try {
@@ -237,28 +244,53 @@ export default function AddTodo(props: Prop) {
         );
 
         const sessionDataString = sessionStorage.getItem("todoData");
-        console.log(res);
+
         if (sessionDataString) {
           const sessionData = JSON.parse(sessionDataString);
           dispatch(TodoSlice.actions.postUpdate(res.data.updatedContact[0]));
           if (sessionData) sessionData.push(res.data.updatedContact[0]);
-          console.log(sessionData);
+
           sessionStorage.setItem("todoData", JSON.stringify(sessionData));
-          console.log(res.data.updatedContact);
+
           dispatch(reset());
         }
       } catch (err) {
-        console.error(err);
         alert("제목을 입력해주세요");
       }
     } else {
-      return axios
-        .patch(`http://localhost:4000/today/${pickDate._id}`, { ...pickDate })
-        .then(() => {
-          dispatch(TodoSlice.actions.patchUpdate({ ...pickDate }));
+      try {
+        const res = await axios.patch(
+          `http://localhost:4000/today/${pickDate._id}`,
+          { ...pickDate }
+        );
+
+        const sessionDataString = sessionStorage.getItem("todoData");
+
+        if (sessionDataString) {
+          const sessionData = JSON.parse(sessionDataString);
+          dispatch(TodoSlice.actions.patchUpdate(res.data));
+
+          if (sessionData) {
+            const idx: number = sessionData.findIndex(
+              (el: TODOOBJArr) => el._id === res.data._id
+            );
+            sessionData[idx] = { ...res.data };
+          }
+          sessionStorage.setItem("todoData", JSON.stringify(sessionData));
+
           dispatch(reset());
-        })
-        .catch((err) => alert(err.response.data));
+        }
+      } catch (err) {
+        alert("제목을 입력해주세요");
+      }
+      // return axios
+      //   .patch(`http://localhost:4000/today/${pickDate._id}`, { ...pickDate })
+      //   .then(() => {
+      //     dispatch(TodoSlice.actions.patchUpdate({ ...pickDate }));
+      //     dispatch(reset());
+      //     console.log(pickDate);
+      //   })
+      //   .catch((err) => alert(err.response.data));
     }
   };
 
@@ -268,7 +300,25 @@ export default function AddTodo(props: Prop) {
     dispatch(PickDateSlice.actions.startDate({ ...today }));
     dispatch(PickDateSlice.actions.endDate({ ...today }));
   };
-  console.log(pickDate);
+
+  const deleteFunc = async () => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:4000/today/${pickDate._id}`
+      );
+      const sessionDataString = sessionStorage.getItem("todoData");
+
+      if (sessionDataString) {
+        sessionStorage.setItem("todoData", JSON.stringify(todo));
+        dispatch(TodoSlice.actions.deleteUpdate(pickDate._id));
+      }
+      alert(res.data.message);
+    } catch (error) {
+      console.error(error);
+    }
+    ModalCloseFunc();
+  };
+
   return (
     <>
       <BackgroundBox onClick={ModalCloseFunc} />
@@ -393,7 +443,11 @@ export default function AddTodo(props: Prop) {
           {addTag ? <TagPicker addTag={addTag} setAddTag={setAddTag} /> : null}
           <CheckBox>
             <CheckBtn onClick={() => handlePostTodo()}>확인</CheckBtn>
-            <CheckBtn onClick={ModalCloseFunc}>취소</CheckBtn>
+            {!isUpdateModal ? (
+              <CheckBtn onClick={ModalCloseFunc}>취소</CheckBtn>
+            ) : (
+              <CheckBtn onClick={deleteFunc}>삭제</CheckBtn>
+            )}
           </CheckBox>
         </ModalInputBox>
       </Container>

@@ -42,6 +42,12 @@ export const TodoSlice = createSlice({
         done: false,
       });
     },
+    deleteUpdate: (state, action: PayloadAction<string>) => {
+      const deleteData: number = state.value.findIndex(
+        (el) => el._id === action.payload
+      );
+      state.value.splice(deleteData, 1);
+    },
   },
 });
 

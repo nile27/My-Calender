@@ -205,7 +205,9 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
   const { id }: { id: string } = req.params as { id: string };
   const { startDate, startTime, name, endTime, tagName, color } = req.body;
   let dubplicate: PostData[] = [];
-  const tagFilter = await Tag.findOne({ tagName: tagName, color: color });
+  const tagFilter = tagName
+    ? await Tag.findOne({ tagName: tagName, color: color })
+    : null;
 
   dubplicate = await duplicateFunc({
     id: id,
@@ -237,7 +239,7 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
     },
     { new: true }
   );
-  if (!tagFilter) {
+  if (tagName && !tagFilter) {
     Tag.create({ tagName: tagName, color: color });
   }
 
@@ -247,9 +249,16 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
 // Main - Delete /today/:id
 const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
   const { id }: { id: string } = req.params as { id: string };
-  const deleteTodo = await CalenderData.deleteOne({ _id: id });
+  try {
+    const deleteTodo = await CalenderData.deleteOne({ _id: id });
 
-  res.status(200).json(deleteTodo);
+    res
+      .status(200)
+      .json({ message: "일정이 삭제되었습니다.", data: deleteTodo });
+  } catch (err) {
+    console.error("Error toggling done status:", err);
+    res.status(500).json({ message: "서버 오류 발생" });
+  }
 });
 
 // Todo Post /todo/:id

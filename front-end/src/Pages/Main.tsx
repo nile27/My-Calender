@@ -140,35 +140,16 @@ export default function Main() {
   };
 
   useEffect(() => {
-    const dataFunc = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`
-        );
-        const { data } = res;
-        console.log(data);
-        dispatch(TodoSlice.actions.update(data));
-        sessionStorage.setItem("todoData", JSON.stringify(data));
-
-        return res;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    const timelineScroll = () => {
-      if (scrollRef.current) {
-        scrollRef.current?.scrollIntoView({
-          block: "start",
-        });
-      }
-    };
     const MainDateFunc = () => {
       if (
         params.year !== undefined &&
         params.day !== undefined &&
         params.month !== undefined
       ) {
+        localStorage.setItem(
+          "date",
+          JSON.stringify(`${params.year}-${params.month}-${params.day}`)
+        );
         dispatch(TodaySlice.actions.year(params.year));
         dispatch(TodaySlice.actions.month(params.month));
         dispatch(TodaySlice.actions.day(params.day));
@@ -187,6 +168,7 @@ export default function Main() {
           })
         );
       } else {
+        dispatch(TodaySlice.actions.month(String(new Date().getFullYear())));
         dispatch(TodaySlice.actions.month(String(new Date().getMonth() + 1)));
         dispatch(TodaySlice.actions.day(String(new Date().getDate())));
         dispatch(
@@ -207,19 +189,61 @@ export default function Main() {
       dispatch(PickDateSlice.actions.startTime(new Date().getHours()));
       dispatch(PickDateSlice.actions.endTime(new Date().getHours()));
     };
+    const localDate = localStorage.getItem("date");
+    const parserDate: string = localDate ? JSON.parse(localDate) : "";
 
-    MainDateFunc();
+    if (
+      !parserDate ||
+      parserDate !== `${today.year}-${today.month}-${today.day}` ||
+      Object.entries(today).toString() !== Object.entries(params).toString()
+    )
+      MainDateFunc();
+    console.log(today, params, localDate);
+  }, [params]);
+
+  useEffect(() => {
+    const dataFunc = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`
+        );
+        const { data } = res;
+        dispatch(TodoSlice.actions.update(data));
+        localStorage.setItem(
+          "date",
+          JSON.stringify(`${today.year}-${today.month}-${today.day}`)
+        );
+        const StorageDate = localStorage.getItem("date");
+        const parseData = StorageDate ? JSON.parse(StorageDate) : "";
+
+        if (parseData === `${today.year}-${today.month}-${today.day}`)
+          sessionStorage.setItem("todoData", JSON.stringify(data));
+        console.log(parseData === `${today.year}-${today.month}-${today.day}`);
+
+        return res;
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    const timelineScroll = () => {
+      if (scrollRef.current) {
+        scrollRef.current?.scrollIntoView({
+          block: "start",
+        });
+      }
+    };
+
     timelineScroll();
     dataFunc();
-    if (sessionStorage.getItem("todoData") || todoData.length === 0) {
+    if (todoData.length === 0) {
       const storedData = sessionStorage.getItem("todoData");
       const parsedData = storedData ? JSON.parse(storedData) : [];
-      console.log("지워짐");
-      dispatch(TodoSlice.actions.update(parsedData));
+      console.log(parsedData);
+      if (parsedData) dispatch(TodoSlice.actions.update(parsedData));
     }
-
-    console.log(todoData, filterData, params);
-  }, [params, today]);
+    console.log(today, "today");
+  }, [today]);
 
   return (
     <Container>
