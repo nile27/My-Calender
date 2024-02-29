@@ -15,4 +15,8 @@ router.route("/todo/:id").patch(Controller.postTodoDone);
 
 router.route("/month/:year");
 
+router.route("/search/:keyword").get(Controller.searchFunc);
+
+router.route("/tag");
+
 module.exports = router;

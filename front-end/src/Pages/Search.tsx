@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 
-import { SearchData } from "../type";
+import { TODOOBJArr } from "../type";
 import SearchImg from "../Img/mingcute_search-line.svg";
 import SearchList from "../Components/Search-list";
 
@@ -61,22 +61,25 @@ const ResultBox = styled.ul`
 
 export default function Search() {
   const [keyword, setKeyword] = useState<string>("");
-  const [data, setData] = useState<SearchData[]>([]);
+  const [data, setData] = useState<TODOOBJArr[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setKeyword(value);
   };
 
-  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeydown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      return axios
-        .get("http://localhost:4000/search")
-        .then((res) => setData(res.data))
-        .catch((err) => console.error(err, keyword));
+      try {
+        const res = await axios.get(`http://localhost:4000/search/${keyword}`);
+
+        console.log(res);
+        setData(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
-
   return (
     <Container>
       <SearchContainer>
@@ -89,7 +92,7 @@ export default function Search() {
         </SearchBarBox>
       </SearchContainer>
       <ResultBox>
-        {data.map((item: SearchData, key: number) => (
+        {data.map((item: TODOOBJArr, key: number) => (
           <SearchList search={item} key={key} />
         ))}
       </ResultBox>

@@ -191,12 +191,6 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
     Tag.create({ tagName: tagName, color: color });
   }
 
-  // const updatedContacts = await CalenderData.find({
-  //   year: year,
-  //   month: month,
-  //   day: day,
-  // });
-
   res.status(200).json({
     message: "일정이 추가 되었습니다.",
     updatedContact: arr,
@@ -292,6 +286,29 @@ const postTodoDone = asyncHandler(
   }
 );
 
+// Search /search
+
+const searchFunc = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    const { keyword } = req.params;
+
+    try {
+      const document = await CalenderData.find({
+        $or: [{ name: keyword }, { tagName: keyword }],
+      });
+      console.log(document);
+      if (!document) {
+        res.status(404).json({ message: "문서를 찾을 수 없습니다." });
+        return;
+      }
+      res.status(200).json(document);
+    } catch (error) {
+      console.error("Error toggling done status:", error);
+      res.status(500).json({ message: "서버 오류 발생" });
+    }
+  }
+);
+
 // const resetDatabase = async () => {
 //   try {
 //     // CalenderData 컬렉션 내 모든 문서 삭제
@@ -312,4 +329,5 @@ export default {
   patchYearData,
   deleteYearData,
   postTodoDone,
+  searchFunc,
 };

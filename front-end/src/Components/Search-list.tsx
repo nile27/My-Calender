@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
-import { SearchData } from "../type";
+import { TODOOBJArr } from "../type";
 
 const SearchBox = styled.li`
   width: 100%;
@@ -66,8 +66,9 @@ const ColorBox = styled.div`
     prop.color === "null" ? "var(--line-gray)" : prop.color};
 `;
 
-export default function SearchList(props: { search: SearchData }) {
-  const { color, name, date, time, tagname } = props.search;
+export default function SearchList(props: { search: TODOOBJArr }) {
+  const { color, name, year, month, day, endTime, startTime, tagName } =
+    props.search;
 
   const View: boolean = useMediaQuery({
     query: "(max-width:770px)",
@@ -78,23 +79,23 @@ export default function SearchList(props: { search: SearchData }) {
         <Search770Box>
           <div className="tagBox">
             <ColorBox color={color} />
-            <span className="tagName">{tagname}</span>
+            <span className="tagName">{tagName}</span>
           </div>
           <div className="todoBox">
             <span>Todo: </span>
             <span className="todoname">{name}</span>
           </div>
           <div className="timeBox">
-            <span className="date">{date}</span>
-            <span className="time">{time}</span>
+            <span className="date">{`${year}_${month}_${day}`}</span>
+            <span className="time">{`${startTime}시 ~ ${endTime}시`}</span>
           </div>
         </Search770Box>
       ) : (
         <SearchBox>
           <ColorBox color={color} />
-          <span className="tagName">{tagname}</span>
-          <span className="date">{date}</span>
-          <span className="time">{time}</span>
+          <span className="tagName">{tagName}</span>
+          <span className="date">{`${year}_${month}_${day}`}</span>
+          <span className="time">{`${startTime}시 ~ ${endTime}시`}</span>
           <span className="todoname">{name}</span>
         </SearchBox>
       )}
