@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { tagFilterSlice, selectTagDate } from "../Slice/tagFilter";
+import { selectTodo } from "../Slice/todoSlice";
 
 import Home from "../Img/akar-icons_home-alt1.svg";
 import Calender from "../Img/ic_baseline-calendar-month.svg";
@@ -165,6 +166,7 @@ export default function Nav() {
   const dispatch = useDispatch();
 
   const tagData = useSelector(selectTagDate);
+  const todo = useSelector(selectTodo);
 
   const filterOnclick = (idx: number) => {
     if (!tagData.visit[idx]) {
@@ -173,10 +175,11 @@ export default function Nav() {
       dispatch(tagFilterSlice.actions.uncheck(idx));
     }
   };
+
   useEffect(() => {
-    console.log(tagData, "use");
-  }, [tagData]);
-  console.log(tagData);
+    dispatch(tagFilterSlice.actions.patch(todo));
+  }, [todo]);
+
   return (
     <Container>
       {View ? (

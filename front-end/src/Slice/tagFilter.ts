@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { TODOOBJArr } from "../type";
 
 interface tag {
   tagName: string;
@@ -22,7 +23,6 @@ export const tagFilterSlice = createSlice({
   initialState,
 
   reducers: {
-    // 1. add 리듀서 함수 수정: 조건문에서 상태를 변경하는 대신 새로운 상태를 반환하도록 수정
     add: (state, action: PayloadAction<tag>) => {
       const idx: number = state.value.findIndex(
         (el) =>
@@ -30,12 +30,10 @@ export const tagFilterSlice = createSlice({
           el.color === action.payload.color
       );
       if (idx === -1) {
-        // 태그가 이미 존재하지 않을 때만 추가
-        state.value = [...state.value, action.payload]; // 기존 상태 변경 대신 새로운 상태 반환
+        state.value = [...state.value, action.payload];
       }
     },
 
-    // 2. get 리듀서 함수 수정: visit 배열을 초기화할 때 state.value의 길이가 아니라 filterArr의 길이를 기준으로 visit 배열을 생성하도록 수정
     get: (state, action: PayloadAction<tag[]>) => {
       const filterArr: tag[] = [];
       action.payload.forEach((item: tag) => {
@@ -53,6 +51,33 @@ export const tagFilterSlice = createSlice({
       });
       state.value = [...filterArr]; // 상태 값 업데이트
       state.visit = Array.from({ length: filterArr.length }, () => false); // visit 배열 초기화
+    },
+    patch: (state, action: PayloadAction<TODOOBJArr[]>) => {
+      // const newState: tag[] = state.value.map((oldItem) => {
+      //   const newItem = action.payload.findIndex(
+      //     (item) =>
+      //       item.tagName === oldItem.tagName && item.color === oldItem.color
+      //   );
+      //   return newItem === -1
+      //     ? {
+      //         tagName: oldItem.tagName,
+      //         color: oldItem.color,
+      //       }
+      //     : {
+      //         tagName: action.payload[newItem].tagName,
+      //         color: action.payload[newItem].color,
+      //       };
+      // });
+      const arr: tag[] = [];
+      action.payload.forEach((item) => {
+        const idx = arr.findIndex(
+          (el) => el.tagName === item.tagName && el.color === item.color
+        );
+        if (idx === -1) {
+          arr.push({ tagName: item.tagName, color: item.color });
+        }
+      });
+      state.value = [...arr];
     },
     check: (state, action: PayloadAction<number>) => {
       state.visit[action.payload] = true;

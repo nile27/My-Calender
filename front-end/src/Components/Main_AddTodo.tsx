@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { selectTodayDate } from "../Slice/todayDate";
 import { selectPickDate, PickDateSlice, reset } from "../Slice/pickDateSlice";
 import { isUpdate } from "../Slice/isUpdate";
@@ -266,8 +266,14 @@ export default function AddTodo(props: Prop) {
           );
         }
       } catch (err) {
-        console.log(err);
-        alert("제목을 입력해주세요");
+        if (isAxiosError(err)) {
+          if (err.response && err.response.status === 409) {
+            alert(err.response.data);
+          } else {
+            alert("제목을 입력해주세요");
+          }
+          dispatch(reset());
+        }
       }
     } else {
       try {
@@ -291,9 +297,32 @@ export default function AddTodo(props: Prop) {
           sessionStorage.setItem("todoData", JSON.stringify(sessionData));
 
           dispatch(reset());
+          const localData = localStorage.getItem("date");
+          const parseData = localData ? JSON.parse(localData).split("-") : [];
+          dispatch(
+            PickDateSlice.actions.startDate({
+              year: parseData[0],
+              month: parseData[1],
+              day: parseData[2],
+            })
+          );
+          dispatch(
+            PickDateSlice.actions.endDate({
+              year: parseData[0],
+              month: parseData[1],
+              day: parseData[2],
+            })
+          );
         }
       } catch (err) {
-        alert("제목을 입력해주세요");
+        if (isAxiosError(err)) {
+          if (err.response && err.response.status === 409) {
+            alert(err.response.data);
+          } else {
+            alert("제목을 입력해주세요");
+          }
+        }
+        dispatch(reset());
       }
     }
   };
