@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { tagFilterSlice, selectTagDate } from "../Slice/tagFilter";
 
@@ -165,7 +165,6 @@ export default function Nav() {
   const dispatch = useDispatch();
 
   const tagData = useSelector(selectTagDate);
-  const { value, visit } = tagData;
 
   const filterOnclick = (idx: number) => {
     if (!tagData.visit[idx]) {
@@ -175,14 +174,9 @@ export default function Nav() {
     }
   };
   useEffect(() => {
-    const tagArr: TagData[] = [
-      { color: "red", tagName: "word" },
-      { color: "blue", tagName: "What to buy" },
-      { color: "red", tagName: "What to buy" },
-      { color: "yellow", tagName: "Homework" },
-    ];
-    dispatch(tagFilterSlice.actions.get(tagArr));
-  }, []);
+    console.log(tagData, "use");
+  }, [tagData]);
+  console.log(tagData);
   return (
     <Container>
       {View ? (
@@ -259,8 +253,8 @@ export default function Nav() {
           </ListBox>
           <TagListBox>
             <span>Menu</span>
-            {value.map((item: TagData, key: number) => {
-              return !visit[key] ? (
+            {tagData.value.map((item: TagData, key: number) => {
+              return !tagData.visit[key] ? (
                 <TagBtn key={key} onClick={() => filterOnclick(key)}>
                   <ColorBox color={item.color} />
                   <span>{item.tagName}</span>

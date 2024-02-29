@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+
 import PickDateSlice from "../Slice/pickDateSlice";
 import XBtn from "../Img/ph_x-bold.svg";
 
@@ -109,26 +110,22 @@ export default function TagPicker(prop: Prop) {
   const [tagName, setTagName] = useState<string>("");
   const { addTag, setAddTag } = prop;
   const dispatch = useDispatch();
+
   const arr = [
     "red",
+    "yellow",
     "blue",
-    "black",
     "purple",
-    "black",
-    "purple",
-    "black",
-    "purple",
-    "black",
-    "purple",
+    "var(--skyblue)",
+    "orange",
+    "pink",
+    "green",
+    "Cyan",
+    "Brown",
   ];
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTagName(event.target.value);
-  };
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      setTagName("");
-    }
   };
 
   const handleTag = () => {
@@ -146,7 +143,6 @@ export default function TagPicker(prop: Prop) {
       </HeaderDiv>
       <ModalInput
         onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
         value={tagName}
         placeholder="태그 이름"
       />

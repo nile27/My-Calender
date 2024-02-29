@@ -22,12 +22,37 @@ export const tagFilterSlice = createSlice({
   initialState,
 
   reducers: {
+    // 1. add 리듀서 함수 수정: 조건문에서 상태를 변경하는 대신 새로운 상태를 반환하도록 수정
     add: (state, action: PayloadAction<tag>) => {
-      state.value.push(action.payload);
+      const idx: number = state.value.findIndex(
+        (el) =>
+          el.tagName === action.payload.tagName &&
+          el.color === action.payload.color
+      );
+      if (idx === -1) {
+        // 태그가 이미 존재하지 않을 때만 추가
+        state.value = [...state.value, action.payload]; // 기존 상태 변경 대신 새로운 상태 반환
+      }
     },
+
+    // 2. get 리듀서 함수 수정: visit 배열을 초기화할 때 state.value의 길이가 아니라 filterArr의 길이를 기준으로 visit 배열을 생성하도록 수정
     get: (state, action: PayloadAction<tag[]>) => {
-      state.value = [...action.payload];
-      state.visit = Array.from({ length: state.value.length }, () => false);
+      const filterArr: tag[] = [];
+      action.payload.forEach((item: tag) => {
+        if (item.tagName && item.color) {
+          const key = `${item.tagName}-${item.color}`;
+
+          const existingIndex = filterArr.findIndex((el) => {
+            return `${el.tagName}-${el.color}` === key;
+          });
+
+          if (existingIndex === -1) {
+            filterArr.push({ tagName: item.tagName, color: item.color });
+          }
+        }
+      });
+      state.value = [...filterArr]; // 상태 값 업데이트
+      state.visit = Array.from({ length: filterArr.length }, () => false); // visit 배열 초기화
     },
     check: (state, action: PayloadAction<number>) => {
       state.visit[action.payload] = true;

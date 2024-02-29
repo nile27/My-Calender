@@ -23,6 +23,7 @@ import DatePicker from "./DatePicker";
 import TimePicker from "./TimePicker";
 import TagPicker from "./TagPicker";
 import { TODOOBJArr } from "../type";
+import tagFilterSlice, { selectTagDate } from "../Slice/tagFilter";
 
 // import axios from "axios";
 
@@ -197,31 +198,19 @@ interface Prop {
 
 export default function AddTodo(props: Prop) {
   const { modal, setModal } = props;
-
+  const [tagpicker, setTagPicker] = useState<boolean>(false);
   const [timepicker, setTimePicker] = useState<boolean>(false);
   const [datepicker, setDatePicker] = useState<boolean>(false);
-  const [tagpicker, setTagPicker] = useState<boolean>(false);
+
   const [addTag, setAddTag] = useState<boolean>(false);
 
   const pickDate = useSelector(selectPickDate);
   const today = useSelector(selectTodayDate);
   const isUpdateModal = useSelector(isUpdate);
   const todo = useSelector(selectTodo);
+  const tagSelect = useSelector(selectTagDate);
 
   const dispatch = useDispatch();
-
-  const TagArr = [
-    { color: "yellow", name: "homework" },
-    { color: "red", name: "homework" },
-    { color: "black", name: "homework" },
-    { color: "black", name: "homework" },
-    { color: "black", name: "homework" },
-    { color: "red", name: "homework" },
-    { color: "red", name: "homework" },
-    { color: "red", name: "homework" },
-    { color: "red", name: "homework" },
-    { color: "red", name: "homework" },
-  ];
 
   const TagOnclickFunc = (color: string, name: string) => {
     dispatch(PickDateSlice.actions.tagColor(color));
@@ -251,10 +240,33 @@ export default function AddTodo(props: Prop) {
           if (sessionData) sessionData.push(res.data.updatedContact[0]);
 
           sessionStorage.setItem("todoData", JSON.stringify(sessionData));
+          dispatch(
+            tagFilterSlice.actions.add({
+              tagName: pickDate.tagName,
+              color: pickDate.color,
+            })
+          );
 
           dispatch(reset());
+          const localData = localStorage.getItem("date");
+          const parseData = localData ? JSON.parse(localData).split("-") : [];
+          dispatch(
+            PickDateSlice.actions.startDate({
+              year: parseData[0],
+              month: parseData[1],
+              day: parseData[2],
+            })
+          );
+          dispatch(
+            PickDateSlice.actions.endDate({
+              year: parseData[0],
+              month: parseData[1],
+              day: parseData[2],
+            })
+          );
         }
       } catch (err) {
+        console.log(err);
         alert("제목을 입력해주세요");
       }
     } else {
@@ -283,14 +295,6 @@ export default function AddTodo(props: Prop) {
       } catch (err) {
         alert("제목을 입력해주세요");
       }
-      // return axios
-      //   .patch(`http://localhost:4000/today/${pickDate._id}`, { ...pickDate })
-      //   .then(() => {
-      //     dispatch(TodoSlice.actions.patchUpdate({ ...pickDate }));
-      //     dispatch(reset());
-      //     console.log(pickDate);
-      //   })
-      //   .catch((err) => alert(err.response.data));
     }
   };
 
@@ -300,7 +304,6 @@ export default function AddTodo(props: Prop) {
     dispatch(PickDateSlice.actions.startDate({ ...today }));
     dispatch(PickDateSlice.actions.endDate({ ...today }));
   };
-
   const deleteFunc = async () => {
     try {
       const res = await axios.delete(
@@ -416,17 +419,21 @@ export default function AddTodo(props: Prop) {
               )}
               {tagpicker ? (
                 <SelectBox>
-                  {TagArr.map((item: { color: string; name: string }, key) => {
-                    return (
-                      <SelectTag
-                        key={key}
-                        onClick={() => TagOnclickFunc(item.color, item.name)}
-                      >
-                        <TagColorBox color={item.color}> </TagColorBox>
-                        <span>{item.name}</span>
-                      </SelectTag>
-                    );
-                  })}
+                  {tagSelect.value.map(
+                    (item: { color: string; tagName: string }, key) => {
+                      return (
+                        <SelectTag
+                          key={key}
+                          onClick={() =>
+                            TagOnclickFunc(item.color, item.tagName)
+                          }
+                        >
+                          <TagColorBox color={item.color}> </TagColorBox>
+                          <span>{item.tagName}</span>
+                        </SelectTag>
+                      );
+                    }
+                  )}
                 </SelectBox>
               ) : null}
             </SelectContainer>

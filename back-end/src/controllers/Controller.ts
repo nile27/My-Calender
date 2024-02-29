@@ -124,6 +124,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
   let arr: CreateData[] = [];
   let date = `${endDate.year}-${Number(endDate.month)}-${endDate.day}`;
   let dubplicate: PostData[] = [];
+  console.log(req.body);
   while (lastDate !== date) {
     firstDate = new Date(
       Number(startDate.year),
@@ -158,6 +159,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         color: color,
         done: done,
       });
+
       if (
         year === String(firstDate.getFullYear()) &&
         month === String(firstDate.getMonth() + 1) &&
@@ -175,6 +177,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
           color: createdData.color,
           done: createdData.done,
         });
+      console.log(lastDate, date, req.params);
     }
 
     lastDate = `${firstDate.getFullYear()}-${
@@ -183,7 +186,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 
     i += 1;
   }
-  // arr.forEach((el: PostData) => CalenderData.create({ ...el }));
+
   if (tagName && !tagFilter) {
     Tag.create({ tagName: tagName, color: color });
   }
@@ -252,9 +255,11 @@ const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
   try {
     const deleteTodo = await CalenderData.deleteOne({ _id: id });
 
-    res
-      .status(200)
-      .json({ message: "일정이 삭제되었습니다.", data: deleteTodo });
+    if (!deleteTodo.deletedCount) {
+      res.status(404).json({ message: "문서를 찾을 수 없습니다." });
+    } else {
+      res.status(200).json({ message: "일정이 삭제되었습니다." });
+    }
   } catch (err) {
     console.error("Error toggling done status:", err);
     res.status(500).json({ message: "서버 오류 발생" });
@@ -286,6 +291,20 @@ const postTodoDone = asyncHandler(
     }
   }
 );
+
+// const resetDatabase = async () => {
+//   try {
+//     // CalenderData 컬렉션 내 모든 문서 삭제
+//     await CalenderData.deleteMany({});
+//     // Tag 컬렉션 내 모든 문서 삭제
+//     await Tag.deleteMany({});
+//     console.log("데이터베이스가 성공적으로 초기화되었습니다.");
+//   } catch (error) {
+//     console.error("데이터베이스 초기화 중 오류가 발생했습니다:", error);
+//   }
+// };
+
+// resetDatabase();
 
 export default {
   getYearData,

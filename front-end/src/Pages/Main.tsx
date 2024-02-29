@@ -7,7 +7,7 @@ import { TodoSlice, selectTodo } from "../Slice/todoSlice";
 import { TodaySlice, selectTodayDate } from "../Slice/todayDate";
 import { isUpdateSlice } from "../Slice/isUpdate";
 import { PickDateSlice } from "../Slice/pickDateSlice";
-import { selectTagDate } from "../Slice/tagFilter";
+import tagFilterSlice, { selectTagDate } from "../Slice/tagFilter";
 
 import { TODOOBJArr } from "../type";
 
@@ -140,6 +140,48 @@ export default function Main() {
   };
 
   useEffect(() => {
+    const dataFunc = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`
+        );
+        const { data } = res;
+        const tagData: { tagName: string; color: string }[] = data
+          .filter((item: TODOOBJArr) => {
+            return item.tagName && { tagName: item.tagName, color: item.color };
+          })
+          .map((item: TODOOBJArr) => {
+            return { tagName: item.tagName, color: item.color };
+          });
+
+        dispatch(TodoSlice.actions.update(data));
+        dispatch(tagFilterSlice.actions.get(tagData));
+        localStorage.setItem(
+          "date",
+          JSON.stringify(`${today.year}-${today.month}-${today.day}`)
+        );
+
+        sessionStorage.setItem("todoData", JSON.stringify(data));
+
+        return res;
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    const timelineScroll = () => {
+      if (scrollRef.current) {
+        scrollRef.current?.scrollIntoView({
+          block: "start",
+        });
+      }
+    };
+
+    timelineScroll();
+    dataFunc();
+  }, [today]);
+
+  useEffect(() => {
     const MainDateFunc = () => {
       if (
         params.year !== undefined &&
@@ -189,61 +231,9 @@ export default function Main() {
       dispatch(PickDateSlice.actions.startTime(new Date().getHours()));
       dispatch(PickDateSlice.actions.endTime(new Date().getHours()));
     };
-    const localDate = localStorage.getItem("date");
-    const parserDate: string = localDate ? JSON.parse(localDate) : "";
 
-    if (
-      !parserDate ||
-      parserDate !== `${today.year}-${today.month}-${today.day}` ||
-      Object.entries(today).toString() !== Object.entries(params).toString()
-    )
-      MainDateFunc();
-    console.log(today, params, localDate);
+    MainDateFunc();
   }, [params]);
-
-  useEffect(() => {
-    const dataFunc = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`
-        );
-        const { data } = res;
-        dispatch(TodoSlice.actions.update(data));
-        localStorage.setItem(
-          "date",
-          JSON.stringify(`${today.year}-${today.month}-${today.day}`)
-        );
-        const StorageDate = localStorage.getItem("date");
-        const parseData = StorageDate ? JSON.parse(StorageDate) : "";
-
-        if (parseData === `${today.year}-${today.month}-${today.day}`)
-          sessionStorage.setItem("todoData", JSON.stringify(data));
-        console.log(parseData === `${today.year}-${today.month}-${today.day}`);
-
-        return res;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    const timelineScroll = () => {
-      if (scrollRef.current) {
-        scrollRef.current?.scrollIntoView({
-          block: "start",
-        });
-      }
-    };
-
-    timelineScroll();
-    dataFunc();
-    if (todoData.length === 0) {
-      const storedData = sessionStorage.getItem("todoData");
-      const parsedData = storedData ? JSON.parse(storedData) : [];
-      console.log(parsedData);
-      if (parsedData) dispatch(TodoSlice.actions.update(parsedData));
-    }
-    console.log(today, "today");
-  }, [today]);
 
   return (
     <Container>
