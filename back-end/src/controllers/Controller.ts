@@ -74,7 +74,6 @@ const duplicateFunc = async ({
       ],
     });
 
-    // Convert Document array to PostData array
     contacts = documents.map((doc) => ({
       year: doc.year,
       month: doc.month,
@@ -97,7 +96,6 @@ const duplicateFunc = async ({
       ],
     });
 
-    // Convert Document array to PostData array
     contacts = documents.map((doc) => ({
       year: doc.year,
       month: doc.month,
@@ -301,18 +299,6 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  // if (tagName && !tagFilter) {
-  //   Tag.create({ count: 1, tagName: tagName, color: color });
-  // } else if (tagName && tagFilter) {
-  // if (tagFilter && typeof tagFilter.count === "number") {
-  //   tagFilter.count = tagFilter.count + 1;
-  //   await tagFilter.save();
-  // }
-  // } else if (tagFilter?.tagName !== tagName && tagFilter?.count === 1) {
-  //   if (tagFilter && typeof tagFilter.count === "number") {
-  //     await Tag.deleteOne({ tagName: tagName, color: color });
-  //   }
-  // }
   res.status(200).json(upDate);
 });
 
@@ -442,20 +428,6 @@ const monthData = asyncHandler(async (req: Request, res: Response) => {
 
   res.status(200).json(arr);
 });
-
-// const resetDatabase = async () => {
-//   try {
-//     // CalenderData 컬렉션 내 모든 문서 삭제
-//     await CalenderData.deleteMany({});
-//     // Tag 컬렉션 내 모든 문서 삭제
-//     await Tag.deleteMany({});
-//     console.log("데이터베이스가 성공적으로 초기화되었습니다.");
-//   } catch (error) {
-//     console.error("데이터베이스 초기화 중 오류가 발생했습니다:", error);
-//   }
-// };
-
-// resetDatabase();
 
 export default {
   getYearData,

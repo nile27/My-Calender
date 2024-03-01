@@ -49,8 +49,8 @@ export const tagFilterSlice = createSlice({
           }
         }
       });
-      state.value = [...filterArr]; // 상태 값 업데이트
-      state.visit = Array.from({ length: filterArr.length }, () => false); // visit 배열 초기화
+      state.value = [...filterArr];
+      state.visit = Array.from({ length: filterArr.length }, () => false);
     },
     patch: (state, action: PayloadAction<TODOOBJArr[]>) => {
       const arr: tag[] = [];

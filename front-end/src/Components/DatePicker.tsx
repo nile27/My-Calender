@@ -149,7 +149,6 @@ const PrevButton = styled.div`
   background-size: cover;
 `;
 
-// 다음 달로 이동하는 버튼
 const NextButton = styled(PrevButton)`
   transform: scaleX(-1);
 `;

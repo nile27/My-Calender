@@ -26,8 +26,6 @@ import { TODOOBJArr } from "../type";
 import tagFilterSlice from "../Slice/tagFilter";
 import tagSelectSlice, { selectTagList } from "../Slice/tagSelect";
 
-// import axios from "axios";
-
 const UlKeyframe = keyframes`
 from {
   opacity: 0;
@@ -209,7 +207,6 @@ export default function AddTodo(props: Prop) {
   const today = useSelector(selectTodayDate);
   const isUpdateModal = useSelector(isUpdate);
   const todo = useSelector(selectTodo);
-  // const tagSelect = useSelector(selectTagDate);
   const TagList = useSelector(selectTagList);
 
   const dispatch = useDispatch();
@@ -357,7 +354,6 @@ export default function AddTodo(props: Prop) {
       try {
         const res = await axios.get(`http://localhost:4000/tag`);
         dispatch(tagSelectSlice.actions.get(res.data));
-        console.log(res.data);
       } catch (error) {
         if (isAxiosError(error)) {
           alert(error);
