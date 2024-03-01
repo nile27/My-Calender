@@ -6,6 +6,7 @@ import MonthSlice from "./Slice/monthSlice";
 import isUpdate from "./Slice/isUpdate";
 import tagFilterSlice from "./Slice/tagFilter";
 import tagSelectSlice from "./Slice/tagSelect";
+import isShowNavTag from "./Slice/isShowNavTag";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     isUpdate: isUpdate.reducer,
     tagFilter: tagFilterSlice.reducer,
     tagSelect: tagSelectSlice.reducer,
+    isShow: isShowNavTag.reducer,
   },
 });
 

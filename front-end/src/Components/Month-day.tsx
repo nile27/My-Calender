@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { isShowNavTag } from "../Slice/isShowNavTag";
 import { OnClick, NumberProp, MonthTodo } from "../type";
 
 const DayBox = styled.li<OnClick>`
@@ -179,6 +181,7 @@ export default function Day(props: {
   todoDay: MonthTodo | undefined;
 }) {
   const navi = useNavigate();
+  const dispatch = useDispatch();
   const date = new Date();
 
   function todayFunc(): boolean {
@@ -205,10 +208,15 @@ export default function Day(props: {
     return "black";
   }
 
+  const dayOnClick = (url: string) => {
+    navi(url);
+    dispatch(isShowNavTag.actions.isUpdate(true));
+  };
+
   return props.day !== 0 ? (
     <DayBox
       onClick={() =>
-        navi(`/today/${props.nowYear}/${props.month}/${props.day}`)
+        dayOnClick(`/today/${props.nowYear}/${props.month}/${props.day}`)
       }
     >
       <div className="numberBox">

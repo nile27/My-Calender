@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { tagFilterSlice, selectTagDate } from "../Slice/tagFilter";
 import { selectTodo } from "../Slice/todoSlice";
+import { isShowTag, isShowNavTag } from "../Slice/isShowNavTag";
 
 import Home from "../Img/akar-icons_home-alt1.svg";
 import Calender from "../Img/ic_baseline-calendar-month.svg";
@@ -167,12 +168,26 @@ export default function Nav() {
 
   const tagData = useSelector(selectTagDate);
   const todo = useSelector(selectTodo);
+  const isShow = useSelector(isShowTag);
 
   const filterOnclick = (idx: number) => {
     if (!tagData.visit[idx]) {
       dispatch(tagFilterSlice.actions.check(idx));
     } else {
       dispatch(tagFilterSlice.actions.uncheck(idx));
+    }
+  };
+
+  const tagShowOnClick = (url: string) => {
+    if (url === "/") {
+      if (View) {
+        setIsOpen(!isOpen);
+      }
+      navi(url);
+      dispatch(isShowNavTag.actions.isUpdate(true));
+    } else {
+      navi(url);
+      dispatch(isShowNavTag.actions.isUpdate(false));
     }
   };
 
@@ -192,30 +207,15 @@ export default function Nav() {
               <DownListBox>
                 <span>Menu</span>
 
-                <DownListli
-                  onClick={() => {
-                    navi(`/`);
-                    setIsOpen(!isOpen);
-                  }}
-                >
+                <DownListli onClick={() => tagShowOnClick("/")}>
                   <span>Home</span>
                 </DownListli>
 
-                <DownListli
-                  onClick={() => {
-                    navi("/month");
-                    setIsOpen(!isOpen);
-                  }}
-                >
+                <DownListli onClick={() => tagShowOnClick("/month")}>
                   <span>Month</span>
                 </DownListli>
 
-                <DownListli
-                  onClick={() => {
-                    navi("/search");
-                    setIsOpen(!isOpen);
-                  }}
-                >
+                <DownListli onClick={() => tagShowOnClick("/search")}>
                   <span>Search</span>
                 </DownListli>
               </DownListBox>
@@ -239,37 +239,39 @@ export default function Nav() {
           <ListBox>
             <span>Menu</span>
 
-            <Listli onClick={() => navi(`/`)}>
+            <Listli onClick={() => tagShowOnClick("/")}>
               <img src={Home} />
               <span>Home</span>
             </Listli>
 
-            <Listli onClick={() => navi("/month")}>
+            <Listli onClick={() => tagShowOnClick("/month")}>
               <img src={Calender} />
               <span>Month</span>
             </Listli>
 
-            <Listli onClick={() => navi("/search")}>
+            <Listli onClick={() => tagShowOnClick("/search")}>
               <img src={Search} />
               <span>Search</span>
             </Listli>
           </ListBox>
-          <TagListBox>
-            <span>Menu</span>
-            {tagData.value.map((item: TagData, key: number) => {
-              return !tagData.visit[key] ? (
-                <TagBtn key={key} onClick={() => filterOnclick(key)}>
-                  <ColorBox color={item.color} />
-                  <span>{item.tagName}</span>
-                </TagBtn>
-              ) : (
-                <TagBtn key={key} onClick={() => filterOnclick(key)}>
-                  <ColorBox />
-                  <span>{item.tagName}</span>
-                </TagBtn>
-              );
-            })}
-          </TagListBox>
+          {isShow ? (
+            <TagListBox>
+              <span>Tag</span>
+              {tagData.value.map((item: TagData, key: number) => {
+                return !tagData.visit[key] ? (
+                  <TagBtn key={key} onClick={() => filterOnclick(key)}>
+                    <ColorBox color={item.color} />
+                    <span>{item.tagName}</span>
+                  </TagBtn>
+                ) : (
+                  <TagBtn key={key} onClick={() => filterOnclick(key)}>
+                    <ColorBox />
+                    <span>{item.tagName}</span>
+                  </TagBtn>
+                );
+              })}
+            </TagListBox>
+          ) : null}
         </>
       )}
     </Container>

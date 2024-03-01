@@ -53,27 +53,13 @@ export const tagFilterSlice = createSlice({
       state.visit = Array.from({ length: filterArr.length }, () => false); // visit 배열 초기화
     },
     patch: (state, action: PayloadAction<TODOOBJArr[]>) => {
-      // const newState: tag[] = state.value.map((oldItem) => {
-      //   const newItem = action.payload.findIndex(
-      //     (item) =>
-      //       item.tagName === oldItem.tagName && item.color === oldItem.color
-      //   );
-      //   return newItem === -1
-      //     ? {
-      //         tagName: oldItem.tagName,
-      //         color: oldItem.color,
-      //       }
-      //     : {
-      //         tagName: action.payload[newItem].tagName,
-      //         color: action.payload[newItem].color,
-      //       };
-      // });
       const arr: tag[] = [];
       action.payload.forEach((item) => {
         const idx = arr.findIndex(
           (el) => el.tagName === item.tagName && el.color === item.color
         );
-        if (idx === -1) {
+
+        if (idx === -1 && item.tagName && item.color !== "null") {
           arr.push({ tagName: item.tagName, color: item.color });
         }
       });
