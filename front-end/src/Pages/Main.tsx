@@ -96,6 +96,12 @@ const TodoBox = styled.div`
   }
 `;
 
+interface TodaySelect {
+  year: string | undefined;
+  month: string | undefined;
+  day: string | undefined;
+}
+
 export default function Main() {
   const scrollRef = useRef<null | HTMLLIElement>(null);
   const dispatch = useDispatch();
@@ -140,48 +146,6 @@ export default function Main() {
   };
 
   useEffect(() => {
-    const dataFunc = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`
-        );
-        const { data } = res;
-        const tagData: { tagName: string; color: string }[] = data
-          .filter((item: TODOOBJArr) => {
-            return item.tagName && { tagName: item.tagName, color: item.color };
-          })
-          .map((item: TODOOBJArr) => {
-            return { tagName: item.tagName, color: item.color };
-          });
-
-        dispatch(TodoSlice.actions.update(data));
-        dispatch(tagFilterSlice.actions.get(tagData));
-        localStorage.setItem(
-          "date",
-          JSON.stringify(`${today.year}-${today.month}-${today.day}`)
-        );
-
-        sessionStorage.setItem("todoData", JSON.stringify(data));
-
-        return res;
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    const timelineScroll = () => {
-      if (scrollRef.current) {
-        scrollRef.current?.scrollIntoView({
-          block: "start",
-        });
-      }
-    };
-
-    timelineScroll();
-    dataFunc();
-  }, [today]);
-
-  useEffect(() => {
     const MainDateFunc = () => {
       if (
         params.year !== undefined &&
@@ -197,16 +161,16 @@ export default function Main() {
         dispatch(TodaySlice.actions.day(params.day));
         dispatch(
           PickDateSlice.actions.startDate({
-            year: String(today.year),
-            month: String(today.month),
-            day: String(today.day),
+            year: String(params.year),
+            month: String(params.month),
+            day: String(params.day),
           })
         );
         dispatch(
           PickDateSlice.actions.endDate({
-            year: String(today.year),
-            month: String(today.month),
-            day: String(today.day),
+            year: String(params.year),
+            month: String(params.month),
+            day: String(params.day),
           })
         );
       } else {
@@ -215,16 +179,16 @@ export default function Main() {
         dispatch(TodaySlice.actions.day(String(new Date().getDate())));
         dispatch(
           PickDateSlice.actions.startDate({
-            year: String(today.year),
-            month: String(today.month),
-            day: String(today.day),
+            year: String(new Date().getFullYear()),
+            month: String(new Date().getMonth() + 1),
+            day: String(new Date().getDate()),
           })
         );
         dispatch(
           PickDateSlice.actions.endDate({
-            year: String(today.year),
-            month: String(today.month),
-            day: String(today.day),
+            year: String(new Date().getFullYear()),
+            month: String(new Date().getMonth() + 1),
+            day: String(new Date().getDate()),
           })
         );
       }
@@ -232,8 +196,58 @@ export default function Main() {
       dispatch(PickDateSlice.actions.endTime(new Date().getHours()));
     };
 
+    const dataFunc = async () => {
+      try {
+        const selectToday: TodaySelect = {
+          year: params.year ? params.year : String(new Date().getFullYear()),
+          month: params.month
+            ? params.month
+            : String(new Date().getMonth() + 1),
+          day: params.day ? params.day : String(new Date().getDate()),
+        };
+        const res = await axios.get(
+          `http://localhost:4000/today/${selectToday.year}/${selectToday.month}/${selectToday.day}`
+        );
+
+        const { data } = res;
+        const tagData: { tagName: string; color: string }[] = data
+          .filter((item: TODOOBJArr) => {
+            return item.tagName && { tagName: item.tagName, color: item.color };
+          })
+          .map((item: TODOOBJArr) => {
+            return { tagName: item.tagName, color: item.color };
+          });
+
+        dispatch(TodoSlice.actions.update(data));
+        dispatch(tagFilterSlice.actions.get(tagData));
+        localStorage.setItem(
+          "date",
+          JSON.stringify(
+            `${selectToday.year}-${selectToday.month}-${selectToday.day}`
+          )
+        );
+        sessionStorage.setItem("todoData", JSON.stringify(data));
+
+        return res;
+      } catch (err) {
+        throw err;
+      }
+    };
+
     MainDateFunc();
+    dataFunc();
   }, [params]);
+
+  useEffect(() => {
+    const timelineScroll = () => {
+      if (scrollRef.current) {
+        scrollRef.current?.scrollIntoView({
+          block: "start",
+        });
+      }
+    };
+    timelineScroll();
+  }, [today]);
 
   return (
     <Container>
