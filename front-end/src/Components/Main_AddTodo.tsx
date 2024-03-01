@@ -214,16 +214,42 @@ export default function AddTodo(props: Prop) {
 
   const dispatch = useDispatch();
 
+  const dataReset = () => {
+    const localData = localStorage.getItem("date");
+    const parseData = localData ? JSON.parse(localData).split("-") : [];
+    dispatch(
+      PickDateSlice.actions.startDate({
+        year: parseData[0],
+        month: parseData[1],
+        day: parseData[2],
+      })
+    );
+    dispatch(
+      PickDateSlice.actions.endDate({
+        year: parseData[0],
+        month: parseData[1],
+        day: parseData[2],
+      })
+    );
+    dispatch(PickDateSlice.actions.startTime(new Date().getHours()));
+    dispatch(PickDateSlice.actions.endTime(new Date().getHours()));
+  };
+
   const TagOnclickFunc = (color: string, name: string) => {
     dispatch(PickDateSlice.actions.tagColor(color));
     dispatch(PickDateSlice.actions.tagName(name));
     setTagPicker(!tagpicker);
   };
+  const ModalCloseFunc = () => {
+    setModal(!modal);
+    dispatch(reset());
+    dataReset();
+  };
 
   const handlePostTodo = async () => {
     if (!pickDate.name) {
       alert("제목을 입력해주세요.");
-      dispatch(reset());
+      ModalCloseFunc();
       return;
     }
     setModal(!modal);
@@ -250,31 +276,18 @@ export default function AddTodo(props: Prop) {
           );
 
           dispatch(reset());
-          const localData = localStorage.getItem("date");
-          const parseData = localData ? JSON.parse(localData).split("-") : [];
-          dispatch(
-            PickDateSlice.actions.startDate({
-              year: parseData[0],
-              month: parseData[1],
-              day: parseData[2],
-            })
-          );
-          dispatch(
-            PickDateSlice.actions.endDate({
-              year: parseData[0],
-              month: parseData[1],
-              day: parseData[2],
-            })
-          );
+          dataReset();
         }
       } catch (err) {
         if (isAxiosError(err)) {
           if (err.response && err.response.status === 409) {
             alert(err.response.data);
           } else {
+            ModalCloseFunc();
             alert("제목을 입력해주세요");
           }
           dispatch(reset());
+          dataReset();
         }
       }
     } else {
@@ -299,42 +312,23 @@ export default function AddTodo(props: Prop) {
           sessionStorage.setItem("todoData", JSON.stringify(sessionData));
 
           dispatch(reset());
-          const localData = localStorage.getItem("date");
-          const parseData = localData ? JSON.parse(localData).split("-") : [];
-          dispatch(
-            PickDateSlice.actions.startDate({
-              year: parseData[0],
-              month: parseData[1],
-              day: parseData[2],
-            })
-          );
-          dispatch(
-            PickDateSlice.actions.endDate({
-              year: parseData[0],
-              month: parseData[1],
-              day: parseData[2],
-            })
-          );
+          dataReset();
         }
       } catch (err) {
         if (isAxiosError(err)) {
           if (err.response && err.response.status === 409) {
             alert(err.response.data);
           } else {
+            ModalCloseFunc();
             alert("제목을 입력해주세요");
           }
         }
         dispatch(reset());
+        dataReset();
       }
     }
   };
 
-  const ModalCloseFunc = () => {
-    setModal(!modal);
-    dispatch(reset());
-    dispatch(PickDateSlice.actions.startDate({ ...today }));
-    dispatch(PickDateSlice.actions.endDate({ ...today }));
-  };
   const deleteFunc = async () => {
     try {
       const res = await axios.delete(
@@ -363,6 +357,7 @@ export default function AddTodo(props: Prop) {
       try {
         const res = await axios.get(`http://localhost:4000/tag`);
         dispatch(tagSelectSlice.actions.get(res.data));
+        console.log(res.data);
       } catch (error) {
         if (isAxiosError(error)) {
           alert(error);

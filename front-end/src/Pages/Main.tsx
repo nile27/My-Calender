@@ -15,6 +15,7 @@ import Plus from "../Img/mingcute_add-fill.svg";
 import TodoLi from "../Components/Main-TodoLI";
 import Scheduler from "../Components/Main-Schedule";
 import Modal from "../Components/Main_AddTodo";
+import isShowNavTag from "../Slice/isShowNavTag";
 
 const Container = styled.div`
   width: 100%;
@@ -146,6 +147,7 @@ export default function Main() {
   };
 
   useEffect(() => {
+    dispatch(isShowNavTag.actions.isUpdate(true));
     const MainDateFunc = () => {
       if (
         params.year !== undefined &&

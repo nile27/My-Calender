@@ -2,6 +2,13 @@ import asyncHandler from "express-async-handler";
 import CalenderData from "../models/dateModel";
 import Tag from "../models/tagModel";
 import { Request, Response } from "express";
+import { Document } from "mongoose";
+
+interface PrevTag extends Document {
+  tagName: string;
+  color: string;
+  count: number;
+}
 
 interface PostData {
   year: string;
@@ -14,13 +21,6 @@ interface PostData {
   color: string;
   done: boolean;
 }
-
-interface MyDate {
-  year: string;
-  month: string;
-  day: string;
-}
-
 interface CreateData {
   _id: string;
   year: string;
@@ -223,7 +223,8 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
   let dubplicate: PostData[] = [];
   const tagFilter = tagName
     ? await Tag.findOne({ tagName: tagName, color: color })
-    : null;
+    : (null as PrevTag | null);
+  const prevData: PostData | null = await CalenderData.findOne({ _id: id });
 
   dubplicate = await duplicateFunc({
     id: id,
@@ -255,15 +256,63 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
     },
     { new: true }
   );
-  if (tagName && !tagFilter) {
+
+  if (
+    tagName &&
+    !tagFilter &&
+    prevData &&
+    !prevData.tagName &&
+    prevData.color === "null"
+  ) {
     Tag.create({ count: 1, tagName: tagName, color: color });
-  } else if (tagName && tagFilter) {
+  } else if (tagName && !tagFilter && prevData && prevData.tagName) {
+    Tag.create({ count: 1, tagName: tagName, color: color });
+    const prevTag = (await Tag.findOne({
+      tagName: prevData.tagName,
+      color: prevData.color,
+    })) as PrevTag | null;
+    if (prevTag && prevTag.count === 1) {
+      await Tag.findOneAndDelete({
+        tagName: prevData.tagName,
+        color: prevData.color,
+      });
+    } else if (prevTag && prevTag.count > 1) {
+      if (prevTag && typeof prevTag.count === "number") {
+        prevTag.count = prevTag.count - 1;
+        await prevTag.save();
+      }
+    }
+  } else if (tagName && tagFilter && prevData) {
+    const prevTag = (await Tag.findOne({
+      tagName: prevData.tagName,
+      color: prevData.color,
+    })) as PrevTag | null;
+    if (prevTag && prevTag.count === 1) {
+      await Tag.deleteOne({ tagName: prevData.tagName, color: prevData.color });
+    } else if (prevTag && prevTag.count > 1) {
+      if (prevTag && typeof prevTag.count === "number") {
+        prevTag.count = prevTag.count + 1;
+        await prevTag.save();
+      }
+    }
     if (tagFilter && typeof tagFilter.count === "number") {
-      tagFilter.count = tagFilter.count - 1;
+      tagFilter.count = tagFilter.count + 1;
       await tagFilter.save();
     }
   }
 
+  // if (tagName && !tagFilter) {
+  //   Tag.create({ count: 1, tagName: tagName, color: color });
+  // } else if (tagName && tagFilter) {
+  // if (tagFilter && typeof tagFilter.count === "number") {
+  //   tagFilter.count = tagFilter.count + 1;
+  //   await tagFilter.save();
+  // }
+  // } else if (tagFilter?.tagName !== tagName && tagFilter?.count === 1) {
+  //   if (tagFilter && typeof tagFilter.count === "number") {
+  //     await Tag.deleteOne({ tagName: tagName, color: color });
+  //   }
+  // }
   res.status(200).json(upDate);
 });
 
@@ -389,7 +438,6 @@ const monthData = asyncHandler(async (req: Request, res: Response) => {
       };
       arr.push(dummy);
     }
-    console.log(arr);
   });
 
   res.status(200).json(arr);
