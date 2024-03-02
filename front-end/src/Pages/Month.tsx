@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { MonthSlice } from "../Slice/monthSlice";
@@ -77,7 +77,9 @@ export default function Month() {
 
         return response;
       } catch (error) {
-        console.error("There was a problem with your axios request:", error);
+        if (isAxiosError(error)) {
+          alert("공휴일을 불러오는데 실패하였습니다.");
+        }
         throw error;
       }
     };

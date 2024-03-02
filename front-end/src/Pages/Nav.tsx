@@ -186,6 +186,9 @@ export default function Nav() {
       navi(url);
       dispatch(isShowNavTag.actions.isUpdate(true));
     } else {
+      if (View) {
+        setIsOpen(!isOpen);
+      }
       navi(url);
       dispatch(isShowNavTag.actions.isUpdate(false));
     }

@@ -329,7 +329,6 @@ const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
       }
     }
   } catch (err) {
-    console.error("Error toggling done status:", err);
     res.status(500).json({ message: "서버 오류 발생" });
   }
 });
@@ -354,7 +353,6 @@ const postTodoDone = asyncHandler(
 
       res.status(200).json(document);
     } catch (error) {
-      console.error("Error toggling done status:", error);
       res.status(500).json({ message: "서버 오류 발생" });
     }
   }
@@ -377,7 +375,6 @@ const searchFunc = asyncHandler(
       }
       res.status(200).json(document);
     } catch (error) {
-      console.error("Error toggling done status:", error);
       res.status(500).json({ message: "서버 오류 발생" });
     }
   }
