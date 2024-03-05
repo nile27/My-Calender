@@ -71,7 +71,9 @@ export default function Search() {
   const handleKeydown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       try {
-        const res = await axios.get(`http://localhost:4000/search/${keyword}`);
+        const res = await axios.get(
+          `${process.env.REACT_APP_PUBLIC_URL}/search/${keyword}`
+        );
         setData(res.data);
       } catch (error) {
         if (isAxiosError(error) && error.response) {

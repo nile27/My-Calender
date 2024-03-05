@@ -84,7 +84,7 @@ export default function Month() {
       }
     };
     const gettodoDate = async () => {
-      const url: string = `http://localhost:4000/month/${date.getFullYear()}`;
+      const url: string = `${process.env.REACT_APP_PUBLIC_URL}/month/${date.getFullYear()}`;
 
       const data = await axios.get(url);
 

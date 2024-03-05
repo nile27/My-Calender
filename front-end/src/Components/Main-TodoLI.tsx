@@ -129,7 +129,7 @@ export default function TodoLi(props: { todo: TODOOBJArr }) {
     );
     dispatch(TodoSlice.actions.done(idx));
 
-    return axios.patch(`http://localhost:4000/todo/${_id}`);
+    return axios.patch(`${process.env.REACT_APP_PUBLIC_URL}/todo/${_id}`);
   };
 
   return (

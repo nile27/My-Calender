@@ -21,8 +21,9 @@ const Container = styled.div`
   width: 100%;
   height: 90%;
   display: flex;
+  justify-content: center;
   padding: 2rem 3rem;
-  gap: 1rem;
+  gap: 10%;
   @media screen and (max-width: 860px) {
     flex-direction: column;
   }
@@ -30,6 +31,7 @@ const Container = styled.div`
 
 const TodoContainer = styled.div`
   width: 100%;
+  max-width: 800px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -41,6 +43,7 @@ const ScheduleBox = styled.div`
   width: 100%;
   height: 100%;
   padding: 2rem;
+  max-width: 800px;
 
   > .Header {
     border-bottom: 1px solid var(--light-gray);
@@ -208,7 +211,7 @@ export default function Main() {
           day: params.day ? params.day : String(new Date().getDate()),
         };
         const res = await axios.get(
-          `http://localhost:4000/today/${selectToday.year}/${selectToday.month}/${selectToday.day}`
+          `${process.env.REACT_APP_PUBLIC_URL}/today/${selectToday.year}/${selectToday.month}/${selectToday.day}`
         );
 
         const { data } = res;

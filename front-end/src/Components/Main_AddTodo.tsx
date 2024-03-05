@@ -253,7 +253,7 @@ export default function AddTodo(props: Prop) {
     if (!isUpdateModal) {
       try {
         const res = await axios.post(
-          `http://localhost:4000/today/${today.year}/${today.month}/${today.day}`,
+          `${process.env.REACT_APP_PUBLIC_URL}/today/${today.year}/${today.month}/${today.day}`,
           { ...pickDate }
         );
 
@@ -290,7 +290,7 @@ export default function AddTodo(props: Prop) {
     } else {
       try {
         const res = await axios.patch(
-          `http://localhost:4000/today/${pickDate._id}`,
+          `${process.env.REACT_APP_PUBLIC_URL}/today/${pickDate._id}`,
           { ...pickDate }
         );
 
@@ -329,7 +329,7 @@ export default function AddTodo(props: Prop) {
   const deleteFunc = async () => {
     try {
       const res = await axios.delete(
-        `http://localhost:4000/today/${pickDate._id}/${pickDate.tagName}/${pickDate.color}`
+        `${process.env.REACT_APP_PUBLIC_URL}/today/${pickDate._id}/${pickDate.tagName}/${pickDate.color}`
       );
 
       const sessionDataString = sessionStorage.getItem("todoData");
@@ -352,7 +352,7 @@ export default function AddTodo(props: Prop) {
   useEffect(() => {
     const tagDataFunc = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/tag`);
+        const res = await axios.get(`${process.env.REACT_APP_PUBLIC_URL}/tag`);
         dispatch(tagSelectSlice.actions.get(res.data));
       } catch (error) {
         if (isAxiosError(error)) {
