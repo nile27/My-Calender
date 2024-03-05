@@ -22,7 +22,6 @@ interface PostData {
   done: boolean;
 }
 interface CreateData {
-  _id: string;
   year: string;
   month: string;
   day: string;
@@ -161,7 +160,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         );
       return;
     } else {
-      const createdData = await CalenderData.create({
+      arr.push({
         year: String(firstDate.getFullYear()),
         month: String(firstDate.getMonth() + 1),
         day: String(firstDate.getDate()),
@@ -172,24 +171,6 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
         color: color,
         done: done,
       });
-
-      if (
-        year === String(firstDate.getFullYear()) &&
-        month === String(firstDate.getMonth() + 1) &&
-        day === String(firstDate.getDate())
-      )
-        arr.push({
-          _id: createdData._id.toString(),
-          year: createdData.year,
-          month: createdData.month,
-          day: createdData.day,
-          startTime: createdData.startTime,
-          endTime: createdData.endTime,
-          name: createdData.name,
-          tagName: createdData.tagName || null,
-          color: createdData.color,
-          done: createdData.done,
-        });
     }
 
     lastDate = `${firstDate.getFullYear()}-${
@@ -197,6 +178,10 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
     }-${firstDate.getDate()}`;
 
     i += 1;
+  }
+
+  for (let item of arr) {
+    const createdData = await CalenderData.create({ ...item });
   }
 
   if (tagName && !tagFilter) {

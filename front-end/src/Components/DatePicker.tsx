@@ -170,7 +170,7 @@ export default function DatePicker(props: Prop) {
       dispatch(
         PickDateSlice.actions.startDate({
           year: String(date[0].getFullYear()),
-          month: String(date[0].getMonth()),
+          month: String(date[0].getMonth() + 1),
           day: String(date[0].getDate()),
         })
       );
@@ -179,7 +179,7 @@ export default function DatePicker(props: Prop) {
       dispatch(
         PickDateSlice.actions.endDate({
           year: String(date[1].getFullYear()),
-          month: String(date[1].getMonth()),
+          month: String(date[1].getMonth() + 1),
           day: String(date[1].getDate()),
         })
       );
