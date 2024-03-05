@@ -13,6 +13,10 @@ const GlobalStyles = createGlobalStyle`
   body{
     display: flex;
     justify-content: center;
+    -ms-overflow-style: none;
+  }
+  ::-webkit-scrollbar {
+    display: none;
   }
 
   a {
