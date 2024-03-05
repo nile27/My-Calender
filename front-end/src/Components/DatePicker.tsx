@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import ReactDatePicker, { CalendarContainer } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ko } from "date-fns/locale";
+import { ko } from "date-fns/locale/ko";
 import { useSelector, useDispatch } from "react-redux";
 import { PickDateSlice } from "../Slice/pickDateSlice";
 import { selectTodayDate } from "../Slice/todayDate";
@@ -102,8 +102,8 @@ const DateWapper = styled.div`
       width: 300px;
     }
     .react-datepicker__day--disabled {
-      opacity: 0.5; /* 비활성화된 요소에 투명도 적용 */
-      background-color: #f0f0f0; /* 배경색 변경 */
+      opacity: 0.5;
+      background-color: #f0f0f0;
     }
   }
 `;
@@ -192,11 +192,17 @@ export default function DatePicker(props: Prop) {
       <StyledDatePicker
         locale={ko}
         startDate={
-          new Date(Number(today.year), Number(today.month), Number(today.day))
+          new Date(
+            `${Number(today.year)}-${Number(today.month)}-${Number(today.day)}`
+          )
         }
         endDate={null}
         minDate={
-          new Date(Number(today.year), Number(today.month), Number(today.day))
+          new Date(
+            Number(today.year),
+            Number(today.month) - 1,
+            Number(today.day)
+          )
         }
         onChange={(date: [Date, Date]) => handleDatePicker(date)}
         selectsRange
@@ -205,7 +211,8 @@ export default function DatePicker(props: Prop) {
         popperContainer={CalendarContainer}
         renderCustomHeader={({ date, decreaseMonth, increaseMonth }) => (
           <Customhead>
-            <span>{`${date.getFullYear()}년 ${date.getMonth()}월`}</span>
+            <span>{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
+
             <div className="btnBox">
               <PrevButton onClick={decreaseMonth} />
               <NextButton onClick={increaseMonth} />
