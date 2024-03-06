@@ -4,80 +4,96 @@
 
 ### Todo-list는 우리의 시간을 효율적으로 관리하고 우리의 목표를 달성하는데 도움을 줍니다. 작은 일들을 작성하고 큰 성취를 경험하세요. 👏👏👏
 
-저 만의 Todo-list를 정리하고 월별로 볼 수 있는 사이트를 만들어
 <br>
 
 프로젝트 기간: 2023.02.01 ~ 2023.03.03
 
 <a href="http://my-calender.s3-website.ap-northeast-2.amazonaws.com" target="_blank"> My-Todo-Calender 배포사이트 바로가기</a>
 
-<table>	
- <tr>
-    <th>
-      회원 가입 페이지
-    </th>
-    <th>
-      로그인 페이지
-    </th>
-  </tr>
-  <tr>
-    <td>
-      <img src="https://user-images.githubusercontent.com/118884127/240876205-8526ffcd-84a9-48aa-a49e-7f36252d5e2a.gif"  alt="signup page" width = 100% >
-    </td>
-    <td>
-      <img src="https://user-images.githubusercontent.com/118884127/240876213-8a1fc9cd-ac09-4efe-baf8-0c6035199baf.gif" alt="login page" width = 100%>
-    </td>
-   </tr> 
-  <tr>
-    <th>
+<table >	
+ <tr >
+    <th >
       메인 페이지
     </th>
-    <th>
-      맛집 등록 페이지
-    </th>
   </tr>
   <tr>
     <td>
-      <img src="https://user-images.githubusercontent.com/118884127/240876933-3f0cd105-20ac-458f-a3d0-1364f8761a6f.gif"  alt="main page" width = 100%>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/97d04e13-d75a-460d-b4ef-b424cb442a6e"  alt="main page" width = 100% >
     </td>
-    <td>
-      <img src="https://user-images.githubusercontent.com/118884127/241071458-b5f47752-eb3e-4b9b-9f66-116f9a8cfbe1.gif" alt="add page" width = 100%>
-    </td>
-   </tr>
+   </tr> 
    <tr>
     <th>
-      업체 리스트페이지
-    </th> 
-    <th>
-      리뷰 페이지
+      달력 페이지
     </th>
   </tr>
   <tr>
     <td>
-      <img src="https://user-images.githubusercontent.com/118884127/241071936-aa351fd5-eeac-41e6-9087-d1d51aa6f8a9.gif" alt="list page" width = 100%>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/1f56e936-25ae-4ee2-8f06-025d6f3818a6"  alt="main page" width = 100% >
     </td>
-    <td>
-      <img src="https://user-images.githubusercontent.com/118884127/240876217-5c013fea-5bd0-4ba5-aac5-d4278a1c3ab4.gif" alt="review page" width = 100%>
-    </td>
-  </tr> 
-  <tr>
+   </tr> 
+   <tr>
     <th>
-      상세페이지
-    </th><th>
-      마이페이지
+      검색 페이지
     </th>
   </tr>
   <tr>
     <td>
-      <img src="https://user-images.githubusercontent.com/118884127/241087793-ae4fc25a-293f-4ab3-941e-1993b27913cf.gif" alt="detail" width = 100%>
-	</td >   
-	<td>
-      <img src="https://user-images.githubusercontent.com/118884127/241088286-99f4ff31-8496-489e-bb63-96388298cc00.gif" alt="mypage" width = 100%>
-    </td
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/ec3691f3-0145-4f1f-8c83-d973c665fcb9"  alt="main page" width = 100% >
+    </td>
+   </tr> 
+     <tr>
+    <th>
+      일정 추가
+    </th>
   </tr>
-      <br/>
-</table>	
-<br>
+  <tr>
+    <td>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/c745e802-aeef-48bd-b62c-ce62187e9485"  alt="main page" width = 100% >
+    </td>
+   </tr> 
+   <tr>
+    <th>
+      태그 필터 기능
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/c4d5fea8-54da-4b96-8600-3fc0f4ce890d"  alt="main page" width = 100% >
+    </td>
+   </tr> 
+   <tr>
+    <th>
+      일정 수정 
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/3c667c13-a69a-4642-b582-49c18566a437"  alt="main page" width = 100% >
+    </td>
+   </tr> 
+      </tr> 
+   <tr>
+    <th>
+      태그 설정 및 새로 만들기
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/145f438c-c616-43cb-807d-089bd4b35e57"  alt="main page" width = 100% >
+    </td>
+   </tr> 
+   <tr>
+    <th>
+      일정 삭제
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://github.com/nile27/My-Calender/assets/114140840/df21a382-3802-41b6-8deb-bfa874d40d1d"  alt="main page" width = 100% >
+    </td>
+   </tr> 
+</table>		
+<br/>
 
 # 📚 Tech Stack 📚
 
