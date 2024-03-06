@@ -23,7 +23,7 @@ const SearchContainer = styled.div`
 
 const SearchBarBox = styled.div`
   width: 100%;
-  height: 100%;
+  height: 24px;
   padding: 0.5rem 1rem;
   background-color: var(--whiteblue);
   display: flex;
@@ -43,7 +43,7 @@ const SearchBar = styled.input`
   background-color: transparent;
   padding: 0 1rem;
   outline: none;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
 `;
 

@@ -74,8 +74,11 @@ const ListBody = styled.div`
   justify-content: center;
   gap: 1rem;
   span {
+    display: block;
+    width: 100%;
     font-weight: 600;
     font-size: 20px;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -84,6 +87,8 @@ const ListBody = styled.div`
     display: flex;
     gap: 1rem;
     span {
+      display: block;
+      width: 80%;
       font-size: var(--small-size);
       overflow: hidden;
       text-overflow: ellipsis;

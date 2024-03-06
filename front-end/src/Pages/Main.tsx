@@ -26,6 +26,7 @@ const Container = styled.div`
   gap: 10%;
   @media screen and (max-width: 860px) {
     flex-direction: column;
+    justify-content: start;
   }
 `;
 

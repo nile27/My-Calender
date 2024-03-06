@@ -33,7 +33,7 @@ const DayBox = styled.li<OnClick>`
     gap: 1rem;
     overflow-y: scroll;
     white-space: nowrap;
-    overflow-x: hidden;
+    overflow-x: ellipsis;
 
     flex: 1 1 0;
 
@@ -42,10 +42,16 @@ const DayBox = styled.li<OnClick>`
       height: auto;
       display: flex;
       gap: 1rem;
-
+      flex: 1 1 0;
       span {
+        flex: 1 1 0;
+        display: inline_block;
+        overflow: hidden;
+        width: auto;
+        max-width: 70%;
         font-size: 12px;
         text-overflow: ellipsis;
+        font-weight: 600;
       }
     }
   }
@@ -54,53 +60,36 @@ const DayBox = styled.li<OnClick>`
     background-color: var(--whiteblue);
   }
 
-  @media screen and (min-width: 610px) and (max-width: 900px) {
-    .numberBox {
-      padding-right: 0;
-    }
+  @media screen and (min-width: 800px) and (max-width: 950px) {
     .TodoBox {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
       li {
         .colorBox {
           display: none;
         }
 
         span {
-          font-size: 70%;
+          font-size: 12px;
         }
       }
     }
   }
 
-  @media screen and (max-width: 610px) {
+  @media screen and (max-width: 800px) {
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;
     padding: 0.5rem 0;
-    .numberBox {
-      padding-right: 0;
-    }
-    .TodoBox {
-      padding: 0;
-      white-space: nowrap;
-      overflow: hidden;
 
+    .TodoBox {
+      padding: 5px;
+      white-space: nowrap;
       li {
         white-space: nowrap;
-        overflow-x: hidden;
         text-overflow: ellipsis;
 
         padding: 0;
         .colorBox {
           display: none;
-        }
-
-        span {
-          font-size: 70%;
-          text-overflow: ellipsis;
         }
       }
     }
@@ -118,15 +107,15 @@ const Number = styled.div<NumberProp>`
   background-color: ${(prop) => prop.background_color || "var(--skyblue)"};
   border-radius: 50%;
   text-align: center;
-  padding: 1rem;
+  padding: 0.7rem 0.7rem;
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 950px) {
     width: auto;
     height: auto;
-    padding: 0.3rem;
+    padding: 0.1rem 0.4rem;
   }
   @media screen and (max-width: 375px) {
-    font-size: 70%;
+    font-size: 12px;
   }
 `;
 
@@ -137,7 +126,7 @@ const HolidayBox = styled.div`
   height: auto;
   min-height: auto;
   padding: 0 5px;
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 800px) {
     padding: 0;
   }
 `;
@@ -148,21 +137,22 @@ const HolidaySpan = styled.span`
   color: ${(p) => p.color || "black"};
   white-space: normal;
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 800px) {
     display: none;
   }
 `;
 
 const ColorBox = styled.div`
   height: 100%;
+  max-height: 12px;
   width: 12px;
   background-color: ${(prop) => prop.color || "var(--line-gray)"};
 
-  @media screen and (min-width: 610px) and (max-width: 900px) {
+  @media screen and (min-width: 800px) and (max-width: 950px) {
     display: none;
   }
 
-  @media screen and (max-width: 610px) {
+  @media screen and (max-width: 800px) {
     display: none;
   }
 `;

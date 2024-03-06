@@ -22,7 +22,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 2rem;
 
-  @media screen and (max-width: 1100px) {
+  @media screen and (max-width: 1300px) {
     width: auto;
     height: 100%;
     position: absolute;
@@ -161,7 +161,7 @@ export default function Nav() {
   const navi = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const View: boolean = useMediaQuery({
-    query: "(max-width:1100px)",
+    query: "(max-width:1300px)",
   });
 
   const dispatch = useDispatch();
