@@ -22,6 +22,7 @@ const DaysBox = styled.div`
   height: 95%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 `;
 const AnimationDiv = styled.div`
   width: 100%;
