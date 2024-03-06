@@ -33,6 +33,19 @@ interface CreateData {
   done: boolean;
 }
 
+interface CreateSendData {
+  _id: string;
+  year: string;
+  month: string;
+  day: string;
+  startTime: Number;
+  endTime: Number;
+  name: string;
+  tagName: string | null;
+  color: string;
+  done: boolean;
+}
+
 interface MonthTodo {
   color: string[];
   name: string[];
@@ -179,9 +192,10 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 
     i += 1;
   }
-
+  const sendData: CreateSendData[] = [];
   for (let item of arr) {
     const createdData = await CalenderData.create({ ...item });
+    sendData.push({ _id: createdData._id.toString(), ...item });
   }
 
   if (tagName && !tagFilter) {
@@ -195,7 +209,7 @@ const postYearData = asyncHandler(async (req: Request, res: Response) => {
 
   res.status(200).json({
     message: "일정이 추가 되었습니다.",
-    updatedContact: arr,
+    updatedContact: sendData,
   });
 });
 
@@ -291,8 +305,15 @@ const patchYearData = asyncHandler(async (req: Request, res: Response) => {
 const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
   const { id, tagName, color }: { id: string; tagName: string; color: string } =
     req.params as { id: string; tagName: string; color: string };
+  const undefinedTagName = tagName === "undefined" ? "" : tagName;
   const deleteTodo = await CalenderData.deleteOne({ _id: id });
-  const deleteTag = await Tag.findOne({ tagName: tagName, color: color });
+  const deleteTag =
+    undefinedTagName &&
+    (await Tag.findOne({
+      tagName: undefinedTagName,
+      color: color,
+    }));
+
   try {
     if (!deleteTodo.deletedCount) {
       res.status(404).json({ message: "문서를 찾을 수 없습니다." });
@@ -304,13 +325,15 @@ const deleteYearData = asyncHandler(async (req: Request, res: Response) => {
           await deleteTag.save();
 
           res.status(200).json({ message: "일정이 삭제되었습니다." });
-        } else {
-          await Tag.deleteOne({ tagName: tagName, color: color });
+        } else if (deleteTag.count === 1) {
+          await Tag.deleteOne({ tagName: undefinedTagName, color: color });
           const newTagArr = await Tag.find({});
           res
             .status(200)
             .json({ message: "일정이 삭제되었습니다.", data: newTagArr });
         }
+      } else {
+        res.status(200).json({ message: "일정이 삭제되었습니다." });
       }
     }
   } catch (err) {
@@ -355,7 +378,7 @@ const searchFunc = asyncHandler(
       });
 
       if (!document || document.length === 0) {
-        res.status(409).json({ message: "문서를 찾을 수 없습니다." });
+        res.status(409).json({ message: "검색 단어를 찾을 수 없습니다." });
         return;
       }
       res.status(200).json(document);

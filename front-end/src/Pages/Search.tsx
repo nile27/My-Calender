@@ -75,7 +75,11 @@ export default function Search() {
         setData(res.data);
       } catch (error) {
         if (isAxiosError(error) && error.response) {
-          alert(error.response.data.message);
+          if (error.response.status === 404) {
+            alert("검색어를 확인해주세요.");
+          } else if (error.response.status === 409) {
+            alert(error.response.data.message);
+          }
         }
       }
     }

@@ -327,9 +327,17 @@ export default function AddTodo(props: Prop) {
   };
 
   const deleteFunc = async () => {
+    if (!pickDate.name) {
+      alert("제목을 입력해주세요.");
+      ModalCloseFunc();
+      return;
+    }
     try {
+      const undefinedTagName: string = pickDate.tagName
+        ? pickDate.tagName
+        : "undefined";
       const res = await axios.delete(
-        `${process.env.REACT_APP_PUBLIC_URL}/today/${pickDate._id}/${pickDate.tagName}/${pickDate.color}`
+        `${process.env.REACT_APP_PUBLIC_URL}/today/${pickDate._id}/${undefinedTagName}/${pickDate.color}`
       );
 
       const sessionDataString = sessionStorage.getItem("todoData");
@@ -343,7 +351,7 @@ export default function AddTodo(props: Prop) {
       alert(res.data.message);
     } catch (error) {
       if (isAxiosError(error)) {
-        alert(error);
+        alert("일정 삭제에 실패하였습니다.");
       }
     }
     ModalCloseFunc();
@@ -356,7 +364,7 @@ export default function AddTodo(props: Prop) {
         dispatch(tagSelectSlice.actions.get(res.data));
       } catch (error) {
         if (isAxiosError(error)) {
-          alert(error);
+          alert("삭제에 실패 하였습니다.");
         }
       }
     };
