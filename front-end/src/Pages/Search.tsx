@@ -17,19 +17,18 @@ const Container = styled.div`
 const SearchContainer = styled.div`
   width: 100%;
   height: 7%;
-  padding: 0.5rem 1rem 1rem 1rem;
+
   border-bottom: 1px solid var(--light-gray);
 `;
 
 const SearchBarBox = styled.div`
   width: 100%;
-  height: 24px;
+  height: auto;
   padding: 0.5rem 1rem;
   background-color: var(--whiteblue);
   display: flex;
   justify-content: center;
   align-items: center;
-
   border-radius: 10px;
 
   img {
