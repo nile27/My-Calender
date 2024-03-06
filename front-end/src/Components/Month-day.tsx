@@ -49,7 +49,7 @@ const DayBox = styled.li<OnClick>`
         overflow: hidden;
         width: auto;
         max-width: 70%;
-        font-size: 12px;
+        font-size: 10px;
         text-overflow: ellipsis;
         font-weight: 600;
       }
@@ -68,7 +68,7 @@ const DayBox = styled.li<OnClick>`
         }
 
         span {
-          font-size: 12px;
+          font-size: 10px;
         }
       }
     }
