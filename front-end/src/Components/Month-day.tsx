@@ -29,7 +29,7 @@ const DayBox = styled.li<OnClick>`
     display: flex;
     justify-content: start;
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 10%;
     gap: 1rem;
     overflow-y: scroll;
     white-space: nowrap;
@@ -42,14 +42,13 @@ const DayBox = styled.li<OnClick>`
       height: auto;
       display: flex;
       gap: 1rem;
-      flex: 1 1 0;
+
       span {
-        flex: 1 1 0;
         display: inline_block;
         overflow: hidden;
         width: auto;
         max-width: 70%;
-        font-size: 10px;
+        font-size: 11px;
         text-overflow: ellipsis;
         font-weight: 600;
       }
@@ -68,7 +67,7 @@ const DayBox = styled.li<OnClick>`
         }
 
         span {
-          font-size: 10px;
+          font-size: 11px;
         }
       }
     }
