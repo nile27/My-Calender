@@ -17,7 +17,7 @@ const Container = styled.div`
 const SearchContainer = styled.div`
   width: 100%;
   height: 7%;
-
+  padding-bottom: 50px;
   border-bottom: 1px solid var(--light-gray);
 `;
 
@@ -30,7 +30,6 @@ const SearchBarBox = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-
   img {
     width: 24px;
     height: 24px;
