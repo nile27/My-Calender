@@ -6,6 +6,10 @@
 
 <br>
 
+Todo List는 목표와 꿈을 현실로 만들어주는 가장 간단하지만 효과적인 도구이기도 합니다. 우리가 매일 할 일을 시각적으로 정리하고 우선순위를 결정하는 데 도움을 줍니다. 매일 Todo List를 작성하고 효율적으로 시간에 맞춰 계획하면서, 시간을 더 잘 활용하고 더 많은 것들을 달성할 수 있습니다.
+
+<br>
+
 프로젝트 기간: 2023.02.01 ~ 2023.03.03
 
 <a href="http://my-calender.s3-website.ap-northeast-2.amazonaws.com" target="_blank"> My-Todo-Calender 배포사이트 바로가기</a>
