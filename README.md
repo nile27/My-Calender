@@ -10,7 +10,7 @@ Todo List는 목표와 꿈을 현실로 만들어주는 가장 간단하지만 �
 
 <br>
 
-프로젝트 기간: 2023.02.01 ~ 2023.03.03
+프로젝트 기간: 2023.02.01 ~ 2023.03.03 (5주)
 
 <a href="http://calender123.s3-website.ap-northeast-2.amazonaws.com/"  target="_blank"> My-Todo-Calender 배포사이트 바로가기</a>
 
