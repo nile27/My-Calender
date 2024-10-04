@@ -122,21 +122,12 @@ Todo List는 목표와 꿈을 현실로 만들어주는 가장 간단하지만 �
 ## 🛠Backend Tools 🛠
 <div align=left>
  <img src="https://img.shields.io/badge/typescript-007acc?style=for-the-badge&logo=typescript&logoColor=white">
-	<img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" />
-	<img src="https://img.shields.io/badge/ts_node-3178C6?style=for-the-badge&logo=ts-node&logoColor=white" />
 	<img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white" />
   <img src="https://img.shields.io/badge/nodemon-76D04B?style=for-the-badge&logo=nodemon&logoColor=white" />
-  <img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white" />
   <img src="https://img.shields.io/badge/mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
 	<img src="https://img.shields.io/badge/mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white" />
   
 </div>
 <br>
 
-## 🛠AWS 🛠
-
-<div align=left>
-  <img src="https://img.shields.io/badge/s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white" />
-    <img src="https://img.shields.io/badge/ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white" />
-</div>
 <br>
